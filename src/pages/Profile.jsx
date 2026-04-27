@@ -4,10 +4,12 @@ import { Card, Button, Badge, Input } from '../components/ui';
 import { Mail, Shield, LogOut, Settings, Phone, MapPin, KeyRound, Globe, X } from 'lucide-react';
 import { currencies } from '../utils/helpers';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import toast from 'react-hot-toast';
 
 const Profile = () => {
   const { user, logout, updateProfile, changePassword } = useAuth();
+  const { t } = useTranslation();
   const [isEditing, setIsEditing] = useState(false);
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -78,21 +80,21 @@ const Profile = () => {
           </div>
         </div>
         <Button variant={isEditing ? "ghost" : "primary"} onClick={() => setIsEditing(!isEditing)}>
-          {isEditing ? 'Cancel' : 'Edit Profile'}
+          {isEditing ? t('common.cancel') : t('common.edit')}
         </Button>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <Card className="lg:col-span-2 space-y-6 bg-white border-none shadow-sm">
-          <h3 className="text-xl font-bold text-gray-900">Personal & Settings</h3>
+          <h3 className="text-xl font-bold text-gray-900">{t('profile.personal_info')}</h3>
           
           {isEditing ? (
             <form onSubmit={handleUpdate} className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <Input label="Full Name" value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} />
+                <Input label={t('profile.name')} value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} />
                 <Input label="Phone" value={formData.phone} onChange={(e) => setFormData({...formData, phone: e.target.value})} />
                 <div className="space-y-2">
-                  <label className="text-sm font-bold text-gray-700 ml-1">Preferred Currency</label>
+                  <label className="text-sm font-bold text-gray-700 ml-1">{t('profile.currency')}</label>
                   <select 
                     value={formData.currency} 
                     onChange={(e) => setFormData({...formData, currency: e.target.value})}
@@ -109,7 +111,7 @@ const Profile = () => {
                 </div>
               </div>
               <Button type="submit" className="w-full mt-4" disabled={loading}>
-                {loading ? 'Saving...' : 'Save Changes'}
+                {loading ? 'Saving...' : t('common.save')}
               </Button>
             </form>
           ) : (
@@ -130,10 +132,10 @@ const Profile = () => {
               className="w-full text-left justify-start gap-3 font-bold text-gray-600"
               onClick={() => setShowPasswordModal(true)}
             >
-              <KeyRound size={18} /> Change Password
+              <KeyRound size={18} /> {t('profile.change_password')}
             </Button>
             <Button variant="danger" className="w-full text-left justify-start gap-3 mt-4 font-bold" onClick={logout}>
-              <LogOut size={18} /> Sign Out
+              <LogOut size={18} /> {t('common.logout')}
             </Button>
           </div>
         </Card>

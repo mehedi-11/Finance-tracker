@@ -25,18 +25,20 @@
     "type": "ধরন",
     "income": "আয়",
     "expense": "ব্যয়",
-    "all": "সব"
+    "all": "সব",
+    "total_balance": "মোট ব্যালেন্স",
+    "total_income": "মোট আয়",
+    "total_expenses": "মোট ব্যয়"
   },
   "dashboard": {
     "hello": "হ্যালো",
     "welcome_msg": "আপনার অগ্রগতি ট্র্যাক করুন এবং ভবিষ্যতের খরচ পরিকল্পনা করুন।",
     "add_transaction": "লেনদেন",
-    "total_balance": "মোট ব্যালেন্স",
-    "total_income": "মোট আয়",
-    "total_expenses": "মোট ব্যয়",
     "recent_activity": "সাম্প্রতিক কার্যকলাপ",
     "view_all": "সব দেখুন",
-    "future_plans": "ভবিষ্যতের পরিকল্পনা"
+    "spending_by_category": "ক্যাটাগরি ভিত্তিক ব্যয়",
+    "income_vs_expenses": "আয় বনাম ব্যয়",
+    "no_data": "কোনো তথ্য পাওয়া যায়নি"
   },
   "transactions": {
     "title": "লেনদেন সমূহ",
@@ -57,5 +59,31 @@
     "subtitle": "ভবিষ্যৎ লক্ষ্য এবং সম্ভাব্য খরচ।",
     "plan_title": "পরিকল্পনার শিরোনাম",
     "planned_date": "পরিকল্পিত তারিখ"
+  },
+  "budget": {
+    "title": "বাজেট ব্যবস্থাপনা",
+    "subtitle": "বিভিন্ন ক্যাটাগরির জন্য মাসিক সীমা নির্ধারণ করুন।",
+    "set_budget": "বাজেট সেট করুন",
+    "limit": "মাসিক সীমা",
+    "spent": "এ পর্যন্ত ব্যয়",
+    "remaining": "বাকি আছে",
+    "progress": "অগ্রগতি"
+  },
+  "reports": {
+    "title": "আর্থিক ইনসাইট",
+    "subtitle": "আপনার আর্থিক অবস্থা এবং ব্যয়ের ধরন একনজরে দেখুন।",
+    "highest_income": "সর্বোচ্চ আয়",
+    "major_spending": "প্রধান ব্যয়",
+    "saving_rate": "সঞ্চয়ের হার"
+  },
+  "profile": {
+    "title": "প্রোফাইল সেটিংস",
+    "subtitle": "আপনার ব্যক্তিগত তথ্য এবং পছন্দগুলি পরিচালনা করুন।",
+    "personal_info": "ব্যক্তিগত তথ্য",
+    "name": "পুরো নাম",
+    "email": "ইমেল ঠিকানা",
+    "currency": "পছন্দসই কারেন্সি",
+    "update_profile": "প্রোফাইল আপডেট করুন",
+    "change_password": "পাসওয়ার্ড পরিবর্তন করুন"
   }
 }

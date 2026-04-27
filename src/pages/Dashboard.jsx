@@ -60,8 +60,8 @@ const Dashboard = () => {
   }));
 
   const barData = [
-    { name: 'Income', amount: totals.income, fill: '#10b981' },
-    { name: 'Expenses', amount: totals.expenses, fill: '#ef4444' }
+    { name: t('common.income'), amount: totals.income, fill: '#10b981' },
+    { name: t('common.expense'), amount: totals.expenses, fill: '#ef4444' }
   ];
   const [notes, setNotes] = useState(() => {
     try {
@@ -224,9 +224,9 @@ const Dashboard = () => {
 
         {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <StatCard icon={Banknote} color="primary" label="Total Balance" value={totals.balance} />
-          <StatCard icon={ArrowUpCircle} color="emerald" label="Total Income" value={totals.income} />
-          <StatCard icon={ArrowDownCircle} color="red" label="Total Expenses" value={totals.expenses} />
+          <StatCard icon={Banknote} color="primary" label={t('common.total_balance')} value={totals.balance} />
+          <StatCard icon={ArrowUpCircle} color="emerald" label={t('common.total_income')} value={totals.income} />
+          <StatCard icon={ArrowDownCircle} color="red" label={t('common.total_expenses')} value={totals.expenses} />
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -234,7 +234,7 @@ const Dashboard = () => {
             <div className="flex items-center justify-between mb-8">
               <h3 className="text-xl font-bold flex items-center gap-2 text-gray-900">
                 <PieChartIcon className="text-purple-600" size={24} />
-                Spending by Category
+                {t('dashboard.spending_by_category')}
               </h3>
             </div>
             <div className="h-[350px] w-full">
@@ -269,7 +269,7 @@ const Dashboard = () => {
                 </ResponsiveContainer>
               ) : (
                 <div className="flex items-center justify-center h-full text-gray-500 font-medium">
-                  No expense data available
+                  {t('dashboard.no_data')}
                 </div>
               )}
             </div>
@@ -279,7 +279,7 @@ const Dashboard = () => {
             <div className="flex items-center justify-between mb-8">
               <h3 className="text-xl font-bold flex items-center gap-2 text-gray-900">
                 <BarChart3 className="text-emerald-600" size={24} />
-                Income vs Expenses
+                {t('dashboard.income_vs_expenses')}
               </h3>
             </div>
             <div className="h-[350px] w-full">

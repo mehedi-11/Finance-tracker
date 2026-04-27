@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import { useFinance } from '../context/FinanceContext';
 import { useAuth } from '../context/AuthContext';
+import { useTranslation } from 'react-i18next';
 import { Button, Card, Input, Badge } from '../components/ui';
 import { formatCurrency, categories } from '../utils/helpers';
 import toast from 'react-hot-toast';
@@ -19,6 +20,7 @@ import toast from 'react-hot-toast';
 const Budget = () => {
   const { budgets, setBudget, deleteBudget, categoryTotals } = useFinance();
   const { user } = useAuth();
+  const { t } = useTranslation();
   const [selectedCategory, setSelectedCategory] = useState(categories.expense[0]);
   const [amount, setAmount] = useState('');
   const [deleteConfirm, setDeleteConfirm] = useState(null);
@@ -27,7 +29,7 @@ const Budget = () => {
     e.preventDefault();
     setBudget(selectedCategory, Number(amount));
     setAmount('');
-    toast.success('Budget updated!');
+    toast.success(t('budget.title') + ' updated!');
   };
 
   const handleEdit = (budget) => {
@@ -53,8 +55,8 @@ const Budget = () => {
       <div className="space-y-6 md:space-y-8 animate-fade-in pb-20">
         {/* ... existing content ... */}
         <div>
-          <h1 className="text-2xl md:text-3xl font-bold text-gray-900">Budget Planner</h1>
-          <p className="text-sm md:text-base text-gray-500 font-medium">Set limits and stay on top of your spending habits.</p>
+          <h1 className="text-2xl md:text-3xl font-bold text-gray-900">{t('budget.title')}</h1>
+          <p className="text-sm md:text-base text-gray-500 font-medium">{t('budget.subtitle')}</p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8 items-start">
@@ -62,11 +64,11 @@ const Budget = () => {
             <Card className="bg-white border-none shadow-sm p-6 md:p-8">
               <h3 className="text-xl font-bold mb-6 flex items-center gap-2 text-gray-900">
                 <Wallet className="text-primary-600" size={24} />
-                Set Budget
+                {t('budget.set_budget')}
               </h3>
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="space-y-1.5">
-                  <label className="text-sm font-bold text-gray-700 ml-1">Category</label>
+                  <label className="text-sm font-bold text-gray-700 ml-1">{t('common.category')}</label>
                   <select 
                     className="input-premium"
                     value={selectedCategory}
@@ -79,7 +81,7 @@ const Budget = () => {
                 </div>
 
                 <Input 
-                  label={`Limit (${user?.currency || 'BDT'})`} 
+                  label={`${t('budget.limit')} (${user?.currency || 'BDT'})`} 
                   type="number" 
                   placeholder="0.00" 
                   value={amount}
@@ -88,7 +90,7 @@ const Budget = () => {
                 />
 
                 <Button type="submit" className="w-full py-4 font-bold shadow-lg shadow-primary-500/20">
-                  Update Budget
+                  {t('budget.set_budget')}
                 </Button>
               </form>
 

@@ -25,18 +25,20 @@
     "type": "Type",
     "income": "Income",
     "expense": "Expense",
-    "all": "All"
+    "all": "All",
+    "total_balance": "Total Balance",
+    "total_income": "Total Income",
+    "total_expenses": "Total Expenses"
   },
   "dashboard": {
     "hello": "Hello",
     "welcome_msg": "Track your progress and plan your future costs.",
     "add_transaction": "Transaction",
-    "total_balance": "Total Balance",
-    "total_income": "Total Income",
-    "total_expenses": "Total Expenses",
     "recent_activity": "Recent Activity",
     "view_all": "View All",
-    "future_plans": "Future Plans"
+    "spending_by_category": "Spending by Category",
+    "income_vs_expenses": "Income vs Expenses",
+    "no_data": "No data available"
   },
   "transactions": {
     "title": "Transactions",
@@ -57,5 +59,31 @@
     "subtitle": "Future goals and cost predictions.",
     "plan_title": "Plan Title",
     "planned_date": "Planned Date"
+  },
+  "budget": {
+    "title": "Budget Management",
+    "subtitle": "Set monthly limits for different categories.",
+    "set_budget": "Set Budget",
+    "limit": "Monthly Limit",
+    "spent": "Spent So Far",
+    "remaining": "Remaining",
+    "progress": "Progress"
+  },
+  "reports": {
+    "title": "Financial Insights",
+    "subtitle": "Visual breakdown of your financial health and spending patterns.",
+    "highest_income": "Highest Income",
+    "major_spending": "Major Spending",
+    "saving_rate": "Saving Rate"
+  },
+  "profile": {
+    "title": "Profile Settings",
+    "subtitle": "Manage your personal information and preferences.",
+    "personal_info": "Personal Information",
+    "name": "Full Name",
+    "email": "Email Address",
+    "currency": "Preferred Currency",
+    "update_profile": "Update Profile",
+    "change_password": "Change Password"
   }
 }
