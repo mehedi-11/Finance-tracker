@@ -25,7 +25,7 @@ import { useTranslation } from 'react-i18next';
 const Plans = () => {
   const { t } = useTranslation();
   const { user } = useAuth();
-  const { addTransaction } = useFinance();
+  const { addTransaction, fetchFinanceData } = useFinance();
   const [notes, setNotes] = useState(() => {
     try {
       const cached = localStorage.getItem('finance_notes');
@@ -151,13 +151,14 @@ const Plans = () => {
   const handleMarkAsDone = async (note) => {
     try {
       // 1. Create the expense transaction
-      await addTransaction({
-        description: `Plan Completed: ${note.title}`,
-        amount: note.amount || 0,
-        type: 'expense',
-        category: 'Future Plan',
-        date: new Date().toISOString().split('T')[0]
-      });
+        await addTransaction({
+          description: `Plan Completed: ${note.title}`,
+          amount: note.amount || 0,
+          type: 'expense',
+          category: 'Future Plan',
+          date: new Date().toISOString().split('T')[0]
+        });
+        await fetchFinanceData();
 
       // 2. Update the note status to completed
       const response = await fetch(`${API_ENDPOINTS.NOTES}/${note._id}`, {
