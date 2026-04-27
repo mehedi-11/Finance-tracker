@@ -35,7 +35,7 @@ import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
 
 const Reports = () => {
-  const { totals, categoryTotals, getMonthlyReports, transactions, loans, addTransaction, addLoan, deleteMonthData, fetchFinanceData } = useFinance();
+  const { getMonthlyReports, transactions, loans, deleteMonthData, fetchFinanceData } = useFinance();
   const { user } = useAuth();
   const { t } = useTranslation();
   
@@ -208,9 +208,8 @@ const Reports = () => {
         </div>
       </div>
 
-      <div className="pt-8">
 
-      <div className="space-y-6">
+      <div className="space-y-6 pt-8">
         <h2 className="text-2xl font-bold text-gray-900">Monthly Records</h2>
         <Card className="p-0 bg-white border-none shadow-sm overflow-hidden">
           <div className="overflow-x-auto">
