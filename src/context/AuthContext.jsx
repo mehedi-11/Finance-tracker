@@ -1,0 +1,132 @@
+import React, { createContext, useContext, useState, useEffect } from 'react';
+import emailjs from '@emailjs/browser';
+import toast from 'react-hot-toast';
+
+const AuthContext = createContext();
+
+export const useAuth = () => useContext(AuthContext);
+
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/auth';
+
+const EMAILJS_SERVICE_ID = 'service_huxfu4e';
+const EMAILJS_TEMPLATE_ID = 'template_lenjhh8';
+const EMAILJS_PUBLIC_KEY = 'F39LsRFNqk0FODJ_n';
+
+emailjs.init(EMAILJS_PUBLIC_KEY);
+
+export const AuthProvider = ({ children }) => {
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const savedUser = localStorage.getItem('finance_app_user');
+    if (savedUser) {
+      setUser(JSON.parse(savedUser));
+    }
+    setLoading(false);
+  }, []);
+
+  const register = async (userData) => {
+    const response = await fetch(`${API_URL}/register`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(userData),
+    });
+
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.message || 'Registration failed');
+    
+    try {
+      await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+        to_email: userData.email,
+        verification_code: data.verificationCode,
+        app_name: 'FinanceFlow'
+      });
+      toast.success('Verification code sent!');
+    } catch (error) {
+      toast.error('Email failed. Code: ' + data.verificationCode);
+    }
+    return data;
+  };
+
+  const verify = async (email, code) => {
+    const response = await fetch(`${API_URL}/verify`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, code }),
+    });
+
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.message || 'Verification failed');
+
+    setUser(data);
+    localStorage.setItem('finance_app_user', JSON.stringify(data));
+    toast.success('Verified successfully!');
+  };
+
+  const login = async (email, password, twoFactorCode = null) => {
+    const response = await fetch(`${API_URL}/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password, twoFactorCode }),
+    });
+
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.message || 'Login failed');
+
+    if (data.requires2FA) {
+      toast.success('2FA code sent!');
+      return { requires2FA: true };
+    }
+
+    setUser(data);
+    localStorage.setItem('finance_app_user', JSON.stringify(data));
+    toast.success('Welcome back!');
+    return { success: true };
+  };
+
+  const updateProfile = async (userData) => {
+    const response = await fetch(`${API_URL}/profile`, {
+      method: 'PUT',
+      headers: { 
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${user.token}`
+      },
+      body: JSON.stringify(userData),
+    });
+
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.message || 'Update failed');
+
+    const updatedUser = { ...user, ...data };
+    setUser(updatedUser);
+    localStorage.setItem('finance_app_user', JSON.stringify(updatedUser));
+    toast.success('Profile updated!');
+  };
+
+  const changePassword = async (currentPassword, newPassword) => {
+    const response = await fetch(`${API_URL}/change-password`, {
+      method: 'PUT',
+      headers: { 
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${user.token}`
+      },
+      body: JSON.stringify({ currentPassword, newPassword }),
+    });
+
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.message || 'Failed to change password');
+    toast.success('Password changed successfully!');
+  };
+
+  const logout = () => {
+    setUser(null);
+    localStorage.removeItem('finance_app_user');
+  };
+
+  return (
+    <AuthContext.Provider value={{ user, loading, register, verify, login, updateProfile, changePassword, logout }}>
+      {children}
+    </AuthContext.Provider>
+  );
+};
