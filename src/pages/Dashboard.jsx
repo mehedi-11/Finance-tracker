@@ -398,7 +398,7 @@ const StatCard = ({ icon: Icon, color, label, value }) => {
   const { user } = useAuth();
   return (
     <Card className="relative overflow-hidden group bg-white border-none shadow-sm hover:shadow-md transition-all">
-      <div className={`absolute top-0 right-0 w-32 h-32 bg-${color}-50 rounded-xl -mr-16 -mt-16 group-hover:scale-110 transition-transform`}></div>
+      <div className={`absolute top-0 right-0 w-32 h-32 bg-${color}-50 rounded-full -mr-16 -mt-16 group-hover:scale-110 transition-transform`}></div>
       <div className="flex items-start justify-between relative z-10">
         <div>
           <p className="text-gray-600 text-xs font-black uppercase tracking-wider mb-1">{label}</p>
