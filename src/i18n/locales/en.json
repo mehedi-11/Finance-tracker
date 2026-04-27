@@ -1,0 +1,26 @@
+{
+  "common": {
+    "dashboard": "Dashboard",
+    "transactions": "Transactions",
+    "budget": "Budget",
+    "loans": "Loans",
+    "my_plan": "My Plan",
+    "reports": "Reports",
+    "profile": "Profile",
+    "logout": "Logout",
+    "language": "Language",
+    "english": "English",
+    "bangla": "Bangla"
+  },
+  "dashboard": {
+    "hello": "Hello",
+    "welcome_msg": "Track your progress and plan your future costs.",
+    "add_transaction": "Transaction",
+    "total_balance": "Total Balance",
+    "total_income": "Total Income",
+    "total_expenses": "Total Expenses",
+    "recent_activity": "Recent Activity",
+    "view_all": "View All",
+    "future_plans": "Future Plans"
+  }
+}

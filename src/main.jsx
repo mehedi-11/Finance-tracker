@@ -4,6 +4,7 @@ import './index.css'
 import App from './App.jsx'
 import { AuthProvider } from './context/AuthContext'
 import { FinanceProvider } from './context/FinanceContext'
+import './i18n/config'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>

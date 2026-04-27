@@ -12,19 +12,26 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
+import { Languages } from 'lucide-react';
 
 const Sidebar = ({ isOpen, setIsOpen }) => {
   const location = useLocation();
   const { logout } = useAuth();
+  const { t, i18n } = useTranslation();
+
+  const toggleLanguage = () => {
+    i18n.changeLanguage(i18n.language === 'en' ? 'bn' : 'en');
+  };
 
   const menuItems = [
-    { icon: LayoutDashboard, label: 'Dashboard', path: '/dashboard' },
-    { icon: Receipt, label: 'Transactions', path: '/transactions' },
-    { icon: Wallet, label: 'Budget', path: '/budget' },
-    { icon: HandCoins, label: 'Loans', path: '/loans' },
-    { icon: StickyNote, label: 'My Plan', path: '/plans' },
-    { icon: PieChart, label: 'Reports', path: '/reports' },
-    { icon: User, label: 'Profile', path: '/profile' },
+    { icon: LayoutDashboard, label: t('common.dashboard'), path: '/dashboard' },
+    { icon: Receipt, label: t('common.transactions'), path: '/transactions' },
+    { icon: Wallet, label: t('common.budget'), path: '/budget' },
+    { icon: HandCoins, label: t('common.loans'), path: '/loans' },
+    { icon: StickyNote, label: t('common.my_plan'), path: '/plans' },
+    { icon: PieChart, label: t('common.reports'), path: '/reports' },
+    { icon: User, label: t('common.profile'), path: '/profile' },
   ];
 
   return (
@@ -80,7 +87,20 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
             })}
           </nav>
 
-          <div className="pt-6 border-t border-gray-50">
+          <div className="pt-6 border-t border-gray-50 space-y-2">
+            <button
+              onClick={toggleLanguage}
+              className="w-full flex items-center justify-between px-4 py-3.5 rounded-lg text-gray-600 hover:bg-gray-50 transition-all font-bold text-sm"
+            >
+              <div className="flex items-center gap-4">
+                <Languages size={22} className="text-primary-600" />
+                <span>{t('common.language')}</span>
+              </div>
+              <span className="text-[10px] bg-primary-50 text-primary-600 px-2 py-1 rounded-md uppercase tracking-wider">
+                {i18n.language === 'en' ? 'English' : 'বাংলা'}
+              </span>
+            </button>
+
             <button
               onClick={() => {
                 setIsOpen(false);
@@ -89,7 +109,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
               className="w-full flex items-center gap-4 px-4 py-3.5 rounded-lg text-red-500 hover:bg-red-50 transition-all font-bold text-sm"
             >
               <LogOut size={22} />
-              <span>Logout</span>
+              <span>{t('common.logout')}</span>
             </button>
           </div>
         </div>

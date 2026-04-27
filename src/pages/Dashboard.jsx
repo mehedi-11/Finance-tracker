@@ -24,12 +24,14 @@ import { Button, Card, Input } from '../components/ui';
 import { formatCurrency, formatDate } from '../utils/helpers';
 import { API_ENDPOINTS } from '../config';
 import toast from 'react-hot-toast';
+import { useTranslation } from 'react-i18next';
 
 const NOTES_URL = API_ENDPOINTS.NOTES;
 
 const Dashboard = () => {
   const { transactions, totals } = useFinance();
   const { user } = useAuth();
+  const { t } = useTranslation();
   const [notes, setNotes] = useState(() => {
     try {
       const cached = localStorage.getItem('finance_notes');
@@ -155,28 +157,28 @@ const Dashboard = () => {
         {/* Top Header */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 flex-wrap">
           <div className="text-center md:text-left w-full md:w-auto">
-            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 leading-tight whitespace-nowrap">Hello, {user?.name || 'User'}!</h1>
-            <p className="text-gray-600 font-medium text-sm">Track your progress and plan your future costs.</p>
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 leading-tight whitespace-nowrap">{t('dashboard.hello')}, {user?.name || 'User'}!</h1>
+            <p className="text-gray-600 font-medium text-sm">{t('dashboard.welcome_msg')}</p>
           </div>
           <div className="grid grid-cols-2 sm:flex sm:flex-wrap gap-3">
             <Link to="/budget" className="flex-1 sm:flex-none">
               <Button variant="secondary" className="w-full flex items-center justify-center gap-2 bg-white border-gray-200">
-                <LayoutDashboard size={18} className="text-primary-600" /> Budget
+                <LayoutDashboard size={18} className="text-primary-600" /> {t('common.budget')}
               </Button>
             </Link>
             <Link to="/loans" className="flex-1 sm:flex-none">
               <Button variant="secondary" className="w-full flex items-center justify-center gap-2 bg-white border-gray-200">
-                <HandCoins size={18} className="text-amber-600" /> Loans
+                <HandCoins size={18} className="text-amber-600" /> {t('common.loans')}
               </Button>
             </Link>
             <Link to="/plans" className="flex-1 sm:flex-none">
               <Button variant="secondary" className="w-full flex items-center justify-center gap-2 bg-white border-gray-200">
-                <StickyNote size={18} className="text-primary-600" /> My Plan
+                <StickyNote size={18} className="text-primary-600" /> {t('common.my_plan')}
               </Button>
             </Link>
             <Link to="/transactions" className="flex-1 sm:flex-none">
               <Button className="w-full flex items-center justify-center gap-2">
-                <Plus size={18} /> Transaction
+                <Plus size={18} /> {t('dashboard.add_transaction')}
               </Button>
             </Link>
           </div>

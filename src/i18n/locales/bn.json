@@ -1,0 +1,26 @@
+{
+  "common": {
+    "dashboard": "ড্যাশবোর্ড",
+    "transactions": "লেনদেন",
+    "budget": "বাজেট",
+    "loans": "ঋণ",
+    "my_plan": "আমার পরিকল্পনা",
+    "reports": "রিপোর্ট",
+    "profile": "প্রোফাইল",
+    "logout": "লগআউট",
+    "language": "ভাষা",
+    "english": "English",
+    "bangla": "বাংলা"
+  },
+  "dashboard": {
+    "hello": "হ্যালো",
+    "welcome_msg": "আপনার অগ্রগতি ট্র্যাক করুন এবং ভবিষ্যতের খরচ পরিকল্পনা করুন।",
+    "add_transaction": "লেনদেন",
+    "total_balance": "মোট ব্যালেন্স",
+    "total_income": "মোট আয়",
+    "total_expenses": "মোট ব্যয়",
+    "recent_activity": "সাম্প্রতিক কার্যকলাপ",
+    "view_all": "সব দেখুন",
+    "future_plans": "ভবিষ্যতের পরিকল্পনা"
+  }
+}
