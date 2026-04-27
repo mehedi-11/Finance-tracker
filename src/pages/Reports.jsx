@@ -39,7 +39,7 @@ import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
 
 const Reports = () => {
-  const { totals, categoryTotals, getMonthlyReports, transactions, loans, addTransaction, addLoan, deleteMonthData } = useFinance();
+  const { totals, categoryTotals, getMonthlyReports, transactions, loans, addTransaction, addLoan, deleteMonthData, fetchFinanceData } = useFinance();
   const { user } = useAuth();
   const { t } = useTranslation();
   
