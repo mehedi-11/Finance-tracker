@@ -186,36 +186,36 @@ const Dashboard = () => {
     <>
       <div className="space-y-8 animate-fade-in pb-20">
         {/* Header Section - Premium Dark Leaf Box for All Screens */}
-        <div className="bg-[#1a0b2e] rounded-tl-[30px] md:rounded-tl-[60px] rounded-br-[30px] md:rounded-br-[60px] p-8 md:p-12 lg:p-16 mb-10 shadow-2xl shadow-purple-900/20 animate-fade-in relative z-20 transition-all">
-          <div className="max-w-[1400px] mx-auto flex flex-col md:flex-row md:items-center justify-between gap-8 md:gap-4 flex-wrap">
+        <div className="bg-[#1a0b2e] rounded-tl-[30px] md:rounded-tl-[60px] rounded-br-[30px] md:rounded-br-[60px] px-10 py-12 md:px-16 md:py-20 mb-10 shadow-2xl shadow-purple-900/20 animate-fade-in relative z-20 transition-all">
+          <div className="max-w-[1400px] mx-auto flex flex-col md:flex-row md:items-center justify-between gap-10 md:gap-4 flex-wrap">
             <div className="text-center md:text-left w-full md:w-auto">
-              <h1 className="text-3xl sm:text-4xl md:text-2xl lg:text-3xl font-black text-white leading-tight whitespace-nowrap tracking-tight">
+              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black text-white leading-tight whitespace-nowrap tracking-tight">
                 {t('dashboard.hello')}, {user?.name || 'User'}!
               </h1>
-              <p className="text-purple-300 font-bold text-base md:text-lg mt-2 md:mt-1 opacity-90">
+              <p className="text-purple-300 font-bold text-sm md:text-base mt-2 md:mt-1 opacity-90">
                 {t('dashboard.welcome_msg')}
               </p>
             </div>
             
             <div className="grid grid-cols-2 sm:flex sm:flex-wrap gap-4 md:gap-3">
               <Link to="/budget" className="flex-1 sm:flex-none">
-                <Button variant="secondary" className="w-full h-12 flex items-center justify-center gap-2 bg-white/5 border-white/10 text-white hover:bg-white/10 backdrop-blur-xl rounded-xl transition-all">
-                  <Wallet size={20} className="text-purple-400" /> {t('common.budget')}
+                <Button variant="secondary" className="w-full h-11 flex items-center justify-center gap-2 bg-white/5 border-white/10 text-white hover:bg-white/20 backdrop-blur-xl rounded-xl transition-all text-xs md:text-sm font-bold">
+                  <Wallet size={18} className="text-purple-400" /> {t('common.budget')}
                 </Button>
               </Link>
               <Link to="/loans" className="flex-1 sm:flex-none">
-                <Button variant="secondary" className="w-full h-12 flex items-center justify-center gap-2 bg-white/5 border-white/10 text-white hover:bg-white/10 backdrop-blur-xl rounded-xl transition-all">
-                  <HandCoins size={20} className="text-purple-400" /> {t('common.loans')}
+                <Button variant="secondary" className="w-full h-11 flex items-center justify-center gap-2 bg-white/5 border-white/10 text-white hover:bg-white/20 backdrop-blur-xl rounded-xl transition-all text-xs md:text-sm font-bold">
+                  <HandCoins size={18} className="text-purple-400" /> {t('common.loans')}
                 </Button>
               </Link>
               <Link to="/plans" className="flex-1 sm:flex-none">
-                <Button variant="secondary" className="w-full h-12 flex items-center justify-center gap-2 bg-white/5 border-white/10 text-white hover:bg-white/10 backdrop-blur-xl rounded-xl transition-all">
-                  <StickyNote size={20} className="text-purple-400" /> {t('common.my_plan')}
+                <Button variant="secondary" className="w-full h-11 flex items-center justify-center gap-2 bg-white/5 border-white/10 text-white hover:bg-white/20 backdrop-blur-xl rounded-xl transition-all text-xs md:text-sm font-bold">
+                  <StickyNote size={18} className="text-purple-400" /> {t('common.my_plan')}
                 </Button>
               </Link>
               <Link to="/transactions" className="flex-1 sm:flex-none">
-                <Button className="w-full h-12 flex items-center justify-center gap-2 bg-purple-500 text-white hover:bg-purple-400 border-none rounded-xl shadow-lg shadow-purple-500/20 transition-all">
-                  <Plus size={20} /> {t('dashboard.add_transaction')}
+                <Button className="w-full h-11 flex items-center justify-center gap-2 bg-purple-500 text-white hover:bg-purple-400 border-none rounded-xl shadow-lg shadow-purple-500/20 transition-all text-xs md:text-sm font-bold">
+                  <Plus size={18} /> {t('dashboard.add_transaction')}
                 </Button>
               </Link>
             </div>
