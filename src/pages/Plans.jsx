@@ -301,7 +301,7 @@ const Plans = () => {
               >
                 <div className="flex items-center justify-between p-8 md:p-10 pb-4">
                   <h2 className="text-2xl font-black text-gray-900">{editingNote ? 'Edit Plan' : 'New Plan'}</h2>
-                  <button onClick={() => setIsModalOpen(false)} className="p-3 hover:bg-gray-100 rounded-none text-gray-400 transition-colors">>
+                  <button onClick={() => setIsModalOpen(false)} className="p-3 hover:bg-gray-100 rounded-none text-gray-400 transition-colors">
                     <X size={24} />
                   </button>
                 </div>
