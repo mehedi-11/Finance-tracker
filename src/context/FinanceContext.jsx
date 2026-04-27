@@ -181,7 +181,8 @@ export const FinanceProvider = ({ children }) => {
       setBudget,
       deleteBudget,
       totals,
-      categoryTotals
+      categoryTotals,
+      fetchFinanceData
     }}>
       {children}
     </FinanceContext.Provider>

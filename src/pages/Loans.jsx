@@ -20,7 +20,7 @@ import toast from 'react-hot-toast';
 
 const Loans = () => {
   const { user } = useAuth();
-  const { addTransaction } = useFinance();
+  const { fetchFinanceData } = useFinance();
   const [loans, setLoans] = useState(() => {
     try {
       const cached = localStorage.getItem('finance_loans');
@@ -110,20 +110,10 @@ const Loans = () => {
       });
 
       if (response.ok) {
-        // If it's a new loan, also record it as income transaction
-        if (!editingLoan) {
-          await addTransaction({
-            description: `Loan from ${formData.lender}`,
-            amount: Number(formData.amount),
-            type: 'income',
-            category: 'Loan',
-            date: new Date().toISOString().split('T')[0]
-          });
-        }
-        
-        toast.success(editingLoan ? 'Loan updated!' : 'Loan recorded & added to balance!');
+        toast.success(editingLoan ? 'Loan and transaction updated!' : 'Loan recorded & added to balance!');
         setIsModalOpen(false);
         fetchLoans();
+        fetchFinanceData(); // Sync global transactions & balance
       }
     } catch (err) {
       toast.error('Operation failed');
@@ -140,9 +130,10 @@ const Loans = () => {
         headers: { 'Authorization': `Bearer ${user.token}` }
       });
       if (response.ok) {
-        toast.success('Loan deleted');
+        toast.success('Loan and related transaction deleted');
         setDeleteConfirm(null);
         fetchLoans();
+        fetchFinanceData(); // Sync global transactions & balance
       }
     } catch (err) {
       toast.error('Delete failed');
