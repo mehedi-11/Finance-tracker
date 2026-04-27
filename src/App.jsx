@@ -24,6 +24,7 @@ import HelpSupport from './pages/HelpSupport';
 // Components
 import Sidebar from './components/layout/Sidebar';
 import Navbar from './components/layout/Navbar';
+import Footer from './components/layout/Footer';
 
 const ProtectedRoute = ({ children }) => {
   const { user, loading: authLoading } = useAuth();
@@ -62,6 +63,7 @@ function AppContent() {
             <Route path="/help" element={<ProtectedRoute><HelpSupport /></ProtectedRoute>} />
           </Routes>
         </main>
+        {user && <Footer />}
       </div>
     </div>
   );
