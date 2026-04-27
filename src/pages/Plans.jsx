@@ -14,7 +14,7 @@ import {
   Calendar
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
-import { Button, Card, Input } from '../components/ui';
+import { Button, Card, Input, Badge } from '../components/ui';
 import { formatCurrency, formatDate } from '../utils/helpers';
 import { API_ENDPOINTS } from '../config';
 import toast from 'react-hot-toast';
@@ -184,63 +184,92 @@ const Plans = () => {
           </div>
         </div>
 
-        {/* Plans Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredNotes.length > 0 ? (
-            filteredNotes.map((note) => (
-              <motion.div
-                key={note._id}
-                layout
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                className={`group relative p-6 rounded-[2rem] border transition-all ${
-                  note.isCompleted ? 'bg-gray-50/50 border-gray-100' : 'bg-white border-gray-100 shadow-sm hover:shadow-xl hover:-translate-y-1'
-                }`}
-              >
-                <div className="flex justify-between items-start mb-4">
-                  <button 
-                    onClick={() => toggleCompleteStatus(note)}
-                    className={`p-2 rounded-xl transition-colors ${note.isCompleted ? 'bg-emerald-100 text-emerald-600' : 'bg-gray-100 text-gray-400 hover:text-primary-600'}`}
-                  >
-                    {note.isCompleted ? <CheckCircle2 size={20} /> : <Circle size={20} />}
-                  </button>
-                  <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <button onClick={() => handleOpenModal(note)} className="p-2 hover:bg-gray-100 rounded-xl text-gray-400 hover:text-primary-600">
-                      <Edit2 size={16} />
-                    </button>
-                    <button onClick={() => setDeleteConfirm(note._id)} className="p-2 hover:bg-red-50 rounded-xl text-gray-400 hover:text-red-600">
-                      <Trash2 size={16} />
-                    </button>
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <h3 className={`text-lg font-black ${note.isCompleted ? 'text-gray-400 line-through' : 'text-gray-900'}`}>{note.title}</h3>
-                  <p className="text-sm text-gray-500 line-clamp-3">{note.content}</p>
-                </div>
-
-                <div className="mt-6 pt-6 border-t border-gray-50 flex items-center justify-between">
-                  <div className="flex items-center gap-2 text-[10px] font-black text-primary-600 uppercase tracking-widest">
-                    <Calendar size={14} />
-                    {note.plannedDate ? formatDate(note.plannedDate) : 'No Date'}
-                  </div>
-                  <div className="text-lg font-black text-gray-900">
-                    {formatCurrency(note.amount || 0, user?.currency)}
-                  </div>
-                </div>
-              </motion.div>
-            ))
-          ) : (
-            <div className="col-span-full py-20 text-center">
-              <div className="flex flex-col items-center gap-4">
-                <div className="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center">
-                  <StickyNote size={40} className="text-gray-300" />
-                </div>
-                <p className="text-lg font-bold text-gray-400">No plans found</p>
-              </div>
-            </div>
-          )}
-        </div>
+        {/* Table Card */}
+        <Card className="p-0 bg-white border-none shadow-sm overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="w-full text-left border-collapse min-w-[600px]">
+              <thead>
+                <tr className="border-b border-gray-50 text-gray-400 text-[10px] md:text-xs uppercase tracking-widest font-black">
+                  <th className="px-4 md:px-6 py-4">Plan Title</th>
+                  <th className="px-4 md:px-6 py-4">Description</th>
+                  <th className="px-4 md:px-6 py-4">Target Date</th>
+                  <th className="px-4 md:px-6 py-4">Amount</th>
+                  <th className="px-4 md:px-6 py-4">Status</th>
+                  <th className="px-4 md:px-6 py-4 text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-50">
+                {filteredNotes.length > 0 ? (
+                  filteredNotes.map((n) => (
+                    <motion.tr 
+                      key={n._id}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      className={`hover:bg-gray-50/50 transition-colors group ${n.isCompleted ? 'opacity-60' : ''}`}
+                    >
+                      <td className="px-4 md:px-6 py-4">
+                        <div className="flex items-center gap-3">
+                          <div className={`w-8 h-8 md:w-10 md:h-10 rounded-xl flex items-center justify-center ${
+                            n.isCompleted ? 'bg-emerald-100 text-emerald-600' : 'bg-primary-100 text-primary-600'
+                          }`}>
+                            <StickyNote size={16} />
+                          </div>
+                          <span className={`font-bold text-sm md:text-base ${n.isCompleted ? 'text-gray-500 line-through' : 'text-gray-900'}`}>{n.title}</span>
+                        </div>
+                      </td>
+                      <td className="px-4 md:px-6 py-4 text-gray-500 font-medium text-xs md:text-sm max-w-xs truncate">
+                        {n.content}
+                      </td>
+                      <td className="px-4 md:px-6 py-4 text-gray-500 font-medium text-xs md:text-sm">
+                        <div className="flex items-center gap-2">
+                          <Calendar size={14} />
+                          {n.plannedDate ? formatDate(n.plannedDate) : 'No Date'}
+                        </div>
+                      </td>
+                      <td className={`px-4 md:px-6 py-4 font-black text-sm md:text-base ${n.isCompleted ? 'text-gray-500' : 'text-primary-600'}`}>
+                        {formatCurrency(n.amount || 0, user?.currency)}
+                      </td>
+                      <td className="px-4 md:px-6 py-4">
+                        <button onClick={() => toggleCompleteStatus(n)}>
+                          <Badge variant={n.isCompleted ? 'success' : 'info'}>
+                            {n.isCompleted ? 'Completed' : 'Active'}
+                          </Badge>
+                        </button>
+                      </td>
+                      <td className="px-4 md:px-6 py-4 text-right">
+                        <div className="flex items-center justify-end gap-1 md:gap-2">
+                          <button 
+                            onClick={() => handleOpenModal(n)}
+                            className="p-2 hover:bg-primary-50 rounded-lg text-gray-400 hover:text-primary-600 transition-colors"
+                          >
+                            <Edit2 size={16} />
+                          </button>
+                          <button 
+                            onClick={() => setDeleteConfirm(n._id)}
+                            className="p-2 hover:bg-red-50 rounded-lg text-gray-400 hover:text-red-600 transition-colors"
+                          >
+                            <Trash2 size={16} />
+                          </button>
+                        </div>
+                      </td>
+                    </motion.tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="6" className="px-6 py-20 text-center">
+                      <div className="flex flex-col items-center gap-4">
+                        <div className="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center">
+                          <StickyNote size={40} className="text-gray-300" />
+                        </div>
+                        <p className="text-lg font-bold text-gray-400">No plans found</p>
+                      </div>
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        </Card>
       </div>
 
       {/* Plan Modal */}
