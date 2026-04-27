@@ -59,14 +59,7 @@ const Navbar = ({ setIsSidebarOpen }) => {
         <span className="text-xl font-black text-gray-900 lg:hidden tracking-tighter">FinanceFlow</span>
       </div>
 
-      <div className="hidden lg:flex items-center bg-gray-50 border border-gray-200 rounded-xl px-4 py-2 w-96 group focus-within:ring-2 focus-within:ring-primary-500/50 transition-all duration-300">
-        <Search size={18} className="text-gray-500" />
-        <input 
-          type="text" 
-          placeholder="Search transactions..." 
-          className="bg-transparent border-none outline-none ml-3 text-sm text-gray-900 w-full placeholder:text-gray-500"
-        />
-      </div>
+
 
       <div className="flex items-center gap-2 md:gap-6">
         <div className="relative">
@@ -122,7 +115,7 @@ const Navbar = ({ setIsSidebarOpen }) => {
           </AnimatePresence>
         </div>
         
-        <Link to="/profile" className="flex items-center gap-2 md:gap-3 hover:opacity-80 transition-opacity">
+        <Link to="/profile" className="hidden md:flex items-center gap-2 md:gap-3 hover:opacity-80 transition-opacity">
           <div className="text-right">
             <p className="text-sm font-black text-gray-900 leading-none whitespace-nowrap">{user?.name || 'User'}</p>
             <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest mt-1">Premium</p>
