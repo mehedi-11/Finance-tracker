@@ -12,7 +12,7 @@ import {
   Cell,
   Legend
 } from 'recharts';
-import { PieChart as PieChartIcon, BarChart3, TrendingUp, TrendingDown } from 'lucide-react';
+import { PieChart as PieChartIcon, BarChart3, TrendingUp, TrendingDown, ArrowDownCircle } from 'lucide-react';
 import { useFinance } from '../context/FinanceContext';
 import { useAuth } from '../context/AuthContext';
 import { useTranslation } from 'react-i18next';
