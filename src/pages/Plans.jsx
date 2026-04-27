@@ -11,9 +11,11 @@ import {
   StickyNote,
   CheckCircle2,
   Circle,
-  Calendar
+  Calendar,
+  Check
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { useFinance } from '../context/FinanceContext';
 import { Button, Card, Input, Badge } from '../components/ui';
 import { formatCurrency, formatDate } from '../utils/helpers';
 import { API_ENDPOINTS } from '../config';
@@ -21,6 +23,7 @@ import toast from 'react-hot-toast';
 
 const Plans = () => {
   const { user } = useAuth();
+  const { addTransaction } = useFinance();
   const [notes, setNotes] = useState(() => {
     try {
       const cached = localStorage.getItem('finance_notes');
@@ -138,22 +141,33 @@ const Plans = () => {
     }
   };
 
-  const toggleCompleteStatus = async (note) => {
+  const handleMarkAsDone = async (note) => {
     try {
+      // 1. Create the expense transaction
+      await addTransaction({
+        description: `Plan Completed: ${note.title}`,
+        amount: note.amount || 0,
+        type: 'expense',
+        category: 'Future Plan',
+        date: new Date().toISOString().split('T')[0]
+      });
+
+      // 2. Update the note status to completed
       const response = await fetch(`${API_ENDPOINTS.NOTES}/${note._id}`, {
         method: 'PUT',
         headers: { 
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${user.token}`
         },
-        body: JSON.stringify({ isCompleted: !note.isCompleted }),
+        body: JSON.stringify({ isCompleted: true }),
       });
+
       if (response.ok) {
         fetchNotes();
-        toast.success(note.isCompleted ? 'Marked as active' : 'Marked as completed!');
+        toast.success('Expense recorded and plan marked as done!');
       }
     } catch (err) {
-      toast.error('Failed to update status');
+      toast.error('Failed to process plan completion');
     }
   };
 
@@ -194,7 +208,6 @@ const Plans = () => {
                   <th className="px-4 md:px-6 py-4">Description</th>
                   <th className="px-4 md:px-6 py-4">Target Date</th>
                   <th className="px-4 md:px-6 py-4">Amount</th>
-                  <th className="px-4 md:px-6 py-4">Status</th>
                   <th className="px-4 md:px-6 py-4 text-right">Actions</th>
                 </tr>
               </thead>
@@ -229,15 +242,17 @@ const Plans = () => {
                       <td className={`px-4 md:px-6 py-4 font-black text-sm md:text-base ${n.isCompleted ? 'text-gray-500' : 'text-primary-600'}`}>
                         {formatCurrency(n.amount || 0, user?.currency)}
                       </td>
-                      <td className="px-4 md:px-6 py-4">
-                        <button onClick={() => toggleCompleteStatus(n)}>
-                          <Badge variant={n.isCompleted ? 'success' : 'info'}>
-                            {n.isCompleted ? 'Completed' : 'Active'}
-                          </Badge>
-                        </button>
-                      </td>
                       <td className="px-4 md:px-6 py-4 text-right">
                         <div className="flex items-center justify-end gap-1 md:gap-2">
+                          {!n.isCompleted && (
+                            <button 
+                              onClick={() => handleMarkAsDone(n)}
+                              title="Mark as done & record expense"
+                              className="p-2 hover:bg-emerald-50 rounded-lg text-gray-400 hover:text-emerald-600 transition-colors"
+                            >
+                              <Check size={16} />
+                            </button>
+                          )}
                           <button 
                             onClick={() => handleOpenModal(n)}
                             className="p-2 hover:bg-primary-50 rounded-lg text-gray-400 hover:text-primary-600 transition-colors"

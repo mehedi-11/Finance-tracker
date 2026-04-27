@@ -12,6 +12,7 @@ import {
   Calendar
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { useFinance } from '../context/FinanceContext';
 import { Button, Card, Input, Badge } from '../components/ui';
 import { formatCurrency, formatDate } from '../utils/helpers';
 import { API_ENDPOINTS } from '../config';
@@ -19,6 +20,7 @@ import toast from 'react-hot-toast';
 
 const Loans = () => {
   const { user } = useAuth();
+  const { addTransaction } = useFinance();
   const [loans, setLoans] = useState(() => {
     try {
       const cached = localStorage.getItem('finance_loans');
@@ -108,7 +110,18 @@ const Loans = () => {
       });
 
       if (response.ok) {
-        toast.success(editingLoan ? 'Loan updated!' : 'Loan recorded!');
+        // If it's a new loan, also record it as income transaction
+        if (!editingLoan) {
+          await addTransaction({
+            description: `Loan from ${formData.lender}`,
+            amount: Number(formData.amount),
+            type: 'income',
+            category: 'Loan',
+            date: new Date().toISOString().split('T')[0]
+          });
+        }
+        
+        toast.success(editingLoan ? 'Loan updated!' : 'Loan recorded & added to balance!');
         setIsModalOpen(false);
         fetchLoans();
       }
