@@ -16,7 +16,7 @@ import { PieChart as PieChartIcon, BarChart3, TrendingUp, TrendingDown, ArrowDow
 import { useFinance } from '../context/FinanceContext';
 import { useAuth } from '../context/AuthContext';
 import { useTranslation } from 'react-i18next';
-import { Card, Badge } from '../components/ui';
+import { Card, Badge, Button } from '../components/ui';
 import { formatCurrency } from '../utils/helpers';
 
 const COLORS = ['#8b5cf6', '#10b981', '#f59e0b', '#ef4444', '#3b82f6', '#ec4899', '#06b6d4', '#84cc16'];
