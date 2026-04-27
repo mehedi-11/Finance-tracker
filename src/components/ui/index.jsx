@@ -5,8 +5,8 @@ export const Button = ({ children, variant = 'primary', className = '', ...props
   const variants = {
     primary: 'btn-primary',
     secondary: 'btn-secondary',
-    danger: 'bg-red-50 text-red-600 hover:bg-red-600 hover:text-white py-2 px-6 rounded-lg transition-all shadow-lg shadow-red-500/10 active:scale-95',
-    ghost: 'bg-transparent hover:bg-gray-100 text-gray-500 hover:text-gray-900 py-2 px-6 rounded-lg transition-all'
+    danger: 'bg-red-50 text-red-600 hover:bg-red-600 hover:text-white py-2 px-6 rounded-none transition-all shadow-lg shadow-red-500/10 active:scale-95',
+    ghost: 'bg-transparent hover:bg-gray-100 text-gray-500 hover:text-gray-900 py-2 px-6 rounded-none transition-all'
   };
 
   return (
@@ -45,7 +45,7 @@ export const Input = ({ label, type = 'text', className = '', ...props }) => {
 
 export const Card = ({ children, className = '', ...props }) => {
   return (
-    <div className={`bg-white rounded-lg p-8 shadow-sm border border-gray-100 ${className}`} {...props}>
+    <div className={`bg-white rounded-none p-8 shadow-sm border border-gray-100 ${className}`} {...props}>
       {children}
     </div>
   );
@@ -60,7 +60,7 @@ export const Badge = ({ children, variant = 'info' }) => {
   };
 
   return (
-    <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider ${variants[variant]}`}>
+    <span className={`px-3 py-1 rounded-none text-[10px] font-black uppercase tracking-wider ${variants[variant]}`}>
       {children}
     </span>
   );

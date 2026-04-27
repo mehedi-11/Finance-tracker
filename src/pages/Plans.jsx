@@ -191,7 +191,7 @@ const Plans = () => {
             <input 
               type="text" 
               placeholder="Search plans..." 
-              className="w-full bg-white border border-gray-200 rounded-lg pl-12 pr-4 py-3 text-sm md:text-base text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary-500/50 transition-all shadow-sm"
+              className="w-full bg-white border border-gray-200 rounded-none pl-12 pr-4 py-3 text-sm md:text-base text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary-500/50 transition-all shadow-sm"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
@@ -222,7 +222,7 @@ const Plans = () => {
                     >
                       <td className="px-4 md:px-6 py-4">
                         <div className="flex items-center gap-3">
-                          <div className={`w-8 h-8 md:w-10 md:h-10 rounded-lg flex items-center justify-center ${
+                          <div className={`w-8 h-8 md:w-10 md:h-10 rounded-none flex items-center justify-center ${
                             n.isCompleted ? 'bg-emerald-100 text-emerald-600' : 'bg-primary-100 text-primary-600'
                           }`}>
                             <StickyNote size={16} />
@@ -248,20 +248,20 @@ const Plans = () => {
                             <button 
                               onClick={() => handleMarkAsDone(n)}
                               title="Mark as done & record expense"
-                              className="p-2 hover:bg-emerald-50 rounded-lg text-gray-400 hover:text-emerald-600 transition-colors"
+                              className="p-2 hover:bg-emerald-50 rounded-none text-gray-400 hover:text-emerald-600 transition-colors"
                             >
                               <Check size={16} />
                             </button>
                           )}
                           <button 
                             onClick={() => handleOpenModal(n)}
-                            className="p-2 hover:bg-primary-50 rounded-lg text-gray-400 hover:text-primary-600 transition-colors"
+                            className="p-2 hover:bg-primary-50 rounded-none text-gray-400 hover:text-primary-600 transition-colors"
                           >
                             <Edit2 size={16} />
                           </button>
                           <button 
                             onClick={() => setDeleteConfirm(n._id)}
-                            className="p-2 hover:bg-red-50 rounded-lg text-gray-400 hover:text-red-600 transition-colors"
+                            className="p-2 hover:bg-red-50 rounded-none text-gray-400 hover:text-red-600 transition-colors"
                           >
                             <Trash2 size={16} />
                           </button>
@@ -273,7 +273,7 @@ const Plans = () => {
                   <tr>
                     <td colSpan="6" className="px-6 py-20 text-center">
                       <div className="flex flex-col items-center gap-4">
-                        <div className="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center">
+                        <div className="w-20 h-20 bg-gray-50 rounded-none flex items-center justify-center">
                           <StickyNote size={40} className="text-gray-300" />
                         </div>
                         <p className="text-lg font-bold text-gray-400">No plans found</p>
@@ -297,11 +297,11 @@ const Plans = () => {
                 initial={{ opacity: 0, scale: 0.95, y: 20 }} 
                 animate={{ opacity: 1, scale: 1, y: 0 }} 
                 exit={{ opacity: 0, scale: 0.95, y: 20 }} 
-                className="relative w-full max-w-lg bg-white rounded-lg shadow-2xl flex flex-col max-h-[90vh]"
+                className="relative w-full max-w-lg bg-white rounded-none shadow-2xl flex flex-col max-h-[90vh]"
               >
                 <div className="flex items-center justify-between p-8 md:p-10 pb-4">
                   <h2 className="text-2xl font-black text-gray-900">{editingNote ? 'Edit Plan' : 'New Plan'}</h2>
-                  <button onClick={() => setIsModalOpen(false)} className="p-3 hover:bg-gray-100 rounded-lg text-gray-400 transition-colors">>
+                  <button onClick={() => setIsModalOpen(false)} className="p-3 hover:bg-gray-100 rounded-none text-gray-400 transition-colors">>
                     <X size={24} />
                   </button>
                 </div>
@@ -316,7 +316,7 @@ const Plans = () => {
                     <div className="space-y-1.5">
                       <label className="text-sm font-bold text-gray-700 ml-1">Notes / Description</label>
                       <textarea 
-                        className="w-full bg-gray-50 border border-gray-200 rounded-lg p-4 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary-500/50"
+                        className="w-full bg-gray-50 border border-gray-200 rounded-none p-4 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary-500/50"
                         rows={4}
                         placeholder="Details about your plan..."
                         value={formData.content}
@@ -345,9 +345,9 @@ const Plans = () => {
                 initial={{ opacity: 0, scale: 0.9 }} 
                 animate={{ opacity: 1, scale: 1 }} 
                 exit={{ opacity: 0, scale: 0.9 }}
-                className="relative w-full max-w-sm bg-white rounded-lg p-8 text-center shadow-2xl"
+                className="relative w-full max-w-sm bg-white rounded-none p-8 text-center shadow-2xl"
               >
-                <div className="w-20 h-20 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-6">
+                <div className="w-20 h-20 bg-red-50 rounded-none flex items-center justify-center mx-auto mb-6">
                   <AlertTriangle className="text-red-500" size={40} />
                 </div>
                 <h3 className="text-xl font-black text-gray-900 mb-2">Are you sure?</h3>

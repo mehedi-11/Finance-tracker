@@ -56,7 +56,7 @@ const Register = () => {
         
         <Card className="p-8 bg-white border-none shadow-2xl">
           <div className="text-center mb-8">
-            <div className="w-16 h-16 bg-primary-50 rounded-lg flex items-center justify-center mx-auto mb-4">
+            <div className="w-16 h-16 bg-primary-50 rounded-none flex items-center justify-center mx-auto mb-4">
               <UserPlus className="text-primary-600" size={32} />
             </div>
             <h1 className="text-2xl font-black text-gray-900">Create Account</h1>

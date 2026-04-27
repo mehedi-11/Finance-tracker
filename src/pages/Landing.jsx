@@ -9,7 +9,7 @@ const Landing = () => {
       {/* Navbar Placeholder for Brand */}
       <nav className="w-full max-w-7xl px-8 py-6 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-indigo-600 rounded-lg flex items-center justify-center shadow-lg shadow-indigo-600/20">
+          <div className="w-10 h-10 bg-indigo-600 rounded-none flex items-center justify-center shadow-lg shadow-indigo-600/20">
             <Wallet className="text-white" size={24} />
           </div>
           <span className="text-xl font-black tracking-tight text-gray-900">FinanceFlow</span>
@@ -25,7 +25,7 @@ const Landing = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary-50 border border-primary-100 text-primary-600 text-sm font-bold mb-8"
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-none bg-primary-50 border border-primary-100 text-primary-600 text-sm font-bold mb-8"
         >
           <Zap size={16} />
           <span>Next-Gen Personal Finance</span>
@@ -96,9 +96,9 @@ const Landing = () => {
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5, delay: 0.4 + (idx * 0.1) }}
-            className="bg-white rounded-lg p-10 border border-gray-100 shadow-sm hover:shadow-xl hover:border-primary-100 transition-all group text-center"
+            className="bg-white rounded-none p-10 border border-gray-100 shadow-sm hover:shadow-xl hover:border-primary-100 transition-all group text-center"
           >
-            <div className="w-16 h-16 bg-primary-50 rounded-lg flex items-center justify-center mb-6 mx-auto group-hover:scale-110 group-hover:bg-primary-100 transition-all">
+            <div className="w-16 h-16 bg-primary-50 rounded-none flex items-center justify-center mb-6 mx-auto group-hover:scale-110 group-hover:bg-primary-100 transition-all">
               <feature.icon className="text-primary-600" size={32} />
             </div>
             <h3 className="text-xl font-black text-gray-900 mb-4">{feature.title}</h3>

@@ -92,7 +92,7 @@ const Budget = () => {
                 </Button>
               </form>
 
-              <div className="mt-8 p-4 bg-primary-50 rounded-lg border border-primary-100">
+              <div className="mt-8 p-4 bg-primary-50 rounded-none border border-primary-100">
                 <div className="flex items-start gap-3">
                   <AlertCircle className="text-primary-600 shrink-0" size={20} />
                   <p className="text-[10px] md:text-xs text-gray-600 font-medium leading-relaxed">
@@ -115,7 +115,7 @@ const Budget = () => {
                   <Card key={budget.category} className="group transition-all bg-white border-none shadow-sm hover:shadow-md p-6">
                     <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
                       <div className="flex items-center gap-3">
-                        <div className={`w-10 h-10 md:w-12 md:h-12 rounded-lg flex items-center justify-center ${
+                        <div className={`w-10 h-10 md:w-12 md:h-12 rounded-none flex items-center justify-center ${
                           isOver ? 'bg-red-100 text-red-600' : 'bg-emerald-100 text-emerald-600'
                         }`}>
                           <PieChartIcon size={20} />
@@ -141,13 +141,13 @@ const Budget = () => {
                         <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                           <button 
                             onClick={() => handleEdit(budget)}
-                            className="p-2 hover:bg-primary-50 rounded-lg text-gray-400 hover:text-primary-600"
+                            className="p-2 hover:bg-primary-50 rounded-none text-gray-400 hover:text-primary-600"
                           >
                             <Edit2 size={16} />
                           </button>
                           <button 
                             onClick={() => setDeleteConfirm(budget._id)}
-                            className="p-2 hover:bg-red-50 rounded-lg text-gray-400 hover:text-red-600"
+                            className="p-2 hover:bg-red-50 rounded-none text-gray-400 hover:text-red-600"
                           >
                             <Trash2 size={16} />
                           </button>
@@ -156,11 +156,11 @@ const Budget = () => {
                     </div>
 
                     <div className="space-y-2">
-                      <div className="h-3 w-full bg-gray-100 rounded-full overflow-hidden">
+                      <div className="h-3 w-full bg-gray-100 rounded-none overflow-hidden">
                         <motion.div 
                           initial={{ width: 0 }}
                           animate={{ width: `${percentage}%` }}
-                          className={`h-full rounded-full transition-all duration-1000 ${
+                          className={`h-full rounded-none transition-all duration-1000 ${
                             isOver ? 'bg-red-600 shadow-[0_0_12px_rgba(239,68,68,0.3)]' : 
                             isNear ? 'bg-yellow-500 shadow-[0_0_12px_rgba(234,179,8,0.3)]' : 
                             'bg-primary-600 shadow-[0_0_12px_rgba(139,92,246,0.3)]'
@@ -174,7 +174,7 @@ const Budget = () => {
                     </div>
 
                     {isOver && (
-                      <div className="mt-4 flex items-center gap-2 text-red-600 text-xs font-bold bg-red-50 p-3 rounded-lg border border-red-100">
+                      <div className="mt-4 flex items-center gap-2 text-red-600 text-xs font-bold bg-red-50 p-3 rounded-none border border-red-100">
                         <AlertCircle size={16} />
                         <span>Exceeded by {formatCurrency(spent - budget.amount, user?.currency)}!</span>
                       </div>
@@ -184,7 +184,7 @@ const Budget = () => {
               })
             ) : (
               <Card className="py-20 flex flex-col items-center justify-center text-center bg-white border-none shadow-sm">
-                <div className="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center mb-6">
+                <div className="w-20 h-20 bg-gray-50 rounded-none flex items-center justify-center mb-6">
                   <PieChartIcon className="text-gray-300" size={40} />
                 </div>
                 <h3 className="text-xl font-bold text-gray-900 mb-2">No Budgets Set</h3>
@@ -210,9 +210,9 @@ const Budget = () => {
                 initial={{ opacity: 0, scale: 0.9 }} 
                 animate={{ opacity: 1, scale: 1 }} 
                 exit={{ opacity: 0, scale: 0.9 }}
-                className="relative w-full max-w-sm bg-white rounded-lg p-8 text-center shadow-2xl"
+                className="relative w-full max-w-sm bg-white rounded-none p-8 text-center shadow-2xl"
               >
-                <div className="w-20 h-20 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-6">
+                <div className="w-20 h-20 bg-red-50 rounded-none flex items-center justify-center mx-auto mb-6">
                   <AlertTriangle className="text-red-500" size={40} />
                 </div>
                 <h3 className="text-xl font-black text-gray-900 mb-2">Remove Budget?</h3>
