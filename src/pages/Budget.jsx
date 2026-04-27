@@ -2,13 +2,10 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { createPortal } from 'react-dom';
 import { 
-  Wallet, 
   PieChart as PieChartIcon, 
   Edit2, 
   Trash2, 
-  AlertCircle, 
-  AlertTriangle, 
-  ArrowRight 
+  AlertTriangle
 } from 'lucide-react';
 import { useFinance } from '../context/FinanceContext';
 import { useAuth } from '../context/AuthContext';

@@ -10,8 +10,6 @@ import {
   AlertTriangle,
   HandCoins,
   Calendar,
-  ArrowDownCircle,
-  ArrowUpCircle,
   CheckCircle2
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
