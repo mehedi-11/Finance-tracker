@@ -40,10 +40,15 @@ const Loans = () => {
     type: 'get'
   });
 
-  const filteredLoans = loans.filter(l => 
-    l.lender.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    l.purpose.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const currentMonth = new Date().toISOString().slice(0, 7); // YYYY-MM
+
+  const filteredLoans = loans.filter(l => {
+    const d = new Date(l.createdAt || l.expectedPayDate);
+    const monthMatch = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}` === currentMonth;
+    const searchMatch = l.lender.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                       l.purpose.toLowerCase().includes(searchTerm.toLowerCase());
+    return monthMatch && searchMatch;
+  });
 
   const handleOpenModal = (loan = null) => {
     if (loan) {

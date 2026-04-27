@@ -70,10 +70,15 @@ const Plans = () => {
     }
   };
 
-  const filteredNotes = notes.filter(n => 
-    n.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    n.content?.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const currentMonth = new Date().toISOString().slice(0, 7); // YYYY-MM
+
+  const filteredNotes = notes.filter(n => {
+    const d = new Date(n.createdAt || n.plannedDate);
+    const monthMatch = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}` === currentMonth;
+    const searchMatch = n.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                       n.content?.toLowerCase().includes(searchTerm.toLowerCase());
+    return monthMatch && searchMatch;
+  });
 
   const handleOpenModal = (note = null) => {
     if (note) {

@@ -301,6 +301,43 @@ const Dashboard = () => {
           <StatCard icon={ArrowDownCircle} color="red" label={t('common.total_expenses')} value={monthTotals.expenses} />
         </div>
 
+        {/* Extra Insights */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <Card className="bg-emerald-50/50 border-none shadow-sm flex items-center gap-4 p-4">
+            <div className="w-10 h-10 bg-emerald-100 rounded-full flex items-center justify-center text-emerald-600">
+              <TrendingUp size={20} />
+            </div>
+            <div>
+              <p className="text-[10px] uppercase font-black text-gray-400 tracking-widest">{t('reports.highest_income')}</p>
+              <h4 className="text-sm font-bold text-emerald-700">Salary</h4>
+            </div>
+          </Card>
+          
+          <Card className="bg-red-50/50 border-none shadow-sm flex items-center gap-4 p-4">
+            <div className="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center text-red-600">
+              <TrendingDown size={20} />
+            </div>
+            <div>
+              <p className="text-[10px] uppercase font-black text-gray-400 tracking-widest">{t('reports.major_spending')}</p>
+              <h4 className="text-sm font-bold text-red-700">
+                {Object.keys(monthCategoryTotals).sort((a,b) => monthCategoryTotals[b] - monthCategoryTotals[a])[0] || 'N/A'}
+              </h4>
+            </div>
+          </Card>
+
+          <Card className="bg-primary-50/50 border-none shadow-sm flex items-center gap-4 p-4">
+            <div className="w-10 h-10 bg-primary-100 rounded-full flex items-center justify-center text-primary-600">
+              <BarChart3 size={20} />
+            </div>
+            <div>
+              <p className="text-[10px] uppercase font-black text-gray-400 tracking-widest">{t('reports.saving_rate')}</p>
+              <h4 className="text-sm font-bold text-primary-700">
+                {monthTotals.income > 0 ? Math.round((monthTotals.balance / monthTotals.income) * 100) : 0}%
+              </h4>
+            </div>
+          </Card>
+        </div>
+
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           <Card className="bg-white border-none shadow-sm">
             <div className="flex items-center justify-between mb-8">
