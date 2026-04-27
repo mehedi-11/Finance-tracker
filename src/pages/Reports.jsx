@@ -22,25 +22,98 @@ import { formatCurrency } from '../utils/helpers';
 const COLORS = ['#8b5cf6', '#10b981', '#f59e0b', '#ef4444', '#3b82f6', '#ec4899', '#06b6d4', '#84cc16'];
 
 const Reports = () => {
-  const { totals, categoryTotals } = useFinance();
+  const { totals, categoryTotals, getMonthlyReports, transactions, loans } = useFinance();
   const { user } = useAuth();
   const { t } = useTranslation();
 
-  const pieData = useMemo(() => {
-    return Object.keys(categoryTotals).map((cat, index) => ({
-      name: cat,
-      value: categoryTotals[cat],
-      color: COLORS[index % COLORS.length]
-    }));
-  }, [categoryTotals]);
+  const monthlyReports = getMonthlyReports();
 
-  const barData = [
-    { name: t('common.income'), amount: totals.income, fill: '#10b981' },
-    { name: t('common.expense'), amount: totals.expenses, fill: '#ef4444' }
-  ];
+  const handlePrint = (report) => {
+    const monthTransactions = transactions.filter(t => {
+      const d = new Date(t.date);
+      return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}` === report.month;
+    });
+
+    const monthLoans = loans.filter(l => {
+      const d = new Date(l.createdAt || l.expectedPayDate);
+      return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}` === report.month;
+    });
+
+    const printWindow = window.open('', '_blank');
+    const [year, month] = report.month.split('-');
+    const monthName = new Date(year, month - 1).toLocaleString('default', { month: 'long', year: 'numeric' });
+
+    printWindow.document.write(`
+      <html>
+        <head>
+          <title>Financial Report - ${monthName}</title>
+          <style>
+            body { font-family: sans-serif; padding: 40px; color: #1e293b; }
+            .header { text-align: center; margin-bottom: 40px; border-bottom: 2px solid #f1f5f9; padding-bottom: 20px; }
+            .summary { display: grid; grid-cols: 2; gap: 20px; margin-bottom: 40px; }
+            .summary-item { padding: 15px; border: 1px solid #f1f5f9; border-radius: 8px; }
+            table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+            th, td { padding: 12px; text-align: left; border-bottom: 1px solid #f1f5f9; }
+            th { background: #f8fafc; font-size: 12px; text-transform: uppercase; }
+            .income { color: #10b981; }
+            .expense { color: #ef4444; }
+          </style>
+        </head>
+        <body>
+          <div class="header">
+            <h1>FinanceFlow Monthly Report</h1>
+            <p>${monthName}</p>
+          </div>
+          <div class="summary">
+            <div class="summary-item"><strong>Total Income:</strong> ${formatCurrency(report.income, user?.currency)}</div>
+            <div class="summary-item"><strong>Total Expense:</strong> ${formatCurrency(report.expense, user?.currency)}</div>
+            <div class="summary-item"><strong>Savings:</strong> ${formatCurrency(report.savings, user?.currency)}</div>
+            <div class="summary-item"><strong>Loan Taken:</strong> ${formatCurrency(report.loansTaken, user?.currency)}</div>
+            <div class="summary-item"><strong>Loan Paid:</strong> ${formatCurrency(report.loansPaid, user?.currency)}</div>
+          </div>
+          
+          <h3>Transactions</h3>
+          <table>
+            <thead>
+              <tr><th>Date</th><th>Category</th><th>Description</th><th>Amount</th></tr>
+            </thead>
+            <tbody>
+              ${monthTransactions.map(t => `
+                <tr>
+                  <td>${new Date(t.date).toLocaleDateString()}</td>
+                  <td>${t.category}</td>
+                  <td>${t.description}</td>
+                  <td class="${t.type}">${t.type === 'income' ? '+' : '-'}${formatCurrency(t.amount, user?.currency)}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+
+          <h3>Loans Activity</h3>
+          <table>
+            <thead>
+              <tr><th>Source</th><th>Purpose</th><th>Amount</th><th>Status</th></tr>
+            </thead>
+            <tbody>
+              ${monthLoans.map(l => `
+                <tr>
+                  <td>${l.lender}</td>
+                  <td>${l.purpose}</td>
+                  <td>${formatCurrency(l.amount, user?.currency)}</td>
+                  <td>${l.isPaid ? 'Settled' : 'Active'}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+          <script>window.print();</script>
+        </body>
+      </html>
+    `);
+    printWindow.document.close();
+  };
 
   return (
-    <div className="space-y-8 animate-fade-in">
+    <div className="space-y-8 animate-fade-in pb-20">
       <div>
         <h1 className="text-3xl font-bold text-gray-900">{t('reports.title')}</h1>
         <p className="text-gray-500 font-medium">{t('reports.subtitle')}</p>
@@ -84,6 +157,60 @@ const Reports = () => {
                 {totals.income > 0 ? Math.round((totals.balance / totals.income) * 100) : 0}%
               </h4>
             </div>
+          </div>
+        </Card>
+      </div>
+
+      <div className="space-y-6">
+        <h2 className="text-2xl font-bold text-gray-900">Monthly Records</h2>
+        <Card className="p-0 bg-white border-none shadow-sm overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="w-full text-left border-collapse min-w-[800px]">
+              <thead>
+                <tr className="border-b border-gray-50 text-gray-400 text-xs uppercase tracking-widest font-black">
+                  <th className="px-6 py-4">Month</th>
+                  <th className="px-6 py-4 text-emerald-600">Total Income</th>
+                  <th className="px-6 py-4 text-red-600">Total Expense</th>
+                  <th className="px-6 py-4 text-primary-600">Savings</th>
+                  <th className="px-6 py-4 text-amber-600">Loan Taken</th>
+                  <th className="px-6 py-4 text-indigo-600">Loan Paid</th>
+                  <th className="px-6 py-4 text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-50">
+                {monthlyReports.length > 0 ? (
+                  monthlyReports.map((report) => {
+                    const [year, month] = report.month.split('-');
+                    const monthName = new Date(year, month - 1).toLocaleString('default', { month: 'long', year: 'numeric' });
+                    return (
+                      <tr key={report.month} className="hover:bg-gray-50/50 transition-colors">
+                        <td className="px-6 py-4 font-bold text-gray-900">{monthName}</td>
+                        <td className="px-6 py-4 font-bold text-emerald-600">{formatCurrency(report.income, user?.currency)}</td>
+                        <td className="px-6 py-4 font-bold text-red-600">{formatCurrency(report.expense, user?.currency)}</td>
+                        <td className="px-6 py-4 font-bold text-primary-600">{formatCurrency(report.savings, user?.currency)}</td>
+                        <td className="px-6 py-4 font-bold text-amber-600">{formatCurrency(report.loansTaken, user?.currency)}</td>
+                        <td className="px-6 py-4 font-bold text-indigo-600">{formatCurrency(report.loansPaid, user?.currency)}</td>
+                        <td className="px-6 py-4 text-right space-x-2">
+                          <button 
+                            onClick={() => handlePrint(report)}
+                            className="p-2 bg-gray-50 text-gray-500 hover:text-primary-600 rounded-xl transition-all"
+                            title="Download PDF"
+                          >
+                            <ArrowDownCircle size={20} />
+                          </button>
+                        </td>
+                      </tr>
+                    );
+                  })
+                ) : (
+                  <tr>
+                    <td colSpan="7" className="px-6 py-20 text-center text-gray-400 font-bold">
+                      No monthly records generated yet.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
           </div>
         </Card>
       </div>

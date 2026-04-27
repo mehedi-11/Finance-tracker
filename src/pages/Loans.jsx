@@ -24,15 +24,7 @@ import { useTranslation } from 'react-i18next';
 const Loans = () => {
   const { t } = useTranslation();
   const { user } = useAuth();
-  const { fetchFinanceData } = useFinance();
-  const [loans, setLoans] = useState(() => {
-    try {
-      const cached = localStorage.getItem('finance_loans');
-      return cached ? JSON.parse(cached) : [];
-    } catch (e) {
-      return [];
-    }
-  });
+  const { loans, addLoan, deleteLoan, updateLoan } = useFinance();
   const [searchTerm, setSearchTerm] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingLoan, setEditingLoan] = useState(null);
@@ -45,28 +37,8 @@ const Loans = () => {
     amount: '',
     expectedPayDate: new Date().toISOString().split('T')[0],
     isPaid: false,
-    type: 'get' // Default to 'Received'
+    type: 'get'
   });
-
-  useEffect(() => {
-    fetchLoans();
-  }, [user]);
-
-  const fetchLoans = async () => {
-    if (!user?.token) return;
-    try {
-      const response = await fetch(API_ENDPOINTS.LOANS, {
-        headers: { 'Authorization': `Bearer ${user.token}` }
-      });
-      const data = await response.json();
-      if (Array.isArray(data)) {
-        setLoans(data);
-        localStorage.setItem('finance_loans', JSON.stringify(data));
-      }
-    } catch (err) {
-      console.error('Failed to fetch loans:', err);
-    }
-  };
 
   const filteredLoans = loans.filter(l => 
     l.lender.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -101,25 +73,15 @@ const Loans = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    const url = editingLoan ? `${API_ENDPOINTS.LOANS}/${editingLoan._id}` : API_ENDPOINTS.LOANS;
-    const method = editingLoan ? 'PUT' : 'POST';
-
     try {
-      const response = await fetch(url, {
-        method,
-        headers: { 
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${user.token}`
-        },
-        body: JSON.stringify(formData),
-      });
-
-      if (response.ok) {
-        toast.success(editingLoan ? 'Loan record updated!' : 'Loan record saved!');
-        setIsModalOpen(false);
-        fetchLoans();
-        fetchFinanceData();
+      if (editingLoan) {
+        await updateLoan(editingLoan._id, formData);
+        toast.success('Loan record updated!');
+      } else {
+        await addLoan(formData);
+        toast.success('Loan record saved!');
       }
+      setIsModalOpen(false);
     } catch (err) {
       toast.error('Operation failed');
     } finally {
@@ -130,16 +92,9 @@ const Loans = () => {
   const handleDelete = async () => {
     if (!deleteConfirm) return;
     try {
-      const response = await fetch(`${API_ENDPOINTS.LOANS}/${deleteConfirm}`, {
-        method: 'DELETE',
-        headers: { 'Authorization': `Bearer ${user.token}` }
-      });
-      if (response.ok) {
-        toast.success('Record removed');
-        setDeleteConfirm(null);
-        fetchLoans();
-        fetchFinanceData();
-      }
+      await deleteLoan(deleteConfirm);
+      toast.success('Record removed');
+      setDeleteConfirm(null);
     } catch (err) {
       toast.error('Delete failed');
     }
@@ -147,18 +102,8 @@ const Loans = () => {
 
   const togglePaidStatus = async (loan) => {
     try {
-      const response = await fetch(`${API_ENDPOINTS.LOANS}/${loan._id}`, {
-        method: 'PUT',
-        headers: { 
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${user.token}`
-        },
-        body: JSON.stringify({ isPaid: !loan.isPaid }),
-      });
-      if (response.ok) {
-        fetchLoans();
-        toast.success('Status updated!');
-      }
+      await updateLoan(loan._id, { isPaid: !loan.isPaid });
+      toast.success('Status updated!');
     } catch (err) {
       toast.error('Failed to update status');
     }

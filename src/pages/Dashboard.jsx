@@ -47,21 +47,41 @@ import { useTranslation } from 'react-i18next';
 const NOTES_URL = API_ENDPOINTS.NOTES;
 
 const Dashboard = () => {
-  const { transactions, totals, categoryTotals } = useFinance();
+  const { transactions, totals, categoryTotals, getMonthlyReports, loans } = useFinance();
   const { user } = useAuth();
   const { t } = useTranslation();
 
+  const currentMonth = new Date().toISOString().slice(0, 7); // YYYY-MM
+
+  const currentMonthTransactions = transactions.filter(t => {
+    const d = new Date(t.date);
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}` === currentMonth;
+  });
+
+  const monthTotals = {
+    income: currentMonthTransactions.filter(t => t.type === 'income').reduce((sum, t) => sum + Number(t.amount), 0),
+    expenses: currentMonthTransactions.filter(t => t.type === 'expense').reduce((sum, t) => sum + Number(t.amount), 0),
+  };
+  monthTotals.balance = monthTotals.income - monthTotals.expenses;
+
+  const monthCategoryTotals = currentMonthTransactions
+    .filter(t => t.type === 'expense')
+    .reduce((acc, t) => {
+      acc[t.category] = (acc[t.category] || 0) + Number(t.amount);
+      return acc;
+    }, {});
+
   const COLORS = ['#8b5cf6', '#10b981', '#f59e0b', '#ef4444', '#3b82f6', '#ec4899', '#06b6d4', '#84cc16'];
 
-  const pieData = Object.keys(categoryTotals).map((cat, index) => ({
+  const pieData = Object.keys(monthCategoryTotals).map((cat, index) => ({
     name: cat,
-    value: categoryTotals[cat],
+    value: monthCategoryTotals[cat],
     color: COLORS[index % COLORS.length]
   }));
 
   const barData = [
-    { name: t('common.income'), amount: totals.income, fill: '#10b981' },
-    { name: t('common.expense'), amount: totals.expenses, fill: '#ef4444' }
+    { name: t('common.income'), amount: monthTotals.income, fill: '#10b981' },
+    { name: t('common.expense'), amount: monthTotals.expenses, fill: '#ef4444' }
   ];
   const [notes, setNotes] = useState(() => {
     try {
@@ -180,7 +200,59 @@ const Dashboard = () => {
     }
   }, [notes, user]);
 
-  const recentTransactions = transactions?.slice(0, 5) || [];
+  // Seed Dummy Data for 4 months if requested
+  useEffect(() => {
+    const seedData = async () => {
+      if (!user || localStorage.getItem('finance_seeded')) return;
+      
+      const categories = ['Food', 'Transport', 'Rent', 'Salary', 'Shopping', 'Bills'];
+      const months = [1, 2, 3, 4]; // Last 4 months
+      const year = new Date().getFullYear();
+
+      for (const m of months) {
+        const month = new Date().getMonth() - m;
+        const date = new Date(year, month, 15).toISOString();
+        
+        // Add Salary (Income)
+        await addTransaction({
+          type: 'income',
+          amount: 25000 + (Math.random() * 5000),
+          category: 'Salary',
+          description: 'Monthly Salary',
+          date
+        });
+
+        // Add 3 Expenses
+        for (let i = 0; i < 3; i++) {
+          await addTransaction({
+            type: 'expense',
+            amount: 500 + (Math.random() * 2000),
+            category: categories[Math.floor(Math.random() * categories.length)],
+            description: 'Sample expense',
+            date
+          });
+        }
+
+        // Add a Loan
+        await addLoan({
+          lender: 'Bank ' + m,
+          purpose: 'Emergency',
+          amount: 5000,
+          expectedPayDate: date,
+          type: 'get',
+          isPaid: m > 2 // Some paid, some not
+        });
+      }
+
+      localStorage.setItem('finance_seeded', 'true');
+      fetchFinanceData();
+      toast.success('Dummy data seeded for testing!');
+    };
+
+    seedData();
+  }, [user]);
+
+  const recentTransactions = currentMonthTransactions.slice(0, 5) || [];
 
   return (
     <>
@@ -224,9 +296,9 @@ const Dashboard = () => {
 
         {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <StatCard icon={Banknote} color="primary" label={t('common.total_balance')} value={totals.balance} />
-          <StatCard icon={ArrowUpCircle} color="emerald" label={t('common.total_income')} value={totals.income} />
-          <StatCard icon={ArrowDownCircle} color="red" label={t('common.total_expenses')} value={totals.expenses} />
+          <StatCard icon={Banknote} color="primary" label={t('common.total_balance')} value={monthTotals.balance} />
+          <StatCard icon={ArrowUpCircle} color="emerald" label={t('common.total_income')} value={monthTotals.income} />
+          <StatCard icon={ArrowDownCircle} color="red" label={t('common.total_expenses')} value={monthTotals.expenses} />
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
