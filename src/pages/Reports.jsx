@@ -22,7 +22,7 @@ import { formatCurrency } from '../utils/helpers';
 const COLORS = ['#8b5cf6', '#10b981', '#f59e0b', '#ef4444', '#3b82f6', '#ec4899', '#06b6d4', '#84cc16'];
 
 const Reports = () => {
-  const { totals, categoryTotals, getMonthlyReports, transactions, loans } = useFinance();
+  const { totals, categoryTotals, getMonthlyReports, transactions, loans, addTransaction, addLoan } = useFinance();
   const { user } = useAuth();
   const { t } = useTranslation();
 
@@ -114,9 +114,30 @@ const Reports = () => {
 
   return (
     <div className="space-y-8 animate-fade-in pb-20">
-      <div>
-        <h1 className="text-3xl font-bold text-gray-900">{t('reports.title')}</h1>
-        <p className="text-gray-500 font-medium">{t('reports.subtitle')}</p>
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900">{t('reports.title')}</h1>
+          <p className="text-gray-500 font-medium">{t('reports.subtitle')}</p>
+        </div>
+        <Button 
+          variant="secondary" 
+          className="bg-primary-50 text-primary-600 border-none font-bold flex items-center gap-2"
+          onClick={async () => {
+            const categories = ['Food', 'Transport', 'Rent', 'Salary', 'Shopping', 'Bills'];
+            const months = [1, 2, 3, 4];
+            const year = new Date().getFullYear();
+            toast.loading('Generating sample data...');
+            for (const m of months) {
+              const month = new Date().getMonth() - m;
+              const date = new Date(year, month, 15).toISOString();
+              await addTransaction({ type: 'income', amount: 30000, category: 'Salary', description: 'Monthly Salary', date });
+              await addLoan({ lender: 'Bank ' + m, purpose: 'Test', amount: 5000, expectedPayDate: date, type: 'get', isPaid: m > 2 });
+            }
+            window.location.reload();
+          }}
+        >
+          <TrendingUp size={18} /> Generate Sample Data
+        </Button>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-8">
