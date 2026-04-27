@@ -197,24 +197,24 @@ const Dashboard = () => {
               </p>
             </div>
             
-            <div className="grid grid-cols-2 sm:flex sm:flex-wrap gap-4 md:gap-3">
-              <Link to="/budget" className="flex-1 sm:flex-none">
-                <Button variant="secondary" className="w-full h-11 flex items-center justify-center gap-2 bg-white/5 border-white/10 text-white hover:bg-white/20 backdrop-blur-xl rounded-xl transition-all text-xs md:text-sm font-bold px-4">
+            <div className="grid grid-cols-2 gap-3 sm:gap-4 w-full md:w-auto">
+              <Link to="/budget" className="w-full">
+                <Button variant="secondary" className="w-full h-11 flex items-center justify-center gap-2 bg-white/5 border-white/10 text-white hover:bg-white/20 backdrop-blur-xl rounded-xl transition-all text-xs md:text-sm font-bold px-3">
                   <Wallet size={18} className="text-primary-300" /> {t('common.budget')}
                 </Button>
               </Link>
-              <Link to="/loans" className="flex-1 sm:flex-none">
-                <Button variant="secondary" className="w-full h-11 flex items-center justify-center gap-2 bg-white/5 border-white/10 text-white hover:bg-white/20 backdrop-blur-xl rounded-xl transition-all text-xs md:text-sm font-bold px-4">
+              <Link to="/loans" className="w-full">
+                <Button variant="secondary" className="w-full h-11 flex items-center justify-center gap-2 bg-white/5 border-white/10 text-white hover:bg-white/20 backdrop-blur-xl rounded-xl transition-all text-xs md:text-sm font-bold px-3">
                   <HandCoins size={18} className="text-primary-300" /> {t('common.loans')}
                 </Button>
               </Link>
-              <Link to="/plans" className="flex-1 sm:flex-none">
-                <Button variant="secondary" className="w-full h-11 flex items-center justify-center gap-2 bg-white/5 border-white/10 text-white hover:bg-white/20 backdrop-blur-xl rounded-xl transition-all text-xs md:text-sm font-bold px-4">
+              <Link to="/plans" className="w-full">
+                <Button variant="secondary" className="w-full h-11 flex items-center justify-center gap-2 bg-white/5 border-white/10 text-white hover:bg-white/20 backdrop-blur-xl rounded-xl transition-all text-xs md:text-sm font-bold px-3">
                   <StickyNote size={18} className="text-primary-300" /> {t('common.my_plan')}
                 </Button>
               </Link>
-              <Link to="/transactions" className="flex-1 sm:flex-none">
-                <Button className="w-full h-11 flex items-center justify-center gap-2 bg-primary-600 text-white hover:bg-primary-700 border-none rounded-xl shadow-lg shadow-primary-600/20 transition-all text-xs md:text-sm font-bold px-4">
+              <Link to="/transactions" className="w-full">
+                <Button className="w-full h-11 flex items-center justify-center gap-2 bg-primary-600 text-white hover:bg-primary-700 border-none rounded-xl shadow-lg shadow-primary-600/20 transition-all text-xs md:text-sm font-bold px-3">
                   <Plus size={18} /> {t('dashboard.add_transaction')}
                 </Button>
               </Link>
