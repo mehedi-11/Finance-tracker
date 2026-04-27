@@ -406,7 +406,7 @@ const StatCard = ({ icon: Icon, color, label, value }) => {
             {formatCurrency(value || 0, user?.currency)}
           </h2>
         </div>
-        <div className={`w-12 h-12 bg-${color}-100 rounded-xl flex items-center justify-center`}>
+        <div className={`w-12 h-12 bg-${color}-100 rounded-full flex items-center justify-center`}>
           <Icon className={`text-${color}-600`} size={24} />
         </div>
       </div>
