@@ -11,8 +11,14 @@ const API_URL = API_ENDPOINTS.FINANCE;
 
 export const FinanceProvider = ({ children }) => {
   const { user } = useAuth();
-  const [transactions, setTransactions] = useState([]);
-  const [budgets, setBudgets] = useState([]);
+  const [transactions, setTransactions] = useState(() => {
+    const cached = localStorage.getItem('finance_transactions');
+    return cached ? JSON.parse(cached) : [];
+  });
+  const [budgets, setBudgets] = useState(() => {
+    const cached = localStorage.getItem('finance_budgets');
+    return cached ? JSON.parse(cached) : [];
+  });
 
   const fetchFinanceData = async () => {
     if (!user?.token) return;
@@ -30,8 +36,14 @@ export const FinanceProvider = ({ children }) => {
       const transData = await transRes.json();
       const budgetData = await budgetRes.json();
 
-      if (transRes.ok) setTransactions(transData);
-      if (budgetRes.ok) setBudgets(budgetData);
+      if (transRes.ok) {
+        setTransactions(transData);
+        localStorage.setItem('finance_transactions', JSON.stringify(transData));
+      }
+      if (budgetRes.ok) {
+        setBudgets(budgetData);
+        localStorage.setItem('finance_budgets', JSON.stringify(budgetData));
+      }
     } catch (error) {
       console.error('Failed to fetch finance data:', error);
     }
@@ -43,8 +55,23 @@ export const FinanceProvider = ({ children }) => {
     } else {
       setTransactions([]);
       setBudgets([]);
+      localStorage.removeItem('finance_transactions');
+      localStorage.removeItem('finance_budgets');
     }
   }, [user]);
+
+  // Sync state to localStorage whenever it changes manually (add/edit/delete)
+  useEffect(() => {
+    if (user && transactions.length > 0) {
+      localStorage.setItem('finance_transactions', JSON.stringify(transactions));
+    }
+  }, [transactions, user]);
+
+  useEffect(() => {
+    if (user && budgets.length > 0) {
+      localStorage.setItem('finance_budgets', JSON.stringify(budgets));
+    }
+  }, [budgets, user]);
 
   const addTransaction = async (transaction) => {
     const response = await fetch(`${API_URL}/transactions`, {

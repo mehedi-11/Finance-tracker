@@ -28,7 +28,10 @@ const NOTES_URL = API_ENDPOINTS.NOTES;
 const Dashboard = () => {
   const { transactions, totals } = useFinance();
   const { user } = useAuth();
-  const [notes, setNotes] = useState([]);
+  const [notes, setNotes] = useState(() => {
+    const cached = localStorage.getItem('finance_notes');
+    return cached ? JSON.parse(cached) : [];
+  });
   const [isNoteModalOpen, setIsNoteModalOpen] = useState(false);
   const [editingNote, setEditingNote] = useState(null);
   const [deleteConfirm, setDeleteConfirm] = useState(null);
@@ -46,6 +49,7 @@ const Dashboard = () => {
       const data = await response.json();
       if (Array.isArray(data)) {
         setNotes(data);
+        localStorage.setItem('finance_notes', JSON.stringify(data));
       }
     } catch (err) {
       console.error('Notes fetch error:', err);
@@ -128,6 +132,14 @@ const Dashboard = () => {
       toast.error('Failed to update status');
     }
   };
+  // Sync notes to localStorage whenever they change
+  useEffect(() => {
+    if (user && notes.length > 0) {
+      localStorage.setItem('finance_notes', JSON.stringify(notes));
+    } else if (!user) {
+      localStorage.removeItem('finance_notes');
+    }
+  }, [notes, user]);
 
   const recentTransactions = transactions?.slice(0, 5) || [];
 
