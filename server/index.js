@@ -6,6 +6,7 @@ const authRoutes = require('./routes/authRoutes');
 const financeRoutes = require('./routes/financeRoutes');
 const noteRoutes = require('./routes/noteRoutes');
 const notificationRoutes = require('./routes/notificationRoutes');
+const loanRoutes = require('./routes/loanRoutes');
 
 dotenv.config({ path: './server/.env' });
 connectDB();
@@ -24,6 +25,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/finance', financeRoutes);
 app.use('/api/notes', noteRoutes);
 app.use('/api/notifications', notificationRoutes);
+app.use('/api/loans', loanRoutes);
 
 app.get('/', (req, res) => {
   res.send('Finance Tracker API is running...');

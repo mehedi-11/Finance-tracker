@@ -14,7 +14,9 @@ import {
   Edit2, 
   Trash2, 
   X, 
-  AlertTriangle 
+  AlertTriangle,
+  LayoutDashboard,
+  HandCoins
 } from 'lucide-react';
 import { useFinance } from '../context/FinanceContext';
 import { useAuth } from '../context/AuthContext';
@@ -156,13 +158,25 @@ const Dashboard = () => {
             <h1 className="text-3xl font-bold text-gray-900 leading-tight">Hello, {user?.name || 'User'}!</h1>
             <p className="text-gray-600 font-medium text-sm">Track your progress and plan your future costs.</p>
           </div>
-          <div className="flex gap-2">
-            <Button variant="secondary" onClick={() => handleOpenModal()} className="flex items-center gap-2 bg-white border-gray-200">
-              <StickyNote size={20} className="text-primary-600" /> New Note
-            </Button>
-            <Link to="/transactions">
-              <Button className="flex items-center gap-2">
-                <Plus size={20} /> Add Transaction
+          <div className="grid grid-cols-2 sm:flex gap-3">
+            <Link to="/budget" className="flex-1 sm:flex-none">
+              <Button variant="secondary" className="w-full flex items-center justify-center gap-2 bg-white border-gray-200">
+                <LayoutDashboard size={18} className="text-primary-600" /> Budget
+              </Button>
+            </Link>
+            <Link to="/loans" className="flex-1 sm:flex-none">
+              <Button variant="secondary" className="w-full flex items-center justify-center gap-2 bg-white border-gray-200">
+                <HandCoins size={18} className="text-amber-600" /> Loans
+              </Button>
+            </Link>
+            <Link to="/plans" className="flex-1 sm:flex-none">
+              <Button variant="secondary" className="w-full flex items-center justify-center gap-2 bg-white border-gray-200">
+                <StickyNote size={18} className="text-primary-600" /> My Plan
+              </Button>
+            </Link>
+            <Link to="/transactions" className="flex-1 sm:flex-none">
+              <Button className="w-full flex items-center justify-center gap-2">
+                <Plus size={18} /> Transaction
               </Button>
             </Link>
           </div>

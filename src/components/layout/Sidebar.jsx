@@ -6,7 +6,9 @@ import {
   Wallet, 
   User,
   LogOut,
-  X
+  X,
+  HandCoins,
+  StickyNote
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { motion } from 'framer-motion';
@@ -18,8 +20,10 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
   const menuItems = [
     { icon: LayoutDashboard, label: 'Dashboard', path: '/dashboard' },
     { icon: Receipt, label: 'Transactions', path: '/transactions' },
-    { icon: PieChart, label: 'Reports', path: '/reports' },
     { icon: Wallet, label: 'Budget', path: '/budget' },
+    { icon: HandCoins, label: 'Loans', path: '/loans' },
+    { icon: StickyNote, label: 'My Plan', path: '/plans' },
+    { icon: PieChart, label: 'Reports', path: '/reports' },
     { icon: User, label: 'Profile', path: '/profile' },
   ];
 
