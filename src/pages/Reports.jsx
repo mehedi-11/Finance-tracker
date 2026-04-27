@@ -69,7 +69,7 @@ const Reports = () => {
     const monthName = new Date(year, month - 1).toLocaleString('default', { month: 'long', year: 'numeric' });
 
     const element = document.createElement('div');
-    element.style.padding = '1in';
+    element.style.padding = '0.4in';
     element.style.width = '8.27in'; // A4 width
     element.style.background = '#ffffff';
     element.innerHTML = `
@@ -167,20 +167,25 @@ const Reports = () => {
     const pdf = new jsPDF('p', 'mm', 'a4');
     const pdfWidth = pdf.internal.pageSize.getWidth();
     const pdfHeight = pdf.internal.pageSize.getHeight();
-    const imgWidth = pdfWidth;
+    
+    const margin = 10.16; // 0.4 inch in mm
+    const contentWidth = pdfWidth - (margin * 2);
+    const contentHeight = pdfHeight - (margin * 2);
+    
+    const imgWidth = contentWidth;
     const imgHeight = (canvas.height * imgWidth) / canvas.width;
     
     let heightLeft = imgHeight;
-    let position = 0;
+    let position = margin; // Start at top margin
 
-    pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-    heightLeft -= pdfHeight;
+    pdf.addImage(imgData, 'PNG', margin, position, imgWidth, imgHeight);
+    heightLeft -= contentHeight;
 
-    while (heightLeft >= 0) {
-      position = heightLeft - imgHeight;
+    while (heightLeft > 0) {
+      position = (heightLeft - imgHeight) + margin - contentHeight;
       pdf.addPage();
-      pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-      heightLeft -= pdfHeight;
+      pdf.addImage(imgData, 'PNG', margin, position, imgWidth, imgHeight);
+      heightLeft -= contentHeight;
     }
 
     pdf.save(`FinanceFlow-Report-${report.month}.pdf`);
