@@ -16,8 +16,26 @@ import {
   X, 
   AlertTriangle,
   LayoutDashboard,
-  HandCoins
+  HandCoins,
+  Banknote,
+  ArrowUpCircle,
+  ArrowDownCircle,
+  PieChart as PieChartIcon,
+  BarChart3
 } from 'lucide-react';
+import { 
+  BarChart, 
+  Bar, 
+  XAxis, 
+  YAxis, 
+  CartesianGrid, 
+  Tooltip as RechartsTooltip, 
+  ResponsiveContainer, 
+  PieChart, 
+  Pie, 
+  Cell,
+  Legend
+} from 'recharts';
 import { useFinance } from '../context/FinanceContext';
 import { useAuth } from '../context/AuthContext';
 import { Button, Card, Input } from '../components/ui';
@@ -29,9 +47,22 @@ import { useTranslation } from 'react-i18next';
 const NOTES_URL = API_ENDPOINTS.NOTES;
 
 const Dashboard = () => {
-  const { transactions, totals } = useFinance();
+  const { transactions, totals, categoryTotals } = useFinance();
   const { user } = useAuth();
   const { t } = useTranslation();
+
+  const COLORS = ['#8b5cf6', '#10b981', '#f59e0b', '#ef4444', '#3b82f6', '#ec4899', '#06b6d4', '#84cc16'];
+
+  const pieData = Object.keys(categoryTotals).map((cat, index) => ({
+    name: cat,
+    value: categoryTotals[cat],
+    color: COLORS[index % COLORS.length]
+  }));
+
+  const barData = [
+    { name: 'Income', amount: totals.income, fill: '#10b981' },
+    { name: 'Expenses', amount: totals.expenses, fill: '#ef4444' }
+  ];
   const [notes, setNotes] = useState(() => {
     try {
       const cached = localStorage.getItem('finance_notes');
@@ -163,17 +194,17 @@ const Dashboard = () => {
           <div className="grid grid-cols-2 sm:flex sm:flex-wrap gap-3">
             <Link to="/budget" className="flex-1 sm:flex-none">
               <Button variant="secondary" className="w-full flex items-center justify-center gap-2 bg-white border-gray-200">
-                <LayoutDashboard size={18} className="text-primary-600" /> {t('common.budget')}
+                <Wallet size={18} className="text-purple-600" /> {t('common.budget')}
               </Button>
             </Link>
             <Link to="/loans" className="flex-1 sm:flex-none">
               <Button variant="secondary" className="w-full flex items-center justify-center gap-2 bg-white border-gray-200">
-                <HandCoins size={18} className="text-amber-600" /> {t('common.loans')}
+                <HandCoins size={18} className="text-purple-600" /> {t('common.loans')}
               </Button>
             </Link>
             <Link to="/plans" className="flex-1 sm:flex-none">
               <Button variant="secondary" className="w-full flex items-center justify-center gap-2 bg-white border-gray-200">
-                <StickyNote size={18} className="text-primary-600" /> {t('common.my_plan')}
+                <StickyNote size={18} className="text-purple-600" /> {t('common.my_plan')}
               </Button>
             </Link>
             <Link to="/transactions" className="flex-1 sm:flex-none">
@@ -186,102 +217,84 @@ const Dashboard = () => {
 
         {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <StatCard icon={Wallet} color="primary" label="Total Balance" value={totals.balance} />
-          <StatCard icon={ArrowUpRight} color="emerald" label="Total Income" value={totals.income} />
-          <StatCard icon={ArrowDownRight} color="red" label="Total Expenses" value={totals.expenses} />
+          <StatCard icon={Banknote} color="primary" label="Total Balance" value={totals.balance} />
+          <StatCard icon={ArrowUpCircle} color="emerald" label="Total Income" value={totals.income} />
+          <StatCard icon={ArrowDownCircle} color="red" label="Total Expenses" value={totals.expenses} />
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Recent Activity */}
-          <div className="lg:col-span-2 space-y-8">
-            <Card className="bg-white border-none shadow-sm">
-              <div className="flex items-center justify-between mb-6">
-                <h3 className="text-xl font-bold text-gray-900">Recent Activity</h3>
-                <Link to="/transactions" className="text-primary-600 text-sm font-bold hover:underline">View All</Link>
-              </div>
-              
-              <div className="space-y-4">
-                {recentTransactions.length > 0 ? (
-                  recentTransactions.map((t) => (
-                    <div key={t._id} className="flex items-center justify-between group p-3 hover:bg-gray-50 rounded-xl transition-all border border-transparent hover:border-gray-100">
-                      <div className="flex items-center gap-4">
-                        <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${
-                          t.type === 'income' ? 'bg-emerald-100 text-emerald-600' : 'bg-red-100 text-red-600'
-                        }`}>
-                          {t.type === 'income' ? <ArrowUpRight size={20} /> : <ArrowDownRight size={20} />}
-                        </div>
-                        <div>
-                          <p className="text-sm font-bold text-gray-900">{t.description}</p>
-                          <p className="text-xs text-gray-500 font-medium">{t.category} • {formatDate(t.date)}</p>
-                        </div>
-                      </div>
-                      <p className={`text-sm font-black ${
-                        t.type === 'income' ? 'text-emerald-600' : 'text-red-600'
-                      }`}>
-                        {t.type === 'income' ? '+' : '-'}{formatCurrency(t.amount, user?.currency)}
-                      </p>
-                    </div>
-                  ))
-                ) : (
-                  <div className="flex flex-col items-center justify-center py-10 text-gray-400">
-                    <ReceiptText size={48} className="mb-4 opacity-20" />
-                    <p>No transactions yet</p>
-                  </div>
-                )}
-              </div>
-            </Card>
-          </div>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <Card className="bg-white border-none shadow-sm">
+            <div className="flex items-center justify-between mb-8">
+              <h3 className="text-xl font-bold flex items-center gap-2 text-gray-900">
+                <PieChartIcon className="text-purple-600" size={24} />
+                Spending by Category
+              </h3>
+            </div>
+            <div className="h-[350px] w-full">
+              {pieData.length > 0 ? (
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie
+                      data={pieData}
+                      cx="50%"
+                      cy="50%"
+                      innerRadius={70}
+                      outerRadius={100}
+                      paddingAngle={5}
+                      dataKey="value"
+                    >
+                      {pieData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={entry.color} stroke="none" />
+                      ))}
+                    </Pie>
+                    <RechartsTooltip 
+                      contentStyle={{ 
+                        backgroundColor: '#fff', 
+                        borderColor: '#f1f5f9', 
+                        borderRadius: '12px',
+                        color: '#1e293b',
+                        boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)'
+                      }}
+                      formatter={(value) => formatCurrency(value, user?.currency)}
+                    />
+                    <Legend verticalAlign="bottom" height={36}/>
+                  </PieChart>
+                </ResponsiveContainer>
+              ) : (
+                <div className="flex items-center justify-center h-full text-gray-500 font-medium">
+                  No expense data available
+                </div>
+              )}
+            </div>
+          </Card>
 
-          {/* Future Cost Plans (Notes) */}
-          <div className="lg:col-span-1 space-y-6">
-            <Card className="bg-white border-none shadow-sm h-full min-h-[400px]">
-              <div className="flex items-center justify-between mb-6">
-                <h3 className="text-xl font-bold text-gray-900 flex items-center gap-2">
-                  <StickyNote className="text-primary-600" size={24} /> Future Plans
-                </h3>
-              </div>
-              
-              <div className="space-y-4">
-                {Array.isArray(notes) && notes.length > 0 ? (
-                  notes.map((note) => (
-                    <div key={note._id} className={`p-4 rounded-xl border transition-all space-y-2 relative group ${
-                      note.isCompleted ? 'bg-gray-50/50 border-gray-100 opacity-70' : 'bg-white border-gray-100 shadow-sm hover:shadow-md'
-                    }`}>
-                      <div className="flex items-start justify-between gap-2">
-                        <button 
-                          onClick={() => toggleNoteStatus(note)}
-                          className={`mt-1 shrink-0 ${note.isCompleted ? 'text-emerald-500' : 'text-gray-300 hover:text-primary-500'}`}
-                        >
-                          {note.isCompleted ? <CheckCircle2 size={18} /> : <Circle size={18} />}
-                        </button>
-                        <div className="flex-1 min-w-0">
-                          <h4 className={`font-bold text-sm ${note.isCompleted ? 'text-gray-500 line-through' : 'text-gray-900'}`}>{note.title}</h4>
-                          <p className="text-[11px] text-gray-500 mt-0.5 line-clamp-2">{note.content}</p>
-                        </div>
-                        <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                          <button onClick={() => handleOpenModal(note)} className="p-1.5 hover:bg-gray-100 rounded-xl text-gray-400 hover:text-primary-600">
-                            <Edit2 size={14} />
-                          </button>
-                          <button onClick={() => setDeleteConfirm(note._id)} className="p-1.5 hover:bg-gray-100 rounded-xl text-gray-400 hover:text-red-600">
-                            <Trash2 size={14} />
-                          </button>
-                        </div>
-                      </div>
-                      
-                      <div className="flex items-center justify-between pt-1">
-                        <span className="text-[9px] font-black text-primary-600 uppercase tracking-widest">{note.plannedDate ? formatDate(note.plannedDate) : 'No Date'}</span>
-                        <span className="text-xs font-bold text-gray-900">{formatCurrency(note.amount, user?.currency)}</span>
-                      </div>
-                    </div>
-                  ))
-                ) : (
-                  <div className="flex flex-col items-center justify-center py-10 text-gray-400 border-2 border-dashed border-gray-100 rounded-xl">
-                    <p className="text-sm font-medium">No plans noted yet.</p>
-                  </div>
-                )}
-              </div>
-            </Card>
-          </div>
+          <Card className="bg-white border-none shadow-sm">
+            <div className="flex items-center justify-between mb-8">
+              <h3 className="text-xl font-bold flex items-center gap-2 text-gray-900">
+                <BarChart3 className="text-emerald-600" size={24} />
+                Income vs Expenses
+              </h3>
+            </div>
+            <div className="h-[350px] w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={barData}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
+                  <XAxis dataKey="name" stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} />
+                  <YAxis stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} tickFormatter={(value) => `${user?.currency || 'BDT'} ${value}`} />
+                  <RechartsTooltip 
+                    cursor={{ fill: '#f8fafc' }}
+                    contentStyle={{ backgroundColor: '#fff', borderColor: '#f1f5f9', borderRadius: '12px', color: '#1e293b', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
+                    formatter={(value) => formatCurrency(value, user?.currency)}
+                  />
+                  <Bar dataKey="amount" radius={[8, 8, 0, 0]} barSize={60}>
+                    {barData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.fill} />
+                    ))}
+                  </Bar>
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </Card>
         </div>
       </div>
 
