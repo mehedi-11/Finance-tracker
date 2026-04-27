@@ -22,11 +22,39 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const savedUser = localStorage.getItem('finance_app_user');
-    if (savedUser) {
-      setUser(JSON.parse(savedUser));
+    const loginTime = localStorage.getItem('finance_login_time');
+    
+    if (savedUser && loginTime) {
+      const currentTime = new Date().getTime();
+      const oneHour = 60 * 60 * 1000;
+      
+      if (currentTime - parseInt(loginTime) > oneHour) {
+        logout();
+      } else {
+        setUser(JSON.parse(savedUser));
+      }
     }
     setLoading(false);
   }, []);
+
+  // Check for auto-logout every minute
+  useEffect(() => {
+    if (!user) return;
+
+    const interval = setInterval(() => {
+      const loginTime = localStorage.getItem('finance_login_time');
+      if (loginTime) {
+        const currentTime = new Date().getTime();
+        const oneHour = 60 * 60 * 1000;
+        if (currentTime - parseInt(loginTime) > oneHour) {
+          toast.error('Session expired. Please login again.');
+          logout();
+        }
+      }
+    }, 60000); // Check every minute
+
+    return () => clearInterval(interval);
+  }, [user]);
 
   const register = async (userData) => {
     const response = await fetch(`${API_URL}/register`, {
@@ -63,6 +91,7 @@ export const AuthProvider = ({ children }) => {
 
     setUser(data);
     localStorage.setItem('finance_app_user', JSON.stringify(data));
+    localStorage.setItem('finance_login_time', new Date().getTime().toString());
     toast.success('Verified successfully!');
   };
 
@@ -83,6 +112,7 @@ export const AuthProvider = ({ children }) => {
 
     setUser(data);
     localStorage.setItem('finance_app_user', JSON.stringify(data));
+    localStorage.setItem('finance_login_time', new Date().getTime().toString());
     toast.success('Welcome back!');
     return { success: true };
   };
@@ -159,6 +189,7 @@ export const AuthProvider = ({ children }) => {
   const logout = () => {
     setUser(null);
     localStorage.removeItem('finance_app_user');
+    localStorage.removeItem('finance_login_time');
   };
 
   return (
