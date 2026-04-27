@@ -35,10 +35,15 @@ export const FinanceProvider = ({ children }) => {
       return [];
     }
   });
+  const [loading, setLoading] = useState(true);
 
   const fetchFinanceData = async () => {
-    if (!user?.token) return;
+    if (!user?.token) {
+      setLoading(false);
+      return;
+    }
 
+    setLoading(true);
     try {
       const [transRes, budgetRes, loanRes] = await Promise.all([
         fetch(`${API_URL}/transactions`, {
@@ -69,6 +74,8 @@ export const FinanceProvider = ({ children }) => {
       }
     } catch (error) {
       console.error('Failed to fetch finance data:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -231,6 +238,7 @@ export const FinanceProvider = ({ children }) => {
       transactions, 
       budgets, 
       loans,
+      loading,
       addTransaction, 
       deleteTransaction, 
       updateTransaction,

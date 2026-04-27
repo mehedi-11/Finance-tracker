@@ -2,7 +2,8 @@ import { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { AuthProvider, useAuth } from './context/AuthContext';
-import { FinanceProvider } from './context/FinanceContext';
+import { FinanceProvider, useFinance } from './context/FinanceContext';
+import { Loader } from './components/ui';
 
 // Pages
 import Landing from './pages/Landing';
@@ -25,13 +26,16 @@ import Sidebar from './components/layout/Sidebar';
 import Navbar from './components/layout/Navbar';
 
 const ProtectedRoute = ({ children }) => {
-  const { user, loading } = useAuth();
-  if (loading) return null;
+  const { user, loading: authLoading } = useAuth();
+  const { loading: financeLoading } = useFinance();
+  
+  if (authLoading || (user && financeLoading)) return <Loader fullPage />;
   return user ? children : <Navigate to="/login" />;
 };
 
 function AppContent() {
   const { user } = useAuth();
+  const { loading } = useFinance();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   return (

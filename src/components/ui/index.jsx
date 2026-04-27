@@ -65,3 +65,25 @@ export const Badge = ({ children, variant = 'info' }) => {
     </span>
   );
 };
+
+export const Loader = ({ fullPage = false }) => {
+  const content = (
+    <div className="flex flex-col items-center justify-center gap-4">
+      <div className="relative w-16 h-16">
+        <div className="absolute inset-0 border-4 border-primary-100 rounded-full"></div>
+        <div className="absolute inset-0 border-4 border-primary-500 rounded-full border-t-transparent animate-spin"></div>
+      </div>
+      <p className="text-sm font-black text-primary-600 uppercase tracking-widest animate-pulse">Loading Data...</p>
+    </div>
+  );
+
+  if (fullPage) {
+    return (
+      <div className="fixed inset-0 bg-white/80 backdrop-blur-md z-[9999] flex items-center justify-center">
+        {content}
+      </div>
+    );
+  }
+
+  return <div className="py-20 flex items-center justify-center w-full">{content}</div>;
+};
