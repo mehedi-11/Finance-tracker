@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { KeyRound, ArrowLeft, Mail } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
 import { Button, Input, Card } from '../components/ui';
 import toast from 'react-hot-toast';
 
