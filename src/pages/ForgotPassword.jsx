@@ -6,7 +6,7 @@ import { useAuth } from '../context/AuthContext';
 import { Button, Input, Card } from '../components/ui';
 import toast from 'react-hot-toast';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/auth';
+
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState('');

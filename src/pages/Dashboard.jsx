@@ -20,11 +20,10 @@ import { useFinance } from '../context/FinanceContext';
 import { useAuth } from '../context/AuthContext';
 import { Button, Card, Input } from '../components/ui';
 import { formatCurrency, formatDate } from '../utils/helpers';
+import { API_ENDPOINTS } from '../config';
 import toast from 'react-hot-toast';
 
-const NOTES_URL = import.meta.env.VITE_API_URL 
-  ? import.meta.env.VITE_API_URL.replace('/auth', '/notes') 
-  : 'http://localhost:5000/api/notes';
+const NOTES_URL = API_ENDPOINTS.NOTES;
 
 const Dashboard = () => {
   const { transactions, totals } = useFinance();
