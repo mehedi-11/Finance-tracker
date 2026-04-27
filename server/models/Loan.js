@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 
 const loanSchema = new mongoose.Schema({
   user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  type: { type: String, enum: ['get', 'give'], required: true },
   lender: { type: String, required: true },
   purpose: { type: String, required: true },
   amount: { type: Number, required: true },

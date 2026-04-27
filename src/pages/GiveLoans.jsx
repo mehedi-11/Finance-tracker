@@ -8,7 +8,7 @@ import {
   Edit2, 
   X,
   AlertTriangle,
-  HandCoins,
+  ArrowUpCircle,
   Calendar
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
@@ -18,23 +18,14 @@ import { formatCurrency, formatDate } from '../utils/helpers';
 import { API_ENDPOINTS } from '../config';
 import toast from 'react-hot-toast';
 
-const Loans = () => {
+const GiveLoans = () => {
   const { user } = useAuth();
   const { fetchFinanceData } = useFinance();
-  const [loans, setLoans] = useState(() => {
-    try {
-      const cached = localStorage.getItem('finance_loans');
-      return cached ? JSON.parse(cached) : [];
-    } catch (e) {
-      return [];
-    }
-  });
+  const [loans, setLoans] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingLoan, setEditingLoan] = useState(null);
   const [loading, setLoading] = useState(false);
-  
-  // Delete confirmation state
   const [deleteConfirm, setDeleteConfirm] = useState(null);
   
   const [formData, setFormData] = useState({
@@ -42,7 +33,8 @@ const Loans = () => {
     purpose: '',
     amount: '',
     expectedPayDate: new Date().toISOString().split('T')[0],
-    isPaid: false
+    isPaid: false,
+    type: 'give'
   });
 
   useEffect(() => {
@@ -57,8 +49,7 @@ const Loans = () => {
       });
       const data = await response.json();
       if (Array.isArray(data)) {
-        setLoans(data);
-        localStorage.setItem('finance_loans', JSON.stringify(data));
+        setLoans(data.filter(l => l.type === 'give'));
       }
     } catch (err) {
       console.error('Failed to fetch loans:', err);
@@ -78,7 +69,8 @@ const Loans = () => {
         purpose: loan.purpose,
         amount: loan.amount,
         expectedPayDate: loan.expectedPayDate ? loan.expectedPayDate.split('T')[0] : new Date().toISOString().split('T')[0],
-        isPaid: loan.isPaid
+        isPaid: loan.isPaid,
+        type: 'give'
       });
     } else {
       setEditingLoan(null);
@@ -87,7 +79,8 @@ const Loans = () => {
         purpose: '',
         amount: '',
         expectedPayDate: new Date().toISOString().split('T')[0],
-        isPaid: false
+        isPaid: false,
+        type: 'give'
       });
     }
     setIsModalOpen(true);
@@ -110,10 +103,10 @@ const Loans = () => {
       });
 
       if (response.ok) {
-        toast.success(editingLoan ? 'Loan and transaction updated!' : 'Loan recorded & added to balance!');
+        toast.success(editingLoan ? 'Receivable updated!' : 'Loan given & recorded!');
         setIsModalOpen(false);
         fetchLoans();
-        fetchFinanceData(); // Sync global transactions & balance
+        fetchFinanceData();
       }
     } catch (err) {
       toast.error('Operation failed');
@@ -130,10 +123,10 @@ const Loans = () => {
         headers: { 'Authorization': `Bearer ${user.token}` }
       });
       if (response.ok) {
-        toast.success('Loan and related transaction deleted');
+        toast.success('Record deleted');
         setDeleteConfirm(null);
         fetchLoans();
-        fetchFinanceData(); // Sync global transactions & balance
+        fetchFinanceData();
       }
     } catch (err) {
       toast.error('Delete failed');
@@ -152,7 +145,7 @@ const Loans = () => {
       });
       if (response.ok) {
         fetchLoans();
-        toast.success(loan.isPaid ? 'Marked as unpaid' : 'Marked as paid!');
+        toast.success(loan.isPaid ? 'Marked as active' : 'Marked as received!');
       }
     } catch (err) {
       toast.error('Failed to update status');
@@ -164,21 +157,20 @@ const Loans = () => {
       <div className="space-y-6 md:space-y-8 animate-fade-in pb-20">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
-            <h1 className="text-2xl md:text-3xl font-bold text-gray-900">Loans & Debts</h1>
-            <p className="text-sm md:text-base text-gray-500 font-medium">Keep track of money you owe or others owe you.</p>
+            <h1 className="text-2xl md:text-3xl font-bold text-gray-900">Give Loan (Receivables)</h1>
+            <p className="text-sm md:text-base text-gray-500 font-medium">Money you have lent to others.</p>
           </div>
-          <Button onClick={() => handleOpenModal()} className="flex items-center justify-center gap-2 w-full md:w-auto">
+          <Button onClick={() => handleOpenModal()} className="flex items-center justify-center gap-2 w-full md:w-auto bg-emerald-600 hover:bg-emerald-700">
             <Plus size={20} /> Record New Loan
           </Button>
         </div>
 
-        {/* Search */}
         <div className="flex flex-col md:flex-row gap-4">
           <div className="flex-1 relative">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
             <input 
               type="text" 
-              placeholder="Search by lender or purpose..." 
+              placeholder="Search by borrower..." 
               className="w-full bg-white border border-gray-200 rounded-xl pl-12 pr-4 py-3 text-sm md:text-base text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary-500/50 transition-all shadow-sm"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
@@ -186,15 +178,14 @@ const Loans = () => {
           </div>
         </div>
 
-        {/* Table Card */}
         <Card className="p-0 bg-white border-none shadow-sm overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse min-w-[600px]">
               <thead>
                 <tr className="border-b border-gray-50 text-gray-400 text-[10px] md:text-xs uppercase tracking-widest font-black">
-                  <th className="px-4 md:px-6 py-4">Lender / Source</th>
+                  <th className="px-4 md:px-6 py-4">Borrower / Destination</th>
                   <th className="px-4 md:px-6 py-4">Purpose</th>
-                  <th className="px-4 md:px-6 py-4">Expected Pay Date</th>
+                  <th className="px-4 md:px-6 py-4">Expected Receive Date</th>
                   <th className="px-4 md:px-6 py-4">Amount</th>
                   <th className="px-4 md:px-6 py-4">Status</th>
                   <th className="px-4 md:px-6 py-4 text-right">Actions</th>
@@ -212,9 +203,9 @@ const Loans = () => {
                       <td className="px-4 md:px-6 py-4">
                         <div className="flex items-center gap-3">
                           <div className={`w-8 h-8 md:w-10 md:h-10 rounded-xl flex items-center justify-center ${
-                            l.isPaid ? 'bg-gray-100 text-gray-400' : 'bg-amber-100 text-amber-600'
+                            l.isPaid ? 'bg-gray-100 text-gray-400' : 'bg-emerald-100 text-emerald-600'
                           }`}>
-                            <HandCoins size={16} />
+                            <ArrowUpCircle size={16} />
                           </div>
                           <span className={`font-bold text-sm md:text-base ${l.isPaid ? 'text-gray-500 line-through' : 'text-gray-900'}`}>{l.lender}</span>
                         </div>
@@ -228,13 +219,13 @@ const Loans = () => {
                           {formatDate(l.expectedPayDate)}
                         </div>
                       </td>
-                      <td className={`px-4 md:px-6 py-4 font-black text-sm md:text-base ${l.isPaid ? 'text-gray-500' : 'text-amber-600'}`}>
+                      <td className={`px-4 md:px-6 py-4 font-black text-sm md:text-base ${l.isPaid ? 'text-gray-500' : 'text-emerald-600'}`}>
                         {formatCurrency(l.amount, user?.currency)}
                       </td>
                       <td className="px-4 md:px-6 py-4">
                         <button onClick={() => togglePaidStatus(l)}>
-                          <Badge variant={l.isPaid ? 'success' : 'warning'}>
-                            {l.isPaid ? 'Paid' : 'Pending'}
+                          <Badge variant={l.isPaid ? 'success' : 'info'}>
+                            {l.isPaid ? 'Received' : 'Pending'}
                           </Badge>
                         </button>
                       </td>
@@ -261,9 +252,9 @@ const Loans = () => {
                     <td colSpan="6" className="px-6 py-20 text-center">
                       <div className="flex flex-col items-center gap-4">
                         <div className="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center">
-                          <HandCoins size={40} className="text-gray-300" />
+                          <ArrowUpCircle size={40} className="text-gray-300" />
                         </div>
-                        <p className="text-lg font-bold text-gray-400">No loans found</p>
+                        <p className="text-lg font-bold text-gray-400">No receivables found</p>
                       </div>
                     </td>
                   </tr>
@@ -274,7 +265,6 @@ const Loans = () => {
         </Card>
       </div>
 
-      {/* Loan Modal (Add/Edit) via Portal */}
       {createPortal(
         <AnimatePresence>
           {isModalOpen && (
@@ -287,7 +277,7 @@ const Loans = () => {
                 className="relative w-full max-w-lg bg-white rounded-[2.5rem] shadow-2xl flex flex-col max-h-[90vh]"
               >
                 <div className="flex items-center justify-between p-8 md:p-10 pb-4">
-                  <h2 className="text-2xl font-black text-gray-900">{editingLoan ? 'Edit Loan' : 'Record Loan'}</h2>
+                  <h2 className="text-2xl font-black text-gray-900">{editingLoan ? 'Edit Record' : 'Give New Loan'}</h2>
                   <button onClick={() => setIsModalOpen(false)} className="p-3 hover:bg-gray-100 rounded-2xl text-gray-400 transition-colors">
                     <X size={24} />
                   </button>
@@ -295,13 +285,13 @@ const Loans = () => {
 
                 <div className="flex-1 overflow-y-auto px-8 md:px-10 pb-8 md:pb-10 custom-scrollbar">
                   <form onSubmit={handleSubmit} className="space-y-6">
-                    <Input label="Lender / Source" placeholder="e.g. Bank, John Doe" value={formData.lender} onChange={(e) => setFormData({ ...formData, lender: e.target.value })} required />
-                    <Input label="Purpose" placeholder="e.g. Car purchase, Medical" value={formData.purpose} onChange={(e) => setFormData({ ...formData, purpose: e.target.value })} required />
+                    <Input label="Borrower / Name" placeholder="e.g. John Doe" value={formData.lender} onChange={(e) => setFormData({ ...formData, lender: e.target.value })} required />
+                    <Input label="Purpose" placeholder="e.g. Personal help" value={formData.purpose} onChange={(e) => setFormData({ ...formData, purpose: e.target.value })} required />
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <Input label="Amount" type="number" placeholder="0.00" value={formData.amount} onChange={(e) => setFormData({ ...formData, amount: e.target.value })} required />
-                      <Input label="Expected Pay Date" type="date" value={formData.expectedPayDate} onChange={(e) => setFormData({ ...formData, expectedPayDate: e.target.value })} required />
+                      <Input label="Expected Receive Date" type="date" value={formData.expectedPayDate} onChange={(e) => setFormData({ ...formData, expectedPayDate: e.target.value })} required />
                     </div>
-                    <Button type="submit" className="w-full py-4 text-lg font-bold mt-4" disabled={loading}>
+                    <Button type="submit" className="w-full py-4 text-lg font-bold mt-4 bg-emerald-600 hover:bg-emerald-700" disabled={loading}>
                       {loading ? 'Processing...' : (editingLoan ? 'Update Record' : 'Save Loan Record')}
                     </Button>
                   </form>
@@ -313,7 +303,6 @@ const Loans = () => {
         document.body
       )}
 
-      {/* Delete Confirmation Modal */}
       {createPortal(
         <AnimatePresence>
           {deleteConfirm && (
@@ -329,7 +318,7 @@ const Loans = () => {
                   <AlertTriangle className="text-red-500" size={40} />
                 </div>
                 <h3 className="text-xl font-black text-gray-900 mb-2">Are you sure?</h3>
-                <p className="text-gray-500 text-sm font-medium mb-8">This loan record will be permanently removed.</p>
+                <p className="text-gray-500 text-sm font-medium mb-8">This loan record and its transaction will be permanently removed.</p>
                 <div className="grid grid-cols-2 gap-4">
                   <Button variant="secondary" onClick={() => setDeleteConfirm(null)} className="bg-gray-100 border-none text-gray-600">Cancel</Button>
                   <Button onClick={handleDelete} className="bg-red-600 hover:bg-red-700 text-white border-none">Yes, Delete</Button>
@@ -344,4 +333,4 @@ const Loans = () => {
   );
 };
 
-export default Loans;
+export default GiveLoans;

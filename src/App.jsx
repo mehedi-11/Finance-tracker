@@ -16,7 +16,8 @@ import Budget from './pages/Budget';
 import Reports from './pages/Reports';
 import Profile from './pages/Profile';
 import ResetPassword from './pages/ResetPassword';
-import Loans from './pages/Loans';
+import GetLoans from './pages/GetLoans';
+import GiveLoans from './pages/GiveLoans';
 import Plans from './pages/Plans';
 
 // Components
@@ -52,7 +53,8 @@ function AppContent() {
             <Route path="/budget" element={<ProtectedRoute><Budget /></ProtectedRoute>} />
             <Route path="/reports" element={<ProtectedRoute><Reports /></ProtectedRoute>} />
             <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
-            <Route path="/loans" element={<ProtectedRoute><Loans /></ProtectedRoute>} />
+            <Route path="/get-loans" element={<ProtectedRoute><GetLoans /></ProtectedRoute>} />
+            <Route path="/give-loans" element={<ProtectedRoute><GiveLoans /></ProtectedRoute>} />
             <Route path="/plans" element={<ProtectedRoute><Plans /></ProtectedRoute>} />
           </Routes>
         </main>

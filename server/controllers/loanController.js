@@ -7,14 +7,15 @@ const getLoans = async (req, res) => {
 };
 
 const addLoan = async (req, res) => {
-  const { lender, purpose, amount, expectedPayDate } = req.body;
+  const { type, lender, purpose, amount, expectedPayDate } = req.body;
   
-  // 1. Create the income transaction first
+  // 1. Create the linked transaction
+  // Get Loan = Income (money in), Give Loan = Expense (money out)
   const transaction = await Transaction.create({
     user: req.user._id,
-    description: `Loan from ${lender}`,
+    description: `${type === 'get' ? 'Loan from' : 'Loan to'} ${lender}`,
     amount: Number(amount),
-    type: 'income',
+    type: type === 'get' ? 'income' : 'expense',
     category: 'Loan',
     date: new Date()
   });
@@ -22,6 +23,7 @@ const addLoan = async (req, res) => {
   // 2. Create the loan record linked to this transaction
   const loan = await Loan.create({
     user: req.user._id,
+    type,
     lender,
     purpose,
     amount,
@@ -35,7 +37,6 @@ const addLoan = async (req, res) => {
 const updateLoan = async (req, res) => {
   const loan = await Loan.findById(req.params.id);
   if (loan && loan.user.toString() === req.user._id.toString()) {
-    // Check if amount or lender changed to update the linked transaction
     const amountChanged = Number(req.body.amount) !== loan.amount;
     const lenderChanged = req.body.lender !== loan.lender;
 
@@ -48,7 +49,7 @@ const updateLoan = async (req, res) => {
     if ((amountChanged || lenderChanged) && loan.relatedTransaction) {
       await Transaction.findByIdAndUpdate(loan.relatedTransaction, {
         amount: Number(loan.amount),
-        description: `Loan from ${loan.lender}`
+        description: `${loan.type === 'get' ? 'Loan from' : 'Loan to'} ${loan.lender}`
       });
     }
 
@@ -62,7 +63,6 @@ const updateLoan = async (req, res) => {
 const deleteLoan = async (req, res) => {
   const loan = await Loan.findById(req.params.id);
   if (loan && loan.user.toString() === req.user._id.toString()) {
-    // Also delete the related transaction
     if (loan.relatedTransaction) {
       await Transaction.findByIdAndDelete(loan.relatedTransaction);
     }

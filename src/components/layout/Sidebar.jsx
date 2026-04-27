@@ -8,6 +8,8 @@ import {
   LogOut,
   X,
   HandCoins,
+  ArrowDownCircle,
+  ArrowUpCircle,
   StickyNote
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
@@ -21,7 +23,8 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
     { icon: LayoutDashboard, label: 'Dashboard', path: '/dashboard' },
     { icon: Receipt, label: 'Transactions', path: '/transactions' },
     { icon: Wallet, label: 'Budget', path: '/budget' },
-    { icon: HandCoins, label: 'Loans', path: '/loans' },
+    { icon: ArrowDownCircle, label: 'Get Loan', path: '/get-loans' },
+    { icon: ArrowUpCircle, label: 'Give Loan', path: '/give-loans' },
     { icon: StickyNote, label: 'My Plan', path: '/plans' },
     { icon: PieChart, label: 'Reports', path: '/reports' },
     { icon: User, label: 'Profile', path: '/profile' },
