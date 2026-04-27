@@ -186,13 +186,13 @@ const Dashboard = () => {
     <>
       <div className="space-y-8 animate-fade-in pb-20">
         {/* Header Section - Premium Dark Leaf Box for All Screens */}
-        <div className="bg-[#1a0b2e] rounded-tl-[30px] md:rounded-tl-[60px] rounded-br-[30px] md:rounded-br-[60px] px-10 py-12 md:px-16 md:py-20 mb-6 shadow-2xl shadow-purple-900/20 animate-fade-in relative z-20 transition-all">
+        <div className="bg-[#1a0b2e] rounded-tl-[30px] md:rounded-tl-[60px] rounded-br-[30px] md:rounded-br-[60px] px-10 py-12 md:px-16 md:py-20 mb-4 shadow-2xl shadow-purple-900/20 animate-fade-in relative z-20 transition-all">
           <div className="max-w-[1400px] mx-auto flex flex-col md:flex-row md:items-center justify-between gap-10 md:gap-4 flex-wrap">
             <div className="text-center md:text-left w-full md:w-auto">
-              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white leading-tight whitespace-nowrap tracking-tight">
+              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black text-white leading-tight tracking-tight">
                 {t('dashboard.hello')}, {user?.name || 'User'}!
               </h1>
-              <p className="text-purple-300 font-bold text-base md:text-lg mt-2 md:mt-1 opacity-90">
+              <p className="text-purple-300 font-bold text-sm md:text-lg mt-2 md:mt-1 opacity-90">
                 {t('dashboard.welcome_msg')}
               </p>
             </div>
