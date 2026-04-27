@@ -44,9 +44,7 @@ const Reports = () => {
         <p className="text-gray-500 font-medium">Visual breakdown of your financial health and spending patterns.</p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4">
-
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-8">
         <Card className="bg-emerald-50 border-none shadow-sm group">
           <div className="flex items-center gap-4">
             <div className="w-12 h-12 bg-emerald-100 rounded-xl flex items-center justify-center text-emerald-600 transition-transform group-hover:scale-110">
