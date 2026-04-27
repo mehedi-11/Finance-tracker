@@ -45,14 +45,14 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
         <div className="h-full flex flex-col p-6">
           <div className="flex items-center justify-between mb-10 px-2">
             <Link to="/dashboard" className="flex items-center gap-3" onClick={() => setIsOpen(false)}>
-              <div className="w-10 h-10 bg-primary-600 rounded-xl flex items-center justify-center shadow-lg shadow-primary-600/20">
+              <div className="w-10 h-10 bg-primary-600 rounded-lg flex items-center justify-center shadow-lg shadow-primary-600/20">
                 <Wallet className="text-white" size={24} />
               </div>
               <span className="text-xl font-black tracking-tight text-gray-900">FinanceFlow</span>
             </Link>
             <button 
               onClick={() => setIsOpen(false)}
-              className="p-2 hover:bg-gray-100 rounded-lg lg:hidden"
+              className="p-2 hover:bg-gray-100 rounded-md lg:hidden"
             >
               <X size={20} className="text-gray-500" />
             </button>
@@ -67,7 +67,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
                   to={item.path}
                   onClick={() => setIsOpen(false)}
                   className={`
-                    flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all duration-300 group
+                    flex items-center gap-4 px-4 py-3.5 rounded-xl transition-all duration-300 group
                     ${isActive 
                       ? 'bg-primary-600 text-white shadow-xl shadow-primary-600/20' 
                       : 'text-gray-500 hover:bg-gray-50 hover:text-gray-900'}
@@ -86,7 +86,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
                 setIsOpen(false);
                 logout();
               }}
-              className="w-full flex items-center gap-4 px-4 py-3.5 rounded-2xl text-red-500 hover:bg-red-50 transition-all font-bold text-sm"
+              className="w-full flex items-center gap-4 px-4 py-3.5 rounded-xl text-red-500 hover:bg-red-50 transition-all font-bold text-sm"
             >
               <LogOut size={22} />
               <span>Logout</span>

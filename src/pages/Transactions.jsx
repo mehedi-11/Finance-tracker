@@ -139,7 +139,7 @@ const Transactions = () => {
               <button
                 key={type}
                 onClick={() => setFilterType(type)}
-                className={`flex-1 md:flex-none px-4 md:px-6 py-2.5 md:py-3 rounded-xl border transition-all capitalize font-bold text-xs md:text-sm ${
+                className={`flex-1 md:flex-none px-4 md:px-6 py-2.5 md:py-3 rounded-lg border transition-all capitalize font-bold text-xs md:text-sm ${
                   filterType === type 
                     ? 'bg-primary-600 border-primary-500 text-white shadow-lg shadow-primary-500/20' 
                     : 'bg-white border-gray-200 text-gray-500 hover:bg-gray-50'
@@ -175,7 +175,7 @@ const Transactions = () => {
                     >
                       <td className="px-4 md:px-6 py-4">
                         <div className="flex items-center gap-3">
-                          <div className={`w-8 h-8 md:w-10 md:h-10 rounded-xl flex items-center justify-center ${
+                          <div className={`w-8 h-8 md:w-10 md:h-10 rounded-lg flex items-center justify-center ${
                             t.type === 'income' ? 'bg-emerald-100 text-emerald-600' : 'bg-red-100 text-red-600'
                           }`}>
                             {t.type === 'income' ? <ArrowUpRight size={16} /> : <ArrowDownRight size={16} />}
@@ -242,11 +242,11 @@ const Transactions = () => {
                 initial={{ opacity: 0, scale: 0.95, y: 20 }} 
                 animate={{ opacity: 1, scale: 1, y: 0 }} 
                 exit={{ opacity: 0, scale: 0.95, y: 20 }} 
-                className="relative w-full max-w-lg bg-white rounded-[2.5rem] shadow-2xl flex flex-col max-h-[90vh]"
+                className="relative w-full max-w-lg bg-white rounded-3xl shadow-2xl flex flex-col max-h-[90vh]"
               >
                 <div className="flex items-center justify-between p-8 md:p-10 pb-4">
                   <h2 className="text-2xl font-black text-gray-900">{editingTransaction ? 'Edit Transaction' : 'Add Transaction'}</h2>
-                  <button onClick={() => setIsModalOpen(false)} className="p-3 hover:bg-gray-100 rounded-2xl text-gray-400 transition-colors">
+                  <button onClick={() => setIsModalOpen(false)} className="p-3 hover:bg-gray-100 rounded-xl text-gray-400 transition-colors">
                     <X size={24} />
                   </button>
                 </div>
@@ -302,7 +302,7 @@ const Transactions = () => {
                 initial={{ opacity: 0, scale: 0.9 }} 
                 animate={{ opacity: 1, scale: 1 }} 
                 exit={{ opacity: 0, scale: 0.9 }}
-                className="relative w-full max-w-sm bg-white rounded-[2rem] p-8 text-center shadow-2xl"
+                className="relative w-full max-w-sm bg-white rounded-2xl p-8 text-center shadow-2xl"
               >
                 <div className="w-20 h-20 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-6">
                   <AlertTriangle className="text-red-500" size={40} />

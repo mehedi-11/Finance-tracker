@@ -201,9 +201,9 @@ const Dashboard = () => {
               <div className="space-y-4">
                 {recentTransactions.length > 0 ? (
                   recentTransactions.map((t) => (
-                    <div key={t._id} className="flex items-center justify-between group p-3 hover:bg-gray-50 rounded-2xl transition-all border border-transparent hover:border-gray-100">
+                    <div key={t._id} className="flex items-center justify-between group p-3 hover:bg-gray-50 rounded-xl transition-all border border-transparent hover:border-gray-100">
                       <div className="flex items-center gap-4">
-                        <div className={`w-12 h-12 rounded-2xl flex items-center justify-center ${
+                        <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${
                           t.type === 'income' ? 'bg-emerald-100 text-emerald-600' : 'bg-red-100 text-red-600'
                         }`}>
                           {t.type === 'income' ? <ArrowUpRight size={20} /> : <ArrowDownRight size={20} />}
@@ -242,7 +242,7 @@ const Dashboard = () => {
               <div className="space-y-4">
                 {Array.isArray(notes) && notes.length > 0 ? (
                   notes.map((note) => (
-                    <div key={note._id} className={`p-4 rounded-2xl border transition-all space-y-2 relative group ${
+                    <div key={note._id} className={`p-4 rounded-xl border transition-all space-y-2 relative group ${
                       note.isCompleted ? 'bg-gray-50/50 border-gray-100 opacity-70' : 'bg-white border-gray-100 shadow-sm hover:shadow-md'
                     }`}>
                       <div className="flex items-start justify-between gap-2">
@@ -273,7 +273,7 @@ const Dashboard = () => {
                     </div>
                   ))
                 ) : (
-                  <div className="flex flex-col items-center justify-center py-10 text-gray-400 border-2 border-dashed border-gray-100 rounded-3xl">
+                  <div className="flex flex-col items-center justify-center py-10 text-gray-400 border-2 border-dashed border-gray-100 rounded-2xl">
                     <p className="text-sm font-medium">No plans noted yet.</p>
                   </div>
                 )}
@@ -297,7 +297,7 @@ const Dashboard = () => {
                 initial={{ opacity: 0, scale: 0.95, y: 20 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.95, y: 20 }}
-                className="relative w-full max-w-md bg-white border border-gray-100 rounded-[2.5rem] shadow-2xl flex flex-col max-h-[90vh]"
+                className="relative w-full max-w-md bg-white border border-gray-100 rounded-3xl shadow-2xl flex flex-col max-h-[90vh]"
               >
                 {/* Fixed Header */}
                 <div className="flex items-center justify-between p-8 md:p-10 pb-4">
@@ -306,7 +306,7 @@ const Dashboard = () => {
                   </h2>
                   <button 
                     onClick={() => setIsNoteModalOpen(false)} 
-                    className="p-3 hover:bg-gray-100 rounded-2xl text-gray-400 transition-colors"
+                    className="p-3 hover:bg-gray-100 rounded-xl text-gray-400 transition-colors"
                   >
                     <X size={24} />
                   </button>
@@ -351,7 +351,7 @@ const Dashboard = () => {
                 initial={{ opacity: 0, scale: 0.9 }} 
                 animate={{ opacity: 1, scale: 1 }} 
                 exit={{ opacity: 0, scale: 0.9 }}
-                className="relative w-full max-w-sm bg-white rounded-[2rem] p-8 text-center shadow-2xl"
+                className="relative w-full max-w-sm bg-white rounded-2xl p-8 text-center shadow-2xl"
               >
                 <div className="w-20 h-20 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-6">
                   <AlertTriangle className="text-red-500" size={40} />
@@ -384,7 +384,7 @@ const StatCard = ({ icon: Icon, color, label, value }) => {
             {formatCurrency(value || 0, user?.currency)}
           </h2>
         </div>
-        <div className={`w-12 h-12 bg-${color}-100 rounded-2xl flex items-center justify-center`}>
+        <div className={`w-12 h-12 bg-${color}-100 rounded-xl flex items-center justify-center`}>
           <Icon className={`text-${color}-600`} size={24} />
         </div>
       </div>
