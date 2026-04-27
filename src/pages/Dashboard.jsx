@@ -185,37 +185,37 @@ const Dashboard = () => {
   return (
     <>
       <div className="space-y-8 animate-fade-in pb-20">
-        {/* Top Header Section with Purple Background and Unique Shape */}
-        <div className="bg-purple-600 rounded-tl-[3rem] rounded-br-[3rem] p-8 md:p-10 shadow-xl shadow-purple-200 animate-fade-in">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 flex-wrap">
+        {/* Top Header Section - Flush to Edges with Dark Purple and Bottom Arch */}
+        <div className="bg-[#1a0b2e] -mx-4 -mt-4 md:-mx-6 md:-mt-6 lg:-mx-10 lg:-mt-10 rounded-b-[40px] md:rounded-b-[80px] p-8 md:p-12 lg:p-16 mb-10 shadow-2xl shadow-purple-900/20 animate-fade-in relative z-20">
+          <div className="max-w-[1400px] mx-auto flex flex-col md:flex-row md:items-center justify-between gap-8 flex-wrap">
             <div className="text-center md:text-left w-full md:w-auto">
-              <h1 className="text-2xl sm:text-3xl font-bold text-white leading-tight whitespace-nowrap">
+              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white leading-tight whitespace-nowrap tracking-tight">
                 {t('dashboard.hello')}, {user?.name || 'User'}!
               </h1>
-              <p className="text-purple-100 font-medium text-sm mt-1">
+              <p className="text-purple-300 font-bold text-base md:text-lg mt-2 opacity-90">
                 {t('dashboard.welcome_msg')}
               </p>
             </div>
             
-            <div className="grid grid-cols-2 sm:flex sm:flex-wrap gap-3">
+            <div className="grid grid-cols-2 sm:flex sm:flex-wrap gap-4">
               <Link to="/budget" className="flex-1 sm:flex-none">
-                <Button variant="secondary" className="w-full flex items-center justify-center gap-2 bg-white/10 border-white/20 text-white hover:bg-white/20 backdrop-blur-md rounded-xl">
-                  <Wallet size={18} className="text-white" /> {t('common.budget')}
+                <Button variant="secondary" className="w-full h-12 flex items-center justify-center gap-2 bg-white/5 border-white/10 text-white hover:bg-white/10 backdrop-blur-xl rounded-xl transition-all hover:scale-105">
+                  <Wallet size={20} className="text-purple-400" /> {t('common.budget')}
                 </Button>
               </Link>
               <Link to="/loans" className="flex-1 sm:flex-none">
-                <Button variant="secondary" className="w-full flex items-center justify-center gap-2 bg-white/10 border-white/20 text-white hover:bg-white/20 backdrop-blur-md rounded-xl">
-                  <HandCoins size={18} className="text-white" /> {t('common.loans')}
+                <Button variant="secondary" className="w-full h-12 flex items-center justify-center gap-2 bg-white/5 border-white/10 text-white hover:bg-white/10 backdrop-blur-xl rounded-xl transition-all hover:scale-105">
+                  <HandCoins size={20} className="text-purple-400" /> {t('common.loans')}
                 </Button>
               </Link>
               <Link to="/plans" className="flex-1 sm:flex-none">
-                <Button variant="secondary" className="w-full flex items-center justify-center gap-2 bg-white/10 border-white/20 text-white hover:bg-white/20 backdrop-blur-md rounded-xl">
-                  <StickyNote size={18} className="text-white" /> {t('common.my_plan')}
+                <Button variant="secondary" className="w-full h-12 flex items-center justify-center gap-2 bg-white/5 border-white/10 text-white hover:bg-white/10 backdrop-blur-xl rounded-xl transition-all hover:scale-105">
+                  <StickyNote size={20} className="text-purple-400" /> {t('common.my_plan')}
                 </Button>
               </Link>
               <Link to="/transactions" className="flex-1 sm:flex-none">
-                <Button className="w-full flex items-center justify-center gap-2 bg-white text-purple-600 hover:bg-purple-50 border-none rounded-xl shadow-lg">
-                  <Plus size={18} /> {t('dashboard.add_transaction')}
+                <Button className="w-full h-12 flex items-center justify-center gap-2 bg-purple-500 text-white hover:bg-purple-400 border-none rounded-xl shadow-lg shadow-purple-500/20 transition-all hover:scale-105">
+                  <Plus size={20} /> {t('dashboard.add_transaction')}
                 </Button>
               </Link>
             </div>
