@@ -185,33 +185,40 @@ const Dashboard = () => {
   return (
     <>
       <div className="space-y-8 animate-fade-in pb-20">
-        {/* Top Header */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 flex-wrap">
-          <div className="text-center md:text-left w-full md:w-auto">
-            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 leading-tight whitespace-nowrap">{t('dashboard.hello')}, {user?.name || 'User'}!</h1>
-            <p className="text-gray-600 font-medium text-sm">{t('dashboard.welcome_msg')}</p>
-          </div>
-          <div className="grid grid-cols-2 sm:flex sm:flex-wrap gap-3">
-            <Link to="/budget" className="flex-1 sm:flex-none">
-              <Button variant="secondary" className="w-full flex items-center justify-center gap-2 bg-white border-gray-200">
-                <Wallet size={18} className="text-purple-600" /> {t('common.budget')}
-              </Button>
-            </Link>
-            <Link to="/loans" className="flex-1 sm:flex-none">
-              <Button variant="secondary" className="w-full flex items-center justify-center gap-2 bg-white border-gray-200">
-                <HandCoins size={18} className="text-purple-600" /> {t('common.loans')}
-              </Button>
-            </Link>
-            <Link to="/plans" className="flex-1 sm:flex-none">
-              <Button variant="secondary" className="w-full flex items-center justify-center gap-2 bg-white border-gray-200">
-                <StickyNote size={18} className="text-purple-600" /> {t('common.my_plan')}
-              </Button>
-            </Link>
-            <Link to="/transactions" className="flex-1 sm:flex-none">
-              <Button className="w-full flex items-center justify-center gap-2">
-                <Plus size={18} /> {t('dashboard.add_transaction')}
-              </Button>
-            </Link>
+        {/* Top Header Section with Purple Background and Unique Shape */}
+        <div className="bg-purple-600 rounded-tl-[3rem] rounded-br-[3rem] p-8 md:p-10 shadow-xl shadow-purple-200 animate-fade-in">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 flex-wrap">
+            <div className="text-center md:text-left w-full md:w-auto">
+              <h1 className="text-2xl sm:text-3xl font-bold text-white leading-tight whitespace-nowrap">
+                {t('dashboard.hello')}, {user?.name || 'User'}!
+              </h1>
+              <p className="text-purple-100 font-medium text-sm mt-1">
+                {t('dashboard.welcome_msg')}
+              </p>
+            </div>
+            
+            <div className="grid grid-cols-2 sm:flex sm:flex-wrap gap-3">
+              <Link to="/budget" className="flex-1 sm:flex-none">
+                <Button variant="secondary" className="w-full flex items-center justify-center gap-2 bg-white/10 border-white/20 text-white hover:bg-white/20 backdrop-blur-md rounded-xl">
+                  <Wallet size={18} className="text-white" /> {t('common.budget')}
+                </Button>
+              </Link>
+              <Link to="/loans" className="flex-1 sm:flex-none">
+                <Button variant="secondary" className="w-full flex items-center justify-center gap-2 bg-white/10 border-white/20 text-white hover:bg-white/20 backdrop-blur-md rounded-xl">
+                  <HandCoins size={18} className="text-white" /> {t('common.loans')}
+                </Button>
+              </Link>
+              <Link to="/plans" className="flex-1 sm:flex-none">
+                <Button variant="secondary" className="w-full flex items-center justify-center gap-2 bg-white/10 border-white/20 text-white hover:bg-white/20 backdrop-blur-md rounded-xl">
+                  <StickyNote size={18} className="text-white" /> {t('common.my_plan')}
+                </Button>
+              </Link>
+              <Link to="/transactions" className="flex-1 sm:flex-none">
+                <Button className="w-full flex items-center justify-center gap-2 bg-white text-purple-600 hover:bg-purple-50 border-none rounded-xl shadow-lg">
+                  <Plus size={18} /> {t('dashboard.add_transaction')}
+                </Button>
+              </Link>
+            </div>
           </div>
         </div>
 
