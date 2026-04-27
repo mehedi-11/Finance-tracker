@@ -153,12 +153,12 @@ const Dashboard = () => {
     <>
       <div className="space-y-8 animate-fade-in pb-20">
         {/* Top Header */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 flex-wrap">
           <div>
             <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 leading-tight whitespace-nowrap">Hello, {user?.name || 'User'}!</h1>
             <p className="text-gray-600 font-medium text-sm">Track your progress and plan your future costs.</p>
           </div>
-          <div className="grid grid-cols-2 sm:flex gap-3">
+          <div className="grid grid-cols-2 sm:flex sm:flex-wrap gap-3">
             <Link to="/budget" className="flex-1 sm:flex-none">
               <Button variant="secondary" className="w-full flex items-center justify-center gap-2 bg-white border-gray-200">
                 <LayoutDashboard size={18} className="text-primary-600" /> Budget
