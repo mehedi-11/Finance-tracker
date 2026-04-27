@@ -21,8 +21,14 @@ import { useTranslation } from 'react-i18next';
 
 const Transactions = () => {
   const { t } = useTranslation();
-  const { transactions, addTransaction, deleteTransaction, updateTransaction } = useFinance();
+  const { transactions, addTransaction, deleteTransaction, updateTransaction, loans } = useFinance();
   const { user } = useAuth();
+  
+  // Combine default categories with active loans for expense type
+  const dynamicCategories = {
+    ...categories,
+    expense: [...categories.expense, ...loans.filter(l => !l.isPaid).map(l => `${l.lender} (Loan)`)]
+  };
   const [searchTerm, setSearchTerm] = useState('');
   const [filterType, setFilterType] = useState('all');
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -282,7 +288,7 @@ const Transactions = () => {
                       <div className="space-y-1.5">
                         <label className="text-sm font-bold text-gray-700 ml-1">Category</label>
                         <select className="input-premium" value={formData.category} onChange={(e) => setFormData({ ...formData, category: e.target.value })}>
-                          {categories[formData.type].map(cat => <option key={cat} value={cat}>{cat}</option>)}
+                          {dynamicCategories[formData.type].map(cat => <option key={cat} value={cat}>{cat}</option>)}
                         </select>
                       </div>
                     </div>

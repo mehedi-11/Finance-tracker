@@ -69,8 +69,8 @@ const Reports = () => {
     const monthName = new Date(year, month - 1).toLocaleString('default', { month: 'long', year: 'numeric' });
 
     const element = document.createElement('div');
-    element.style.padding = '40px';
-    element.style.width = '720px'; // A4 width at 96 DPI
+    element.style.padding = '1in';
+    element.style.width = '8.27in'; // A4 width
     element.style.background = '#ffffff';
     element.innerHTML = `
       <div style="font-family: 'Helvetica', sans-serif; color: #1e293b; line-height: 1.4;">

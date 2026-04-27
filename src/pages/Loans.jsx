@@ -11,7 +11,8 @@ import {
   HandCoins,
   Calendar,
   ArrowDownCircle,
-  ArrowUpCircle
+  ArrowUpCircle,
+  CheckCircle2
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useFinance } from '../context/FinanceContext';
@@ -24,7 +25,7 @@ import { useTranslation } from 'react-i18next';
 const Loans = () => {
   const { t } = useTranslation();
   const { user } = useAuth();
-  const { loans, addLoan, deleteLoan, updateLoan } = useFinance();
+  const { loans, addLoan, deleteLoan, updateLoan, transactions } = useFinance();
   const [searchTerm, setSearchTerm] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingLoan, setEditingLoan] = useState(null);
@@ -147,78 +148,100 @@ const Loans = () => {
                 <tr className="border-b border-gray-50 text-gray-400 text-[10px] md:text-xs uppercase tracking-widest font-black">
                   <th className="px-4 md:px-6 py-4">{t('loans.lender')}</th>
                   <th className="px-4 md:px-6 py-4">{t('common.type')}</th>
-                  <th className="px-4 md:px-6 py-4">{t('common.purpose')}</th>
-                  <th className="px-4 md:px-6 py-4">{t('loans.target_date')}</th>
+                  <th className="px-4 md:px-6 py-4">Progress</th>
                   <th className="px-4 md:px-6 py-4">{t('common.amount')}</th>
+                  <th className="px-4 md:px-6 py-4">{t('loans.target_date')}</th>
+                  <th className="px-4 md:px-6 py-4">Status</th>
                   <th className="px-4 md:px-6 py-4 text-right">{t('common.actions')}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-50">
                 {filteredLoans.length > 0 ? (
-                  filteredLoans.map((l) => (
-                    <motion.tr 
-                      key={l._id}
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      className={`hover:bg-gray-50/50 transition-colors group ${l.isPaid ? 'opacity-60' : ''}`}
-                    >
-                      <td className="px-4 md:px-6 py-4">
-                        <div className="flex items-center gap-3">
-                          <div className={`w-8 h-8 md:w-10 md:h-10 rounded-xl flex items-center justify-center ${
-                            l.type === 'get' ? 'bg-amber-100 text-amber-600' : 'bg-emerald-100 text-emerald-600'
-                          }`}>
-                            {l.type === 'get' ? <ArrowDownCircle size={16} /> : <ArrowUpCircle size={16} />}
+                  filteredLoans.map((loan) => {
+                    const paidAmount = transactions
+                      .filter(t => t.category === `${loan.lender} (Loan)`)
+                      .reduce((sum, t) => sum + Number(t.amount), 0);
+                    
+                    const progress = Math.min((paidAmount / loan.amount) * 100, 100);
+                    const isFullyPaid = progress >= 100;
+
+                    return (
+                      <tr key={loan._id} className="group hover:bg-gray-50/50 transition-all">
+                        <td className="px-4 md:px-6 py-4">
+                          <div className="flex items-center gap-3">
+                            <div className={`w-8 h-8 md:w-10 md:h-10 rounded-xl flex items-center justify-center ${
+                              loan.type === 'get' ? 'bg-amber-100 text-amber-600' : 'bg-blue-100 text-blue-600'
+                            }`}>
+                              <HandCoins size={18} />
+                            </div>
+                            <div>
+                              <p className="text-sm font-bold text-gray-900 leading-none mb-1">{loan.lender}</p>
+                              <p className="text-[10px] font-medium text-gray-400 uppercase tracking-tighter line-clamp-1">{loan.purpose}</p>
+                            </div>
                           </div>
-                          <span className={`font-bold text-sm md:text-base ${l.isPaid ? 'text-gray-500 line-through' : 'text-gray-900'}`}>{l.lender}</span>
-                        </div>
-                      </td>
-                      <td className="px-4 md:px-6 py-4">
-                        <Badge variant={l.type === 'get' ? 'warning' : 'success'}>
-                          {l.type === 'get' ? t('loans.received') : t('loans.given')}
-                        </Badge>
-                      </td>
-                      <td className="px-4 md:px-6 py-4 text-gray-600 font-medium text-xs md:text-sm">
-                        {l.purpose}
-                      </td>
-                      <td className="px-4 md:px-6 py-4 text-gray-500 font-medium text-xs md:text-sm">
-                        <div className="flex items-center gap-2">
-                          <Calendar size={14} />
-                          {formatDate(l.expectedPayDate)}
-                        </div>
-                      </td>
-                      <td className={`px-4 md:px-6 py-4 font-black text-sm md:text-base ${
-                        l.type === 'get' ? 'text-amber-600' : 'text-emerald-600'
-                      } ${l.isPaid ? 'text-gray-400!' : ''}`}>
-                        {formatCurrency(l.amount, user?.currency)}
-                      </td>
-                      <td className="px-4 md:px-6 py-4 text-right">
-                        <div className="flex items-center justify-end gap-1 md:gap-2">
-                          <button 
-                            onClick={() => togglePaidStatus(l)}
-                            className={`p-2 rounded-xl transition-colors ${l.isPaid ? 'bg-emerald-100 text-emerald-600' : 'bg-gray-100 text-gray-400 hover:text-emerald-600'}`}
-                            title={l.isPaid ? 'Mark as active' : 'Mark as settled'}
-                          >
-                            <Badge variant={l.isPaid ? 'success' : 'info'}>{l.isPaid ? 'Settled' : 'Mark Settled'}</Badge>
-                          </button>
-                          <button 
-                            onClick={() => handleOpenModal(l)}
-                            className="p-2 hover:bg-primary-50 rounded-xl text-gray-400 hover:text-primary-600 transition-colors"
-                          >
-                            <Edit2 size={16} />
-                          </button>
-                          <button 
-                            onClick={() => setDeleteConfirm(l._id)}
-                            className="p-2 hover:bg-red-50 rounded-xl text-gray-400 hover:text-red-600 transition-colors"
-                          >
-                            <Trash2 size={16} />
-                          </button>
-                        </div>
-                      </td>
-                    </motion.tr>
-                  ))
+                        </td>
+                        <td className="px-4 md:px-6 py-4">
+                          <Badge variant={loan.type === 'get' ? 'warning' : 'info'} className="capitalize text-[10px]">
+                            {loan.type === 'get' ? 'Borrowed' : 'Lent'}
+                          </Badge>
+                        </td>
+                        <td className="px-4 md:px-6 py-4 min-w-[150px]">
+                          <div className="space-y-2">
+                            <div className="h-1.5 w-full bg-gray-100 rounded-full overflow-hidden">
+                              <motion.div 
+                                initial={{ width: 0 }}
+                                animate={{ width: `${progress}%` }}
+                                className={`h-full rounded-full transition-all duration-1000 ${
+                                  isFullyPaid ? 'bg-emerald-500' : 'bg-primary-500'
+                                }`}
+                              />
+                            </div>
+                            <div className="flex justify-between text-[9px] font-black text-gray-400 uppercase">
+                              <span>{formatCurrency(paidAmount, user?.currency)}</span>
+                              <span>{Math.round(progress)}%</span>
+                            </div>
+                          </div>
+                        </td>
+                        <td className="px-4 md:px-6 py-4">
+                          <p className="text-sm font-black text-gray-900">{formatCurrency(loan.amount, user?.currency)}</p>
+                        </td>
+                        <td className="px-4 md:px-6 py-4">
+                          <div className="flex items-center gap-2 text-gray-500">
+                            <Calendar size={14} />
+                            <span className="text-xs font-medium">{formatDate(loan.expectedPayDate)}</span>
+                          </div>
+                        </td>
+                        <td className="px-4 md:px-6 py-4">
+                          {isFullyPaid ? (
+                            <Badge variant="success" className="flex items-center gap-1 w-fit">
+                              <CheckCircle2 size={12} /> Paid
+                            </Badge>
+                          ) : (
+                            <Badge variant="warning" className="w-fit">Pending</Badge>
+                          )}
+                        </td>
+                        <td className="px-4 md:px-6 py-4 text-right">
+                          <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <button 
+                              onClick={() => handleOpenModal(loan)}
+                              className="p-2 hover:bg-primary-50 rounded-lg text-gray-400 hover:text-primary-600 transition-colors"
+                            >
+                              <Edit2 size={16} />
+                            </button>
+                            <button 
+                              onClick={() => setDeleteConfirm(loan._id)}
+                              className="p-2 hover:bg-red-50 rounded-lg text-gray-400 hover:text-red-600 transition-colors"
+                            >
+                              <Trash2 size={16} />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })
                 ) : (
                   <tr>
-                    <td colSpan="6" className="px-6 py-20 text-center">
+                    <td colSpan="7" className="px-6 py-20 text-center">
                       <div className="flex flex-col items-center gap-4">
                         <div className="w-20 h-20 bg-gray-50 rounded-xl flex items-center justify-center">
                           <HandCoins size={40} className="text-gray-300" />
