@@ -120,7 +120,7 @@ const Budget = () => {
           <div className="lg:col-span-2 space-y-4 md:space-y-6">
             {budgets.length > 0 ? (
               budgets.map((budget) => {
-                const spent = categoryTotals[budget.category] || 0;
+                const spent = monthCategoryTotals[budget.category] || 0;
                 const percentage = Math.min((spent / budget.amount) * 100, 100);
                 const isOver = spent > budget.amount;
                 const isNear = spent > budget.amount * 0.8 && !isOver;
