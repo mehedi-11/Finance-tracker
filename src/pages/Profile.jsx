@@ -60,12 +60,12 @@ const Profile = () => {
     <div className="max-w-4xl mx-auto space-y-8 animate-fade-in pb-20">
       <div className="flex flex-col md:flex-row items-center gap-8">
         <div className="relative group">
-          <div className="w-32 h-32 rounded-none bg-gradient-to-tr from-primary-600 to-emerald-500 p-1">
-            <div className="w-full h-full rounded-none bg-white flex items-center justify-center overflow-hidden">
+          <div className="w-32 h-32 rounded-xl bg-gradient-to-tr from-primary-600 to-emerald-500 p-1">
+            <div className="w-full h-full rounded-xl bg-white flex items-center justify-center overflow-hidden">
               <span className="text-4xl font-bold text-primary-600 uppercase">{user?.name?.[0]}</span>
             </div>
           </div>
-          <button className="absolute -bottom-2 -right-2 w-10 h-10 bg-primary-600 rounded-none flex items-center justify-center border-4 border-slate-50 hover:scale-110 transition-transform shadow-lg">
+          <button className="absolute -bottom-2 -right-2 w-10 h-10 bg-primary-600 rounded-xl flex items-center justify-center border-4 border-slate-50 hover:scale-110 transition-transform shadow-lg">
             <Settings size={18} className="text-white" />
           </button>
         </div>
@@ -144,10 +144,10 @@ const Profile = () => {
         {showPasswordModal && (
           <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setShowPasswordModal(false)} className="absolute inset-0 bg-gray-900/40 backdrop-blur-sm" />
-            <motion.div initial={{ opacity: 0, scale: 0.95, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95, y: 20 }} className="relative w-full max-w-md bg-white rounded-none p-8 shadow-2xl overflow-y-auto max-h-[90vh] custom-scrollbar">
+            <motion.div initial={{ opacity: 0, scale: 0.95, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95, y: 20 }} className="relative w-full max-w-md bg-white rounded-xl p-8 shadow-2xl overflow-y-auto max-h-[90vh] custom-scrollbar">
               <div className="flex items-center justify-between mb-8">
                 <h2 className="text-2xl font-bold text-gray-900 flex items-center gap-2"><KeyRound className="text-primary-600" /> Change Password</h2>
-                <button onClick={() => setShowPasswordModal(false)} className="p-2 hover:bg-gray-100 rounded-none text-gray-400"><X size={20} /></button>
+                <button onClick={() => setShowPasswordModal(false)} className="p-2 hover:bg-gray-100 rounded-xl text-gray-400"><X size={20} /></button>
               </div>
               <form onSubmit={handlePasswordChange} className="space-y-6">
                 <Input label="Current Password" type="password" value={passwordData.currentPassword} onChange={e => setPasswordData({...passwordData, currentPassword: e.target.value})} required />
@@ -164,7 +164,7 @@ const Profile = () => {
 };
 
 const ProfileItem = ({ icon: Icon, label, value }) => (
-  <div className="p-4 bg-gray-50 rounded-none border border-gray-100">
+  <div className="p-4 bg-gray-50 rounded-xl border border-gray-100">
     <div className="flex items-center gap-3 mb-1">
       <Icon className="text-gray-400" size={16} />
       <span className="text-xs font-medium text-gray-500 uppercase tracking-wider">{label}</span>

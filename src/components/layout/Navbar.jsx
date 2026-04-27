@@ -52,7 +52,7 @@ const Navbar = ({ setIsSidebarOpen }) => {
       <div className="flex items-center gap-4">
         <button 
           onClick={() => setIsSidebarOpen(true)}
-          className="p-2 hover:bg-gray-100 rounded-none lg:hidden"
+          className="p-2 hover:bg-gray-100 rounded-xl lg:hidden"
         >
           <Menu size={24} className="text-gray-900" />
         </button>
@@ -69,7 +69,7 @@ const Navbar = ({ setIsSidebarOpen }) => {
           >
             <Bell size={20} />
             {unreadCount > 0 && (
-              <span className="absolute top-2 right-2 w-2.5 h-2.5 bg-primary-600 rounded-none border-2 border-white"></span>
+              <span className="absolute top-2 right-2 w-2.5 h-2.5 bg-primary-600 rounded-xl border-2 border-white"></span>
             )}
           </button>
 
@@ -79,17 +79,17 @@ const Navbar = ({ setIsSidebarOpen }) => {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 10 }}
-                className="absolute right-0 mt-4 w-[calc(100vw-2rem)] sm:w-80 bg-white border border-gray-100 rounded-none shadow-2xl p-6 z-50 overflow-hidden"
+                className="absolute right-0 mt-4 w-[calc(100vw-2rem)] sm:w-80 bg-white border border-gray-100 rounded-xl shadow-2xl p-6 z-50 overflow-hidden"
               >
                 <div className="flex items-center justify-between mb-6">
                   <h4 className="font-black text-gray-900">Notifications</h4>
-                  <span className="text-[10px] bg-primary-50 text-primary-600 px-2 py-1 rounded-none font-bold uppercase">{unreadCount} New</span>
+                  <span className="text-[10px] bg-primary-50 text-primary-600 px-2 py-1 rounded-xl font-bold uppercase">{unreadCount} New</span>
                 </div>
                 
                 <div className="space-y-4 max-h-80 overflow-y-auto pr-2 custom-scrollbar">
                   {safeNotifications.length > 0 ? (
                     safeNotifications.map((n) => (
-                      <div key={n._id} className={`p-4 rounded-none border transition-all ${n.isRead ? 'bg-white border-gray-50' : 'bg-primary-50 border-primary-100'}`}>
+                      <div key={n._id} className={`p-4 rounded-xl border transition-all ${n.isRead ? 'bg-white border-gray-50' : 'bg-primary-50 border-primary-100'}`}>
                         <div className="flex items-start justify-between gap-3">
                           <div className="flex-1 min-w-0">
                             <p className="text-sm font-bold text-gray-900 truncate">{n.title}</p>
@@ -98,7 +98,7 @@ const Navbar = ({ setIsSidebarOpen }) => {
                           {!n.isRead && (
                             <button 
                               onClick={() => markAsRead(n._id)}
-                              className="w-6 h-6 bg-white rounded-none flex items-center justify-center text-primary-600 shadow-sm shrink-0"
+                              className="w-6 h-6 bg-white rounded-xl flex items-center justify-center text-primary-600 shadow-sm shrink-0"
                             >
                               <Check size={14} />
                             </button>
@@ -120,7 +120,7 @@ const Navbar = ({ setIsSidebarOpen }) => {
             <p className="text-sm font-black text-gray-900 leading-none whitespace-nowrap">{user?.name || 'User'}</p>
             <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest mt-1">Premium</p>
           </div>
-          <div className="w-10 h-10 rounded-none bg-gradient-to-tr from-primary-600 to-emerald-500 flex items-center justify-center font-bold text-white shadow-lg ring-2 ring-primary-50/50 shrink-0">
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-primary-600 to-emerald-500 flex items-center justify-center font-bold text-white shadow-lg ring-2 ring-primary-50/50 shrink-0">
             {user?.name?.[0].toUpperCase() || user?.email?.[0].toUpperCase() || 'U'}
           </div>
         </Link>

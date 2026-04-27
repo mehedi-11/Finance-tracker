@@ -10,7 +10,22 @@
     "logout": "Logout",
     "language": "Language",
     "english": "English",
-    "bangla": "Bangla"
+    "bangla": "Bangla",
+    "add_new": "Add New",
+    "search": "Search",
+    "save": "Save",
+    "cancel": "Cancel",
+    "edit": "Edit",
+    "delete": "Delete",
+    "actions": "Actions",
+    "date": "Date",
+    "amount": "Amount",
+    "category": "Category",
+    "description": "Description",
+    "type": "Type",
+    "income": "Income",
+    "expense": "Expense",
+    "all": "All"
   },
   "dashboard": {
     "hello": "Hello",
@@ -22,5 +37,25 @@
     "recent_activity": "Recent Activity",
     "view_all": "View All",
     "future_plans": "Future Plans"
+  },
+  "transactions": {
+    "title": "Transactions",
+    "subtitle": "Manage and track your financial movements.",
+    "search_placeholder": "Search transactions...",
+    "filters": "Filters"
+  },
+  "loans": {
+    "title": "Loans Management",
+    "subtitle": "Track your borrowings and lendings in one place.",
+    "lender": "Name / Source",
+    "target_date": "Target Date",
+    "received": "Received (Debt)",
+    "given": "Given (Loan)"
+  },
+  "plans": {
+    "title": "My Plans",
+    "subtitle": "Future goals and cost predictions.",
+    "plan_title": "Plan Title",
+    "planned_date": "Planned Date"
   }
 }

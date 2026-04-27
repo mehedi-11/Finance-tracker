@@ -46,7 +46,7 @@ const Login = () => {
         
         <Card className="p-10 bg-white border-none shadow-2xl">
           <div className="text-center mb-10">
-            <div className={`w-16 h-16 ${show2FA ? 'bg-emerald-50' : 'bg-primary-50'} rounded-none flex items-center justify-center mx-auto mb-4`}>
+            <div className={`w-16 h-16 ${show2FA ? 'bg-emerald-50' : 'bg-primary-50'} rounded-xl flex items-center justify-center mx-auto mb-4`}>
               {show2FA ? <ShieldCheck className="text-emerald-600" size={32} /> : <LogIn className="text-primary-600" size={32} />}
             </div>
             <h1 className="text-2xl font-black text-gray-900">{show2FA ? 'Two-Factor Auth' : 'Welcome Back'}</h1>

@@ -19,8 +19,10 @@ import { Button, Card, Input, Badge } from '../components/ui';
 import { formatCurrency, formatDate } from '../utils/helpers';
 import { API_ENDPOINTS } from '../config';
 import toast from 'react-hot-toast';
+import { useTranslation } from 'react-i18next';
 
 const Loans = () => {
+  const { t } = useTranslation();
   const { user } = useAuth();
   const { fetchFinanceData } = useFinance();
   const [loans, setLoans] = useState(() => {
@@ -167,11 +169,11 @@ const Loans = () => {
       <div className="space-y-6 md:space-y-8 animate-fade-in pb-20">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
-            <h1 className="text-2xl md:text-3xl font-bold text-gray-900">Loans Management</h1>
-            <p className="text-sm md:text-base text-gray-500 font-medium">Track your borrowings and lendings in one place.</p>
+            <h1 className="text-2xl md:text-3xl font-bold text-gray-900">{t('loans.title')}</h1>
+            <p className="text-sm md:text-base text-gray-500 font-medium">{t('loans.subtitle')}</p>
           </div>
           <Button onClick={() => handleOpenModal()} className="flex items-center justify-center gap-2 w-full md:w-auto">
-            <Plus size={20} /> Add New Record
+            <Plus size={20} /> {t('common.add_new')}
           </Button>
         </div>
 
@@ -181,7 +183,7 @@ const Loans = () => {
             <input 
               type="text" 
               placeholder="Search by name or purpose..." 
-              className="w-full bg-white border border-gray-200 rounded-none pl-12 pr-4 py-3 text-sm md:text-base text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary-500/50 transition-all shadow-sm"
+              className="w-full bg-white border border-gray-200 rounded-xl pl-12 pr-4 py-3 text-sm md:text-base text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary-500/50 transition-all shadow-sm"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
@@ -193,12 +195,12 @@ const Loans = () => {
             <table className="w-full text-left border-collapse min-w-[600px]">
               <thead>
                 <tr className="border-b border-gray-50 text-gray-400 text-[10px] md:text-xs uppercase tracking-widest font-black">
-                  <th className="px-4 md:px-6 py-4">Name / Source</th>
-                  <th className="px-4 md:px-6 py-4">Type</th>
-                  <th className="px-4 md:px-6 py-4">Purpose</th>
-                  <th className="px-4 md:px-6 py-4">Target Date</th>
-                  <th className="px-4 md:px-6 py-4">Amount</th>
-                  <th className="px-4 md:px-6 py-4 text-right">Actions</th>
+                  <th className="px-4 md:px-6 py-4">{t('loans.lender')}</th>
+                  <th className="px-4 md:px-6 py-4">{t('common.type')}</th>
+                  <th className="px-4 md:px-6 py-4">{t('common.purpose')}</th>
+                  <th className="px-4 md:px-6 py-4">{t('loans.target_date')}</th>
+                  <th className="px-4 md:px-6 py-4">{t('common.amount')}</th>
+                  <th className="px-4 md:px-6 py-4 text-right">{t('common.actions')}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-50">
@@ -212,7 +214,7 @@ const Loans = () => {
                     >
                       <td className="px-4 md:px-6 py-4">
                         <div className="flex items-center gap-3">
-                          <div className={`w-8 h-8 md:w-10 md:h-10 rounded-none flex items-center justify-center ${
+                          <div className={`w-8 h-8 md:w-10 md:h-10 rounded-xl flex items-center justify-center ${
                             l.type === 'get' ? 'bg-amber-100 text-amber-600' : 'bg-emerald-100 text-emerald-600'
                           }`}>
                             {l.type === 'get' ? <ArrowDownCircle size={16} /> : <ArrowUpCircle size={16} />}
@@ -222,7 +224,7 @@ const Loans = () => {
                       </td>
                       <td className="px-4 md:px-6 py-4">
                         <Badge variant={l.type === 'get' ? 'warning' : 'success'}>
-                          {l.type === 'get' ? 'Received (Debt)' : 'Given (Loan)'}
+                          {l.type === 'get' ? t('loans.received') : t('loans.given')}
                         </Badge>
                       </td>
                       <td className="px-4 md:px-6 py-4 text-gray-600 font-medium text-xs md:text-sm">
@@ -243,20 +245,20 @@ const Loans = () => {
                         <div className="flex items-center justify-end gap-1 md:gap-2">
                           <button 
                             onClick={() => togglePaidStatus(l)}
-                            className={`p-2 rounded-none transition-colors ${l.isPaid ? 'bg-emerald-100 text-emerald-600' : 'bg-gray-100 text-gray-400 hover:text-emerald-600'}`}
+                            className={`p-2 rounded-xl transition-colors ${l.isPaid ? 'bg-emerald-100 text-emerald-600' : 'bg-gray-100 text-gray-400 hover:text-emerald-600'}`}
                             title={l.isPaid ? 'Mark as active' : 'Mark as settled'}
                           >
                             <Badge variant={l.isPaid ? 'success' : 'info'}>{l.isPaid ? 'Settled' : 'Mark Settled'}</Badge>
                           </button>
                           <button 
                             onClick={() => handleOpenModal(l)}
-                            className="p-2 hover:bg-primary-50 rounded-none text-gray-400 hover:text-primary-600 transition-colors"
+                            className="p-2 hover:bg-primary-50 rounded-xl text-gray-400 hover:text-primary-600 transition-colors"
                           >
                             <Edit2 size={16} />
                           </button>
                           <button 
                             onClick={() => setDeleteConfirm(l._id)}
-                            className="p-2 hover:bg-red-50 rounded-none text-gray-400 hover:text-red-600 transition-colors"
+                            className="p-2 hover:bg-red-50 rounded-xl text-gray-400 hover:text-red-600 transition-colors"
                           >
                             <Trash2 size={16} />
                           </button>
@@ -268,7 +270,7 @@ const Loans = () => {
                   <tr>
                     <td colSpan="6" className="px-6 py-20 text-center">
                       <div className="flex flex-col items-center gap-4">
-                        <div className="w-20 h-20 bg-gray-50 rounded-none flex items-center justify-center">
+                        <div className="w-20 h-20 bg-gray-50 rounded-xl flex items-center justify-center">
                           <HandCoins size={40} className="text-gray-300" />
                         </div>
                         <p className="text-lg font-bold text-gray-400">No records found</p>
@@ -292,11 +294,11 @@ const Loans = () => {
                 initial={{ opacity: 0, scale: 0.95, y: 20 }} 
                 animate={{ opacity: 1, scale: 1, y: 0 }} 
                 exit={{ opacity: 0, scale: 0.95, y: 20 }} 
-                className="relative w-full max-w-lg bg-white rounded-none shadow-2xl flex flex-col max-h-[90vh]"
+                className="relative w-full max-w-lg bg-white rounded-xl shadow-2xl flex flex-col max-h-[90vh]"
               >
                 <div className="flex items-center justify-between p-8 md:p-10 pb-4">
                   <h2 className="text-2xl font-black text-gray-900">{editingLoan ? 'Edit Record' : 'Add Loan Record'}</h2>
-                  <button onClick={() => setIsModalOpen(false)} className="p-3 hover:bg-gray-100 rounded-none text-gray-400 transition-colors">
+                  <button onClick={() => setIsModalOpen(false)} className="p-3 hover:bg-gray-100 rounded-xl text-gray-400 transition-colors">
                     <X size={24} />
                   </button>
                 </div>
@@ -305,7 +307,7 @@ const Loans = () => {
                   <form onSubmit={handleSubmit} className="space-y-6">
                     <div className="space-y-1.5">
                       <label className="text-sm font-bold text-gray-700 ml-1">Loan Type</label>
-                      <div className="flex gap-3 p-1.5 bg-gray-50 rounded-none">
+                      <div className="flex gap-3 p-1.5 bg-gray-50 rounded-xl">
                         {[
                           { id: 'get', label: 'Received (Debt)', color: 'amber' },
                           { id: 'give', label: 'Given (Lent)', color: 'emerald' }
@@ -314,7 +316,7 @@ const Loans = () => {
                             key={t.id}
                             type="button"
                             onClick={() => setFormData({ ...formData, type: t.id })}
-                            className={`flex-1 py-3.5 rounded-none transition-all capitalize font-black text-sm ${
+                            className={`flex-1 py-3.5 rounded-xl transition-all capitalize font-black text-sm ${
                               formData.type === t.id 
                                 ? t.id === 'get' ? 'bg-amber-600 text-white shadow-lg shadow-amber-500/20' : 'bg-emerald-600 text-white shadow-lg shadow-emerald-500/20'
                                 : 'text-gray-400 hover:text-gray-600'
@@ -354,9 +356,9 @@ const Loans = () => {
                 initial={{ opacity: 0, scale: 0.9 }} 
                 animate={{ opacity: 1, scale: 1 }} 
                 exit={{ opacity: 0, scale: 0.9 }}
-                className="relative w-full max-w-sm bg-white rounded-none p-8 text-center shadow-2xl"
+                className="relative w-full max-w-sm bg-white rounded-xl p-8 text-center shadow-2xl"
               >
-                <div className="w-20 h-20 bg-red-50 rounded-none flex items-center justify-center mx-auto mb-6">
+                <div className="w-20 h-20 bg-red-50 rounded-xl flex items-center justify-center mx-auto mb-6">
                   <AlertTriangle className="text-red-500" size={40} />
                 </div>
                 <h3 className="text-xl font-black text-gray-900 mb-2">Are you sure?</h3>

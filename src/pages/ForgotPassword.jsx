@@ -43,7 +43,7 @@ const ForgotPassword = () => {
         </Link>
         
         <Card className="p-10 bg-white border-none shadow-2xl text-center">
-          <div className="w-16 h-16 bg-primary-50 rounded-none flex items-center justify-center mx-auto mb-6">
+          <div className="w-16 h-16 bg-primary-50 rounded-xl flex items-center justify-center mx-auto mb-6">
             <KeyRound className="text-primary-600" size={32} />
           </div>
           <h1 className="text-2xl font-black text-gray-900">Forgot Password</h1>
@@ -66,7 +66,7 @@ const ForgotPassword = () => {
               </Button>
             </form>
           ) : (
-            <div className="p-6 bg-primary-50 rounded-none border border-primary-100 flex flex-col items-center">
+            <div className="p-6 bg-primary-50 rounded-xl border border-primary-100 flex flex-col items-center">
               <Mail className="text-primary-600 mb-3" size={24} />
               <p className="text-primary-700 font-bold text-sm">Check your inbox!</p>
               <p className="text-primary-600/70 text-xs mt-1">We've sent a recovery email to {email}</p>
