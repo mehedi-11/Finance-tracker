@@ -186,7 +186,7 @@ const Dashboard = () => {
     <>
       <div className="space-y-8 animate-fade-in pb-20">
         {/* Header Section - Premium Dark Leaf Box for All Screens */}
-        <div className="bg-[#1a0b2e] rounded-tl-[50px] md:rounded-tl-[100px] rounded-br-[50px] md:rounded-br-[100px] p-8 md:p-12 lg:p-16 mb-10 shadow-2xl shadow-purple-900/20 animate-fade-in relative z-20 transition-all">
+        <div className="bg-[#1a0b2e] rounded-tl-[30px] md:rounded-tl-[60px] rounded-br-[30px] md:rounded-br-[60px] p-8 md:p-12 lg:p-16 mb-10 shadow-2xl shadow-purple-900/20 animate-fade-in relative z-20 transition-all">
           <div className="max-w-[1400px] mx-auto flex flex-col md:flex-row md:items-center justify-between gap-8 md:gap-4 flex-wrap">
             <div className="text-center md:text-left w-full md:w-auto">
               <h1 className="text-3xl sm:text-4xl md:text-2xl lg:text-3xl font-black text-white leading-tight whitespace-nowrap tracking-tight">
