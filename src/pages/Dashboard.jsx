@@ -49,7 +49,7 @@ import { useTranslation } from 'react-i18next';
 const NOTES_URL = API_ENDPOINTS.NOTES;
 
 const Dashboard = () => {
-  const { transactions, totals, categoryTotals, getMonthlyReports, loans } = useFinance();
+  const { transactions, totals, categoryTotals, getMonthlyReports, loans, addTransaction } = useFinance();
   const { user } = useAuth();
   const { t } = useTranslation();
 
