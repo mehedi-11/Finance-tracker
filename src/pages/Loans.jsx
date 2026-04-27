@@ -8,8 +8,10 @@ import {
   Edit2, 
   X,
   AlertTriangle,
-  ArrowUpCircle,
-  Calendar
+  HandCoins,
+  Calendar,
+  ArrowDownCircle,
+  ArrowUpCircle
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useFinance } from '../context/FinanceContext';
@@ -18,10 +20,17 @@ import { formatCurrency, formatDate } from '../utils/helpers';
 import { API_ENDPOINTS } from '../config';
 import toast from 'react-hot-toast';
 
-const GiveLoans = () => {
+const Loans = () => {
   const { user } = useAuth();
   const { fetchFinanceData } = useFinance();
-  const [loans, setLoans] = useState([]);
+  const [loans, setLoans] = useState(() => {
+    try {
+      const cached = localStorage.getItem('finance_loans');
+      return cached ? JSON.parse(cached) : [];
+    } catch (e) {
+      return [];
+    }
+  });
   const [searchTerm, setSearchTerm] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingLoan, setEditingLoan] = useState(null);
@@ -34,7 +43,7 @@ const GiveLoans = () => {
     amount: '',
     expectedPayDate: new Date().toISOString().split('T')[0],
     isPaid: false,
-    type: 'give'
+    type: 'get' // Default to 'Received'
   });
 
   useEffect(() => {
@@ -49,7 +58,8 @@ const GiveLoans = () => {
       });
       const data = await response.json();
       if (Array.isArray(data)) {
-        setLoans(data.filter(l => l.type === 'give'));
+        setLoans(data);
+        localStorage.setItem('finance_loans', JSON.stringify(data));
       }
     } catch (err) {
       console.error('Failed to fetch loans:', err);
@@ -70,7 +80,7 @@ const GiveLoans = () => {
         amount: loan.amount,
         expectedPayDate: loan.expectedPayDate ? loan.expectedPayDate.split('T')[0] : new Date().toISOString().split('T')[0],
         isPaid: loan.isPaid,
-        type: 'give'
+        type: loan.type || 'get'
       });
     } else {
       setEditingLoan(null);
@@ -80,7 +90,7 @@ const GiveLoans = () => {
         amount: '',
         expectedPayDate: new Date().toISOString().split('T')[0],
         isPaid: false,
-        type: 'give'
+        type: 'get'
       });
     }
     setIsModalOpen(true);
@@ -103,7 +113,7 @@ const GiveLoans = () => {
       });
 
       if (response.ok) {
-        toast.success(editingLoan ? 'Receivable updated!' : 'Loan given & recorded!');
+        toast.success(editingLoan ? 'Loan record updated!' : 'Loan record saved!');
         setIsModalOpen(false);
         fetchLoans();
         fetchFinanceData();
@@ -123,7 +133,7 @@ const GiveLoans = () => {
         headers: { 'Authorization': `Bearer ${user.token}` }
       });
       if (response.ok) {
-        toast.success('Record deleted');
+        toast.success('Record removed');
         setDeleteConfirm(null);
         fetchLoans();
         fetchFinanceData();
@@ -145,7 +155,7 @@ const GiveLoans = () => {
       });
       if (response.ok) {
         fetchLoans();
-        toast.success(loan.isPaid ? 'Marked as active' : 'Marked as received!');
+        toast.success('Status updated!');
       }
     } catch (err) {
       toast.error('Failed to update status');
@@ -157,11 +167,11 @@ const GiveLoans = () => {
       <div className="space-y-6 md:space-y-8 animate-fade-in pb-20">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
-            <h1 className="text-2xl md:text-3xl font-bold text-gray-900">Give Loan (Receivables)</h1>
-            <p className="text-sm md:text-base text-gray-500 font-medium">Money you have lent to others.</p>
+            <h1 className="text-2xl md:text-3xl font-bold text-gray-900">Loans Management</h1>
+            <p className="text-sm md:text-base text-gray-500 font-medium">Track your borrowings and lendings in one place.</p>
           </div>
-          <Button onClick={() => handleOpenModal()} className="flex items-center justify-center gap-2 w-full md:w-auto bg-emerald-600 hover:bg-emerald-700">
-            <Plus size={20} /> Record New Loan
+          <Button onClick={() => handleOpenModal()} className="flex items-center justify-center gap-2 w-full md:w-auto">
+            <Plus size={20} /> Add New Record
           </Button>
         </div>
 
@@ -170,7 +180,7 @@ const GiveLoans = () => {
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
             <input 
               type="text" 
-              placeholder="Search by borrower..." 
+              placeholder="Search by name or purpose..." 
               className="w-full bg-white border border-gray-200 rounded-xl pl-12 pr-4 py-3 text-sm md:text-base text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary-500/50 transition-all shadow-sm"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
@@ -183,11 +193,11 @@ const GiveLoans = () => {
             <table className="w-full text-left border-collapse min-w-[600px]">
               <thead>
                 <tr className="border-b border-gray-50 text-gray-400 text-[10px] md:text-xs uppercase tracking-widest font-black">
-                  <th className="px-4 md:px-6 py-4">Borrower / Destination</th>
+                  <th className="px-4 md:px-6 py-4">Name / Source</th>
+                  <th className="px-4 md:px-6 py-4">Type</th>
                   <th className="px-4 md:px-6 py-4">Purpose</th>
-                  <th className="px-4 md:px-6 py-4">Expected Receive Date</th>
+                  <th className="px-4 md:px-6 py-4">Target Date</th>
                   <th className="px-4 md:px-6 py-4">Amount</th>
-                  <th className="px-4 md:px-6 py-4">Status</th>
                   <th className="px-4 md:px-6 py-4 text-right">Actions</th>
                 </tr>
               </thead>
@@ -203,12 +213,17 @@ const GiveLoans = () => {
                       <td className="px-4 md:px-6 py-4">
                         <div className="flex items-center gap-3">
                           <div className={`w-8 h-8 md:w-10 md:h-10 rounded-xl flex items-center justify-center ${
-                            l.isPaid ? 'bg-gray-100 text-gray-400' : 'bg-emerald-100 text-emerald-600'
+                            l.type === 'get' ? 'bg-amber-100 text-amber-600' : 'bg-emerald-100 text-emerald-600'
                           }`}>
-                            <ArrowUpCircle size={16} />
+                            {l.type === 'get' ? <ArrowDownCircle size={16} /> : <ArrowUpCircle size={16} />}
                           </div>
                           <span className={`font-bold text-sm md:text-base ${l.isPaid ? 'text-gray-500 line-through' : 'text-gray-900'}`}>{l.lender}</span>
                         </div>
+                      </td>
+                      <td className="px-4 md:px-6 py-4">
+                        <Badge variant={l.type === 'get' ? 'warning' : 'success'}>
+                          {l.type === 'get' ? 'Received (Debt)' : 'Given (Loan)'}
+                        </Badge>
                       </td>
                       <td className="px-4 md:px-6 py-4 text-gray-600 font-medium text-xs md:text-sm">
                         {l.purpose}
@@ -219,18 +234,20 @@ const GiveLoans = () => {
                           {formatDate(l.expectedPayDate)}
                         </div>
                       </td>
-                      <td className={`px-4 md:px-6 py-4 font-black text-sm md:text-base ${l.isPaid ? 'text-gray-500' : 'text-emerald-600'}`}>
+                      <td className={`px-4 md:px-6 py-4 font-black text-sm md:text-base ${
+                        l.type === 'get' ? 'text-amber-600' : 'text-emerald-600'
+                      } ${l.isPaid ? 'text-gray-400!' : ''}`}>
                         {formatCurrency(l.amount, user?.currency)}
-                      </td>
-                      <td className="px-4 md:px-6 py-4">
-                        <button onClick={() => togglePaidStatus(l)}>
-                          <Badge variant={l.isPaid ? 'success' : 'info'}>
-                            {l.isPaid ? 'Received' : 'Pending'}
-                          </Badge>
-                        </button>
                       </td>
                       <td className="px-4 md:px-6 py-4 text-right">
                         <div className="flex items-center justify-end gap-1 md:gap-2">
+                          <button 
+                            onClick={() => togglePaidStatus(l)}
+                            className={`p-2 rounded-lg transition-colors ${l.isPaid ? 'bg-emerald-100 text-emerald-600' : 'bg-gray-100 text-gray-400 hover:text-emerald-600'}`}
+                            title={l.isPaid ? 'Mark as active' : 'Mark as settled'}
+                          >
+                            <Badge variant={l.isPaid ? 'success' : 'info'}>{l.isPaid ? 'Settled' : 'Mark Settled'}</Badge>
+                          </button>
                           <button 
                             onClick={() => handleOpenModal(l)}
                             className="p-2 hover:bg-primary-50 rounded-lg text-gray-400 hover:text-primary-600 transition-colors"
@@ -252,9 +269,9 @@ const GiveLoans = () => {
                     <td colSpan="6" className="px-6 py-20 text-center">
                       <div className="flex flex-col items-center gap-4">
                         <div className="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center">
-                          <ArrowUpCircle size={40} className="text-gray-300" />
+                          <HandCoins size={40} className="text-gray-300" />
                         </div>
-                        <p className="text-lg font-bold text-gray-400">No receivables found</p>
+                        <p className="text-lg font-bold text-gray-400">No records found</p>
                       </div>
                     </td>
                   </tr>
@@ -265,6 +282,7 @@ const GiveLoans = () => {
         </Card>
       </div>
 
+      {/* Unified Loan Modal */}
       {createPortal(
         <AnimatePresence>
           {isModalOpen && (
@@ -277,7 +295,7 @@ const GiveLoans = () => {
                 className="relative w-full max-w-lg bg-white rounded-[2.5rem] shadow-2xl flex flex-col max-h-[90vh]"
               >
                 <div className="flex items-center justify-between p-8 md:p-10 pb-4">
-                  <h2 className="text-2xl font-black text-gray-900">{editingLoan ? 'Edit Record' : 'Give New Loan'}</h2>
+                  <h2 className="text-2xl font-black text-gray-900">{editingLoan ? 'Edit Record' : 'Add Loan Record'}</h2>
                   <button onClick={() => setIsModalOpen(false)} className="p-3 hover:bg-gray-100 rounded-2xl text-gray-400 transition-colors">
                     <X size={24} />
                   </button>
@@ -285,14 +303,37 @@ const GiveLoans = () => {
 
                 <div className="flex-1 overflow-y-auto px-8 md:px-10 pb-8 md:pb-10 custom-scrollbar">
                   <form onSubmit={handleSubmit} className="space-y-6">
-                    <Input label="Borrower / Name" placeholder="e.g. John Doe" value={formData.lender} onChange={(e) => setFormData({ ...formData, lender: e.target.value })} required />
-                    <Input label="Purpose" placeholder="e.g. Personal help" value={formData.purpose} onChange={(e) => setFormData({ ...formData, purpose: e.target.value })} required />
+                    <div className="space-y-1.5">
+                      <label className="text-sm font-bold text-gray-700 ml-1">Loan Type</label>
+                      <div className="flex gap-3 p-1.5 bg-gray-50 rounded-2xl">
+                        {[
+                          { id: 'get', label: 'Received (Debt)', color: 'amber' },
+                          { id: 'give', label: 'Given (Lent)', color: 'emerald' }
+                        ].map((t) => (
+                          <button
+                            key={t.id}
+                            type="button"
+                            onClick={() => setFormData({ ...formData, type: t.id })}
+                            className={`flex-1 py-3.5 rounded-xl transition-all capitalize font-black text-sm ${
+                              formData.type === t.id 
+                                ? t.id === 'get' ? 'bg-amber-600 text-white shadow-lg shadow-amber-500/20' : 'bg-emerald-600 text-white shadow-lg shadow-emerald-500/20'
+                                : 'text-gray-400 hover:text-gray-600'
+                            }`}
+                          >
+                            {t.label}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    <Input label="Person / Bank Name" placeholder="e.g. John Doe" value={formData.lender} onChange={(e) => setFormData({ ...formData, lender: e.target.value })} required />
+                    <Input label="Purpose" placeholder="e.g. Business help, Car" value={formData.purpose} onChange={(e) => setFormData({ ...formData, purpose: e.target.value })} required />
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <Input label="Amount" type="number" placeholder="0.00" value={formData.amount} onChange={(e) => setFormData({ ...formData, amount: e.target.value })} required />
-                      <Input label="Expected Receive Date" type="date" value={formData.expectedPayDate} onChange={(e) => setFormData({ ...formData, expectedPayDate: e.target.value })} required />
+                      <Input label="Expected Date" type="date" value={formData.expectedPayDate} onChange={(e) => setFormData({ ...formData, expectedPayDate: e.target.value })} required />
                     </div>
-                    <Button type="submit" className="w-full py-4 text-lg font-bold mt-4 bg-emerald-600 hover:bg-emerald-700" disabled={loading}>
-                      {loading ? 'Processing...' : (editingLoan ? 'Update Record' : 'Save Loan Record')}
+                    <Button type="submit" className="w-full py-4 text-lg font-bold mt-4" disabled={loading}>
+                      {loading ? 'Processing...' : (editingLoan ? 'Update Record' : 'Save Record')}
                     </Button>
                   </form>
                 </div>
@@ -303,6 +344,7 @@ const GiveLoans = () => {
         document.body
       )}
 
+      {/* Delete Confirmation */}
       {createPortal(
         <AnimatePresence>
           {deleteConfirm && (
@@ -318,7 +360,7 @@ const GiveLoans = () => {
                   <AlertTriangle className="text-red-500" size={40} />
                 </div>
                 <h3 className="text-xl font-black text-gray-900 mb-2">Are you sure?</h3>
-                <p className="text-gray-500 text-sm font-medium mb-8">This loan record and its transaction will be permanently removed.</p>
+                <p className="text-gray-500 text-sm font-medium mb-8">This record and its related transaction will be removed.</p>
                 <div className="grid grid-cols-2 gap-4">
                   <Button variant="secondary" onClick={() => setDeleteConfirm(null)} className="bg-gray-100 border-none text-gray-600">Cancel</Button>
                   <Button onClick={handleDelete} className="bg-red-600 hover:bg-red-700 text-white border-none">Yes, Delete</Button>
@@ -333,4 +375,4 @@ const GiveLoans = () => {
   );
 };
 
-export default GiveLoans;
+export default Loans;

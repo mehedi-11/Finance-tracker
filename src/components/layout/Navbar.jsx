@@ -69,56 +69,6 @@ const Navbar = ({ setIsSidebarOpen }) => {
       </div>
 
       <div className="flex items-center gap-2 md:gap-6">
-        {/* Loan Dropdown */}
-        <div className="relative hidden md:block">
-          <button 
-            onClick={() => setShowLoanDropdown(!showLoanDropdown)}
-            onBlur={() => setTimeout(() => setShowLoanDropdown(false), 200)}
-            className="flex items-center gap-2 px-4 py-2 bg-gray-50 border border-gray-100 rounded-xl text-sm font-bold text-gray-700 hover:bg-gray-100 transition-all group"
-          >
-            <HandCoins size={18} className="text-primary-600 group-hover:scale-110 transition-transform" />
-            <span>Loan</span>
-            <ChevronDown size={14} className={`transition-transform duration-300 ${showLoanDropdown ? 'rotate-180' : ''}`} />
-          </button>
-
-          <AnimatePresence>
-            {showLoanDropdown && (
-              <motion.div 
-                initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                className="absolute right-0 mt-3 w-56 bg-white border border-gray-50 rounded-[1.5rem] shadow-2xl p-2 z-50 ring-1 ring-black/5"
-              >
-                <Link 
-                  to="/get-loans" 
-                  className="flex items-center gap-3 p-3 rounded-2xl hover:bg-amber-50 text-gray-700 hover:text-amber-700 transition-all group"
-                >
-                  <div className="w-8 h-8 bg-amber-100 rounded-xl flex items-center justify-center text-amber-600 group-hover:bg-amber-600 group-hover:text-white transition-all">
-                    <ArrowDownCircle size={16} />
-                  </div>
-                  <div className="flex flex-col">
-                    <span className="text-sm font-black">Get Loan</span>
-                    <span className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Take Money</span>
-                  </div>
-                </Link>
-
-                <Link 
-                  to="/give-loans" 
-                  className="flex items-center gap-3 p-3 rounded-2xl hover:bg-emerald-50 text-gray-700 hover:text-emerald-700 transition-all group mt-1"
-                >
-                  <div className="w-8 h-8 bg-emerald-100 rounded-xl flex items-center justify-center text-emerald-600 group-hover:bg-emerald-600 group-hover:text-white transition-all">
-                    <ArrowUpCircle size={16} />
-                  </div>
-                  <div className="flex flex-col">
-                    <span className="text-sm font-black">Take Loan</span>
-                    <span className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Give Money</span>
-                  </div>
-                </Link>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
-
         <div className="relative">
           <button 
             onClick={() => setShowDropdown(!showDropdown)}

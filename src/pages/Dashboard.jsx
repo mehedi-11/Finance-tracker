@@ -16,8 +16,7 @@ import {
   X, 
   AlertTriangle,
   LayoutDashboard,
-  ArrowDownCircle,
-  ArrowUpCircle
+  HandCoins
 } from 'lucide-react';
 import { useFinance } from '../context/FinanceContext';
 import { useAuth } from '../context/AuthContext';
@@ -165,14 +164,9 @@ const Dashboard = () => {
                 <LayoutDashboard size={18} className="text-primary-600" /> Budget
               </Button>
             </Link>
-            <Link to="/get-loans" className="flex-1 sm:flex-none">
+            <Link to="/loans" className="flex-1 sm:flex-none">
               <Button variant="secondary" className="w-full flex items-center justify-center gap-2 bg-white border-gray-200">
-                <ArrowDownCircle size={18} className="text-amber-600" /> Get Loan
-              </Button>
-            </Link>
-            <Link to="/give-loans" className="flex-1 sm:flex-none">
-              <Button variant="secondary" className="w-full flex items-center justify-center gap-2 bg-white border-gray-200">
-                <ArrowUpCircle size={18} className="text-emerald-600" /> Give Loan
+                <HandCoins size={18} className="text-amber-600" /> Loans
               </Button>
             </Link>
             <Link to="/plans" className="flex-1 sm:flex-none">
