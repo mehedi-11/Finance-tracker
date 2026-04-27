@@ -1,4 +1,6 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
+import { createPortal } from 'react-dom';
+import { motion, AnimatePresence } from 'framer-motion';
 import { 
   BarChart, 
   Bar, 
@@ -12,7 +14,18 @@ import {
   Cell,
   Legend
 } from 'recharts';
-import { PieChart as PieChartIcon, BarChart3, TrendingUp, TrendingDown, ArrowDownCircle } from 'lucide-react';
+import { 
+  PieChart as PieChartIcon, 
+  BarChart3, 
+  TrendingUp, 
+  TrendingDown, 
+  ArrowDownCircle,
+  Eye,
+  Trash2,
+  Download,
+  X,
+  AlertTriangle
+} from 'lucide-react';
 import { useFinance } from '../context/FinanceContext';
 import { useAuth } from '../context/AuthContext';
 import { useTranslation } from 'react-i18next';
@@ -22,14 +35,22 @@ import toast from 'react-hot-toast';
 
 const COLORS = ['#8b5cf6', '#10b981', '#f59e0b', '#ef4444', '#3b82f6', '#ec4899', '#06b6d4', '#84cc16'];
 
+import { jsPDF } from 'jspdf';
+import html2canvas from 'html2canvas';
+
 const Reports = () => {
-  const { totals, categoryTotals, getMonthlyReports, transactions, loans, addTransaction, addLoan } = useFinance();
+  const { totals, categoryTotals, getMonthlyReports, transactions, loans, addTransaction, addLoan, deleteMonthData } = useFinance();
   const { user } = useAuth();
   const { t } = useTranslation();
+  
+  const [viewingReport, setViewingReport] = useState(null);
+  const [deleteConfirm, setDeleteConfirm] = useState(null);
+  const [isDownloading, setIsDownloading] = useState(false);
 
   const monthlyReports = getMonthlyReports();
 
-  const handlePrint = (report) => {
+  const handleDownload = async (report) => {
+    setIsDownloading(true);
     const monthTransactions = transactions.filter(t => {
       const d = new Date(t.date);
       return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}` === report.month;
@@ -40,77 +61,63 @@ const Reports = () => {
       return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}` === report.month;
     });
 
-    const printWindow = window.open('', '_blank');
     const [year, month] = report.month.split('-');
     const monthName = new Date(year, month - 1).toLocaleString('default', { month: 'long', year: 'numeric' });
 
-    printWindow.document.write(`
-      <html>
-        <head>
-          <title>Financial Report - ${monthName}</title>
-          <style>
-            body { font-family: sans-serif; padding: 40px; color: #1e293b; }
-            .header { text-align: center; margin-bottom: 40px; border-bottom: 2px solid #f1f5f9; padding-bottom: 20px; }
-            .summary { display: grid; grid-cols: 2; gap: 20px; margin-bottom: 40px; }
-            .summary-item { padding: 15px; border: 1px solid #f1f5f9; border-radius: 8px; }
-            table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-            th, td { padding: 12px; text-align: left; border-bottom: 1px solid #f1f5f9; }
-            th { background: #f8fafc; font-size: 12px; text-transform: uppercase; }
-            .income { color: #10b981; }
-            .expense { color: #ef4444; }
-          </style>
-        </head>
-        <body>
-          <div class="header">
-            <h1>FinanceFlow Monthly Report</h1>
-            <p>${monthName}</p>
-          </div>
-          <div class="summary">
-            <div class="summary-item"><strong>Total Income:</strong> ${formatCurrency(report.income, user?.currency)}</div>
-            <div class="summary-item"><strong>Total Expense:</strong> ${formatCurrency(report.expense, user?.currency)}</div>
-            <div class="summary-item"><strong>Savings:</strong> ${formatCurrency(report.savings, user?.currency)}</div>
-            <div class="summary-item"><strong>Loan Taken:</strong> ${formatCurrency(report.loansTaken, user?.currency)}</div>
-            <div class="summary-item"><strong>Loan Paid:</strong> ${formatCurrency(report.loansPaid, user?.currency)}</div>
-          </div>
-          
-          <h3>Transactions</h3>
-          <table>
-            <thead>
-              <tr><th>Date</th><th>Category</th><th>Description</th><th>Amount</th></tr>
-            </thead>
-            <tbody>
-              ${monthTransactions.map(t => `
-                <tr>
-                  <td>${new Date(t.date).toLocaleDateString()}</td>
-                  <td>${t.category}</td>
-                  <td>${t.description}</td>
-                  <td class="${t.type}">${t.type === 'income' ? '+' : '-'}${formatCurrency(t.amount, user?.currency)}</td>
-                </tr>
-              `).join('')}
-            </tbody>
-          </table>
+    const element = document.createElement('div');
+    element.style.padding = '40px';
+    element.style.width = '800px';
+    element.innerHTML = `
+      <div style="font-family: sans-serif; color: #1e293b;">
+        <div style="text-align: center; margin-bottom: 40px; border-bottom: 2px solid #f1f5f9; padding-bottom: 20px;">
+          <h1 style="margin:0; color:#4f46e5;">FinanceFlow Report</h1>
+          <p style="color:#64748b; font-weight:bold;">${monthName}</p>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 40px;">
+          <div style="padding:15px; border:1px solid #f1f5f9; border-radius:8px;"><strong>Income:</strong> ${formatCurrency(report.income, user?.currency)}</div>
+          <div style="padding:15px; border:1px solid #f1f5f9; border-radius:8px;"><strong>Expense:</strong> ${formatCurrency(report.expense, user?.currency)}</div>
+          <div style="padding:15px; border:1px solid #f1f5f9; border-radius:8px;"><strong>Savings:</strong> ${formatCurrency(report.savings, user?.currency)}</div>
+          <div style="padding:15px; border:1px solid #f1f5f9; border-radius:8px;"><strong>Loans:</strong> ${formatCurrency(report.loansTaken, user?.currency)}</div>
+        </div>
+        <h3>Transactions</h3>
+        <table style="width:100%; border-collapse:collapse;">
+          <tr style="background:#f8fafc; text-align:left; font-size:12px;">
+            <th style="padding:10px; border-bottom:1px solid #f1f5f9;">Date</th>
+            <th style="padding:10px; border-bottom:1px solid #f1f5f9;">Category</th>
+            <th style="padding:10px; border-bottom:1px solid #f1f5f9;">Amount</th>
+          </tr>
+          ${monthTransactions.map(t => `
+            <tr>
+              <td style="padding:10px; border-bottom:1px solid #f1f5f9;">${new Date(t.date).toLocaleDateString()}</td>
+              <td style="padding:10px; border-bottom:1px solid #f1f5f9;">${t.category}</td>
+              <td style="padding:10px; border-bottom:1px solid #f1f5f9; color: ${t.type === 'income' ? '#10b981' : '#ef4444'}">${t.type === 'income' ? '+' : '-'}${t.amount}</td>
+            </tr>
+          `).join('')}
+        </table>
+      </div>
+    `;
+    
+    document.body.appendChild(element);
+    const canvas = await html2canvas(element);
+    const imgData = canvas.toDataURL('image/png');
+    const pdf = new jsPDF('p', 'mm', 'a4');
+    const imgProps = pdf.getImageProperties(imgData);
+    const pdfWidth = pdf.internal.pageSize.getWidth();
+    const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+    pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+    pdf.save(`FinanceReport-${report.month}.pdf`);
+    document.body.removeChild(element);
+    setIsDownloading(false);
+    toast.success('Report downloaded successfully!');
+  };
 
-          <h3>Loans Activity</h3>
-          <table>
-            <thead>
-              <tr><th>Source</th><th>Purpose</th><th>Amount</th><th>Status</th></tr>
-            </thead>
-            <tbody>
-              ${monthLoans.map(l => `
-                <tr>
-                  <td>${l.lender}</td>
-                  <td>${l.purpose}</td>
-                  <td>${formatCurrency(l.amount, user?.currency)}</td>
-                  <td>${l.isPaid ? 'Settled' : 'Active'}</td>
-                </tr>
-              `).join('')}
-            </tbody>
-          </table>
-          <script>window.print();</script>
-        </body>
-      </html>
-    `);
-    printWindow.document.close();
+  const handleDelete = async () => {
+    if (!deleteConfirm) return;
+    toast.loading('Deleting month records...');
+    await deleteMonthData(deleteConfirm);
+    setDeleteConfirm(null);
+    toast.dismiss();
+    toast.success('Month records deleted!');
   };
 
   return (
@@ -124,7 +131,6 @@ const Reports = () => {
           variant="secondary" 
           className="bg-primary-50 text-primary-600 border-none font-bold flex items-center gap-2"
           onClick={async () => {
-            const categories = ['Food', 'Transport', 'Rent', 'Salary', 'Shopping', 'Bills'];
             const months = [1, 2, 3, 4];
             const year = new Date().getFullYear();
             toast.loading('Generating sample data...');
@@ -212,14 +218,31 @@ const Reports = () => {
                         <td className="px-6 py-4 font-bold text-primary-600">{formatCurrency(report.savings, user?.currency)}</td>
                         <td className="px-6 py-4 font-bold text-amber-600">{formatCurrency(report.loansTaken, user?.currency)}</td>
                         <td className="px-6 py-4 font-bold text-indigo-600">{formatCurrency(report.loansPaid, user?.currency)}</td>
-                        <td className="px-6 py-4 text-right space-x-2">
-                          <button 
-                            onClick={() => handlePrint(report)}
-                            className="p-2 bg-gray-50 text-gray-500 hover:text-primary-600 rounded-xl transition-all"
-                            title="Download PDF"
-                          >
-                            <ArrowDownCircle size={20} />
-                          </button>
+                        <td className="px-6 py-4 text-right">
+                          <div className="flex items-center justify-end gap-2">
+                            <button 
+                              onClick={() => setViewingReport(report)}
+                              className="p-2 bg-gray-50 text-gray-500 hover:text-primary-600 rounded-xl transition-all"
+                              title="View Details"
+                            >
+                              <Eye size={18} />
+                            </button>
+                            <button 
+                              onClick={() => handleDownload(report)}
+                              disabled={isDownloading}
+                              className="p-2 bg-gray-50 text-gray-500 hover:text-emerald-600 rounded-xl transition-all"
+                              title="Download PDF"
+                            >
+                              <Download size={18} />
+                            </button>
+                            <button 
+                              onClick={() => setDeleteConfirm(report.month)}
+                              className="p-2 bg-gray-50 text-gray-500 hover:text-red-600 rounded-xl transition-all"
+                              title="Delete Month Data"
+                            >
+                              <Trash2 size={18} />
+                            </button>
+                          </div>
                         </td>
                       </tr>
                     );
@@ -236,6 +259,111 @@ const Reports = () => {
           </div>
         </Card>
       </div>
+
+      {/* View Modal */}
+      {createPortal(
+        <AnimatePresence>
+          {viewingReport && (
+            <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setViewingReport(null)} className="absolute inset-0 bg-gray-900/40 backdrop-blur-sm" />
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.95, y: 20 }} 
+                animate={{ opacity: 1, scale: 1, y: 0 }} 
+                exit={{ opacity: 0, scale: 0.95, y: 20 }} 
+                className="relative w-full max-w-2xl bg-white rounded-xl shadow-2xl flex flex-col max-h-[90vh]"
+              >
+                <div className="flex items-center justify-between p-6 border-b">
+                  <div>
+                    <h2 className="text-xl font-bold text-gray-900">Month Summary</h2>
+                    <p className="text-sm text-gray-500">{new Date(viewingReport.month.split('-')[0], viewingReport.month.split('-')[1]-1).toLocaleString('default', { month: 'long', year: 'numeric' })}</p>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Button 
+                      onClick={() => handleDownload(viewingReport)} 
+                      disabled={isDownloading}
+                      className="bg-emerald-600 hover:bg-emerald-700 text-white flex items-center gap-2 py-2 px-4 h-auto text-sm"
+                    >
+                      <Download size={16} /> Download
+                    </Button>
+                    <button onClick={() => setViewingReport(null)} className="p-2 hover:bg-gray-100 rounded-lg text-gray-400">
+                      <X size={20} />
+                    </button>
+                  </div>
+                </div>
+
+                <div className="flex-1 overflow-y-auto p-6 space-y-6">
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                    <div className="p-4 bg-emerald-50 rounded-xl">
+                      <p className="text-[10px] uppercase font-black text-emerald-600 mb-1">Income</p>
+                      <p className="text-lg font-bold text-emerald-700">{formatCurrency(viewingReport.income, user?.currency)}</p>
+                    </div>
+                    <div className="p-4 bg-red-50 rounded-xl">
+                      <p className="text-[10px] uppercase font-black text-red-600 mb-1">Expense</p>
+                      <p className="text-lg font-bold text-red-700">{formatCurrency(viewingReport.expense, user?.currency)}</p>
+                    </div>
+                    <div className="p-4 bg-primary-50 rounded-xl">
+                      <p className="text-[10px] uppercase font-black text-primary-600 mb-1">Savings</p>
+                      <p className="text-lg font-bold text-primary-700">{formatCurrency(viewingReport.savings, user?.currency)}</p>
+                    </div>
+                    <div className="p-4 bg-amber-50 rounded-xl">
+                      <p className="text-[10px] uppercase font-black text-amber-600 mb-1">Loan</p>
+                      <p className="text-lg font-bold text-amber-700">{formatCurrency(viewingReport.loansTaken, user?.currency)}</p>
+                    </div>
+                  </div>
+
+                  <div className="space-y-4">
+                    <h3 className="font-bold text-gray-900 border-l-4 border-primary-500 pl-3">Monthly Details</h3>
+                    <div className="bg-gray-50 rounded-xl p-4 space-y-3">
+                      <div className="flex justify-between text-sm">
+                        <span className="text-gray-500">Total Transactions</span>
+                        <span className="font-bold text-gray-900">
+                          {transactions.filter(t => {
+                            const d = new Date(t.date);
+                            return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}` === viewingReport.month;
+                          }).length}
+                        </span>
+                      </div>
+                      <div className="flex justify-between text-sm">
+                        <span className="text-gray-500">Loan Settled</span>
+                        <span className="font-bold text-emerald-600">{formatCurrency(viewingReport.loansPaid, user?.currency)}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            </div>
+          )}
+        </AnimatePresence>,
+        document.body
+      )}
+
+      {/* Delete Confirmation */}
+      {createPortal(
+        <AnimatePresence>
+          {deleteConfirm && (
+            <div className="fixed inset-0 z-[10000] flex items-center justify-center p-4">
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setDeleteConfirm(null)} className="absolute inset-0 bg-gray-900/60 backdrop-blur-md" />
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.9 }} 
+                animate={{ opacity: 1, scale: 1 }} 
+                exit={{ opacity: 0, scale: 0.9 }}
+                className="relative w-full max-w-sm bg-white rounded-xl p-8 text-center shadow-2xl"
+              >
+                <div className="w-20 h-20 bg-red-50 rounded-xl flex items-center justify-center mx-auto mb-6">
+                  <AlertTriangle className="text-red-500" size={40} />
+                </div>
+                <h3 className="text-xl font-black text-gray-900 mb-2">Delete Month Data?</h3>
+                <p className="text-gray-500 text-sm font-medium mb-8">All transactions and loans for this month will be permanently removed.</p>
+                <div className="grid grid-cols-2 gap-4">
+                  <Button variant="secondary" onClick={() => setDeleteConfirm(null)} className="bg-gray-100 border-none text-gray-600">Cancel</Button>
+                  <Button onClick={handleDelete} className="bg-red-600 hover:bg-red-700 text-white border-none">Yes, Delete</Button>
+                </div>
+              </motion.div>
+            </div>
+          )}
+        </AnimatePresence>,
+        document.body
+      )}
     </div>
   );
 };

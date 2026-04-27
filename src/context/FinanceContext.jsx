@@ -239,6 +239,31 @@ export const FinanceProvider = ({ children }) => {
       updateLoan,
       setBudget,
       deleteBudget,
+      deleteMonthData: async (monthKey) => {
+        const [year, month] = monthKey.split('-');
+        
+        // Delete Transactions
+        const transToDelete = transactions.filter(t => {
+          const d = new Date(t.date);
+          return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}` === monthKey;
+        });
+        
+        for (const t of transToDelete) {
+          await deleteTransaction(t._id);
+        }
+
+        // Delete Loans
+        const loansToDelete = loans.filter(l => {
+          const d = new Date(l.createdAt || l.expectedPayDate);
+          return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}` === monthKey;
+        });
+        
+        for (const l of loansToDelete) {
+          await deleteLoan(l._id);
+        }
+        
+        fetchFinanceData();
+      },
       getMonthlyReports,
       totals,
       categoryTotals,
