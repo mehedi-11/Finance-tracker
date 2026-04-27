@@ -8,7 +8,8 @@ import {
   LogOut,
   X,
   HandCoins,
-  StickyNote
+  StickyNote,
+  HelpCircle
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { motion } from 'framer-motion';
@@ -32,6 +33,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
     { icon: StickyNote, label: t('common.my_plan'), path: '/plans' },
     { icon: PieChart, label: t('common.reports'), path: '/reports' },
     { icon: User, label: t('common.profile'), path: '/profile' },
+    { icon: HelpCircle, label: t('common.help_support'), path: '/help' },
   ];
 
   return (

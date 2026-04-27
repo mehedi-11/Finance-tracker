@@ -7,6 +7,7 @@
     "my_plan": "My Plan",
     "reports": "Reports",
     "profile": "Profile",
+    "help_support": "Help & Support",
     "logout": "Logout",
     "language": "Language",
     "english": "English",
@@ -85,5 +86,17 @@
     "currency": "Preferred Currency",
     "update_profile": "Update Profile",
     "change_password": "Change Password"
+  },
+  "help_support": {
+    "title": "Help & Support",
+    "subtitle": "Need help? We're here for you.",
+    "contact_us": "Contact Us",
+    "faq": "Frequently Asked Questions",
+    "faq_1_q": "How to add a transaction?",
+    "faq_1_a": "Go to Dashboard or Transactions page and click 'Add New' button.",
+    "faq_2_q": "Can I export my data?",
+    "faq_2_a": "Yes, you can export reports from the Reports page.",
+    "email_support": "Email Support",
+    "live_chat": "Live Chat"
   }
 }
