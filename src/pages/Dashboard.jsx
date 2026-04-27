@@ -185,8 +185,8 @@ const Dashboard = () => {
   return (
     <>
       <div className="space-y-8 animate-fade-in pb-20">
-        {/* Header Section - Custom Dark Box for Mobile, Standard for Desktop */}
-        <div className="bg-[#1a0b2e] md:bg-transparent -mx-4 -mt-4 md:mx-0 md:mt-0 rounded-b-[60px] md:rounded-none p-14 md:p-0 mb-10 md:mb-8 shadow-2xl shadow-purple-900/20 md:shadow-none animate-fade-in relative z-20 transition-all">
+        {/* Header Section - Custom Dark Leaf Box for Mobile, Standard for Desktop */}
+        <div className="bg-[#1a0b2e] md:bg-transparent -mx-4 -mt-4 md:mx-0 md:mt-0 rounded-tl-[100px] md:rounded-tl-none rounded-br-[100px] md:rounded-br-none p-14 md:p-0 mb-10 md:mb-8 shadow-2xl shadow-purple-900/20 md:shadow-none animate-fade-in relative z-20 transition-all">
           <div className="max-w-[1400px] mx-auto flex flex-col md:flex-row md:items-center justify-between gap-8 md:gap-4 flex-wrap">
             <div className="text-center md:text-left w-full md:w-auto">
               <h1 className="text-3xl sm:text-4xl md:text-2xl lg:text-3xl font-black md:font-bold text-white md:text-gray-900 leading-tight whitespace-nowrap tracking-tight">
