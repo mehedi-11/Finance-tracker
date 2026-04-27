@@ -185,36 +185,36 @@ const Dashboard = () => {
   return (
     <>
       <div className="space-y-8 animate-fade-in pb-20">
-        {/* Top Header Section - Flush to Edges with Dark Purple and Bottom Arch */}
-        <div className="bg-[#1a0b2e] -mx-4 -mt-4 md:-mx-6 md:-mt-6 lg:-mx-10 lg:-mt-10 rounded-b-[40px] md:rounded-b-[80px] p-8 md:p-12 lg:p-16 mb-10 shadow-2xl shadow-purple-900/20 animate-fade-in relative z-20">
-          <div className="max-w-[1400px] mx-auto flex flex-col md:flex-row md:items-center justify-between gap-8 flex-wrap">
+        {/* Header Section - Custom Dark Box for Mobile, Standard for Desktop */}
+        <div className="bg-[#1a0b2e] md:bg-transparent -mx-4 -mt-4 md:mx-0 md:mt-0 rounded-b-[60px] md:rounded-none p-14 md:p-0 mb-10 md:mb-8 shadow-2xl shadow-purple-900/20 md:shadow-none animate-fade-in relative z-20 transition-all">
+          <div className="max-w-[1400px] mx-auto flex flex-col md:flex-row md:items-center justify-between gap-8 md:gap-4 flex-wrap">
             <div className="text-center md:text-left w-full md:w-auto">
-              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white leading-tight whitespace-nowrap tracking-tight">
+              <h1 className="text-3xl sm:text-4xl md:text-2xl lg:text-3xl font-black md:font-bold text-white md:text-gray-900 leading-tight whitespace-nowrap tracking-tight">
                 {t('dashboard.hello')}, {user?.name || 'User'}!
               </h1>
-              <p className="text-purple-300 font-bold text-base md:text-lg mt-2 opacity-90">
+              <p className="text-purple-300 md:text-gray-600 font-bold md:font-medium text-base md:text-sm mt-2 md:mt-1 opacity-90 md:opacity-100">
                 {t('dashboard.welcome_msg')}
               </p>
             </div>
             
-            <div className="grid grid-cols-2 sm:flex sm:flex-wrap gap-4">
+            <div className="grid grid-cols-2 sm:flex sm:flex-wrap gap-4 md:gap-3">
               <Link to="/budget" className="flex-1 sm:flex-none">
-                <Button variant="secondary" className="w-full h-12 flex items-center justify-center gap-2 bg-white/5 border-white/10 text-white hover:bg-white/10 backdrop-blur-xl rounded-xl transition-all hover:scale-105">
-                  <Wallet size={20} className="text-purple-400" /> {t('common.budget')}
+                <Button variant="secondary" className="w-full h-12 md:h-auto flex items-center justify-center gap-2 bg-white/5 md:bg-white border-white/10 md:border-gray-200 text-white md:text-gray-900 hover:bg-white/10 md:hover:bg-gray-50 backdrop-blur-xl md:backdrop-blur-none rounded-xl transition-all">
+                  <Wallet size={20} className="text-purple-400 md:text-purple-600" /> {t('common.budget')}
                 </Button>
               </Link>
               <Link to="/loans" className="flex-1 sm:flex-none">
-                <Button variant="secondary" className="w-full h-12 flex items-center justify-center gap-2 bg-white/5 border-white/10 text-white hover:bg-white/10 backdrop-blur-xl rounded-xl transition-all hover:scale-105">
-                  <HandCoins size={20} className="text-purple-400" /> {t('common.loans')}
+                <Button variant="secondary" className="w-full h-12 md:h-auto flex items-center justify-center gap-2 bg-white/5 md:bg-white border-white/10 md:border-gray-200 text-white md:text-gray-900 hover:bg-white/10 md:hover:bg-gray-50 backdrop-blur-xl md:backdrop-blur-none rounded-xl transition-all">
+                  <HandCoins size={20} className="text-purple-400 md:text-purple-600" /> {t('common.loans')}
                 </Button>
               </Link>
               <Link to="/plans" className="flex-1 sm:flex-none">
-                <Button variant="secondary" className="w-full h-12 flex items-center justify-center gap-2 bg-white/5 border-white/10 text-white hover:bg-white/10 backdrop-blur-xl rounded-xl transition-all hover:scale-105">
-                  <StickyNote size={20} className="text-purple-400" /> {t('common.my_plan')}
+                <Button variant="secondary" className="w-full h-12 md:h-auto flex items-center justify-center gap-2 bg-white/5 md:bg-white border-white/10 md:border-gray-200 text-white md:text-gray-900 hover:bg-white/10 md:hover:bg-gray-50 backdrop-blur-xl md:backdrop-blur-none rounded-xl transition-all">
+                  <StickyNote size={20} className="text-purple-400 md:text-purple-600" /> {t('common.my_plan')}
                 </Button>
               </Link>
               <Link to="/transactions" className="flex-1 sm:flex-none">
-                <Button className="w-full h-12 flex items-center justify-center gap-2 bg-purple-500 text-white hover:bg-purple-400 border-none rounded-xl shadow-lg shadow-purple-500/20 transition-all hover:scale-105">
+                <Button className="w-full h-12 md:h-auto flex items-center justify-center gap-2 bg-purple-500 md:bg-primary-600 text-white hover:bg-purple-400 md:hover:bg-primary-700 border-none rounded-xl shadow-lg shadow-purple-500/20 md:shadow-none transition-all">
                   <Plus size={20} /> {t('dashboard.add_transaction')}
                 </Button>
               </Link>
