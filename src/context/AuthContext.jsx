@@ -21,18 +21,24 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const savedUser = localStorage.getItem('finance_app_user');
-    const loginTime = localStorage.getItem('finance_login_time');
-    
-    if (savedUser && loginTime) {
-      const currentTime = new Date().getTime();
-      const oneHour = 60 * 60 * 1000;
+    try {
+      const savedUser = localStorage.getItem('finance_app_user');
+      const loginTime = localStorage.getItem('finance_login_time');
       
-      if (currentTime - parseInt(loginTime) > oneHour) {
-        logout();
-      } else {
-        setUser(JSON.parse(savedUser));
+      if (savedUser && loginTime) {
+        const currentTime = new Date().getTime();
+        const oneHour = 60 * 60 * 1000;
+        
+        if (currentTime - parseInt(loginTime) > oneHour) {
+          logout();
+        } else {
+          setUser(JSON.parse(savedUser));
+        }
       }
+    } catch (err) {
+      console.error('Auth initialization error:', err);
+      localStorage.removeItem('finance_app_user');
+      localStorage.removeItem('finance_login_time');
     }
     setLoading(false);
   }, []);

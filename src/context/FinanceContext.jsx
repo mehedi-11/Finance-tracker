@@ -12,12 +12,20 @@ const API_URL = API_ENDPOINTS.FINANCE;
 export const FinanceProvider = ({ children }) => {
   const { user } = useAuth();
   const [transactions, setTransactions] = useState(() => {
-    const cached = localStorage.getItem('finance_transactions');
-    return cached ? JSON.parse(cached) : [];
+    try {
+      const cached = localStorage.getItem('finance_transactions');
+      return cached ? JSON.parse(cached) : [];
+    } catch (e) {
+      return [];
+    }
   });
   const [budgets, setBudgets] = useState(() => {
-    const cached = localStorage.getItem('finance_budgets');
-    return cached ? JSON.parse(cached) : [];
+    try {
+      const cached = localStorage.getItem('finance_budgets');
+      return cached ? JSON.parse(cached) : [];
+    } catch (e) {
+      return [];
+    }
   });
 
   const fetchFinanceData = async () => {

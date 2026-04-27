@@ -29,8 +29,12 @@ const Dashboard = () => {
   const { transactions, totals } = useFinance();
   const { user } = useAuth();
   const [notes, setNotes] = useState(() => {
-    const cached = localStorage.getItem('finance_notes');
-    return cached ? JSON.parse(cached) : [];
+    try {
+      const cached = localStorage.getItem('finance_notes');
+      return cached ? JSON.parse(cached) : [];
+    } catch (e) {
+      return [];
+    }
   });
   const [isNoteModalOpen, setIsNoteModalOpen] = useState(false);
   const [editingNote, setEditingNote] = useState(null);
