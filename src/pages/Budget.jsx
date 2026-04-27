@@ -92,7 +92,7 @@ const Budget = () => {
                 </Button>
               </form>
 
-              <div className="mt-8 p-4 bg-primary-50 rounded-2xl border border-primary-100">
+              <div className="mt-8 p-4 bg-primary-50 rounded-lg border border-primary-100">
                 <div className="flex items-start gap-3">
                   <AlertCircle className="text-primary-600 shrink-0" size={20} />
                   <p className="text-[10px] md:text-xs text-gray-600 font-medium leading-relaxed">
@@ -115,7 +115,7 @@ const Budget = () => {
                   <Card key={budget.category} className="group transition-all bg-white border-none shadow-sm hover:shadow-md p-6">
                     <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
                       <div className="flex items-center gap-3">
-                        <div className={`w-10 h-10 md:w-12 md:h-12 rounded-2xl flex items-center justify-center ${
+                        <div className={`w-10 h-10 md:w-12 md:h-12 rounded-lg flex items-center justify-center ${
                           isOver ? 'bg-red-100 text-red-600' : 'bg-emerald-100 text-emerald-600'
                         }`}>
                           <PieChartIcon size={20} />
@@ -174,7 +174,7 @@ const Budget = () => {
                     </div>
 
                     {isOver && (
-                      <div className="mt-4 flex items-center gap-2 text-red-600 text-xs font-bold bg-red-50 p-3 rounded-xl border border-red-100">
+                      <div className="mt-4 flex items-center gap-2 text-red-600 text-xs font-bold bg-red-50 p-3 rounded-lg border border-red-100">
                         <AlertCircle size={16} />
                         <span>Exceeded by {formatCurrency(spent - budget.amount, user?.currency)}!</span>
                       </div>
@@ -210,7 +210,7 @@ const Budget = () => {
                 initial={{ opacity: 0, scale: 0.9 }} 
                 animate={{ opacity: 1, scale: 1 }} 
                 exit={{ opacity: 0, scale: 0.9 }}
-                className="relative w-full max-w-sm bg-white rounded-[2rem] p-8 text-center shadow-2xl"
+                className="relative w-full max-w-sm bg-white rounded-lg p-8 text-center shadow-2xl"
               >
                 <div className="w-20 h-20 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-6">
                   <AlertTriangle className="text-red-500" size={40} />

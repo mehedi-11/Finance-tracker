@@ -52,7 +52,7 @@ const Navbar = ({ setIsSidebarOpen }) => {
       <div className="flex items-center gap-4">
         <button 
           onClick={() => setIsSidebarOpen(true)}
-          className="p-2 hover:bg-gray-100 rounded-md lg:hidden"
+          className="p-2 hover:bg-gray-100 rounded-lg lg:hidden"
         >
           <Menu size={24} className="text-gray-900" />
         </button>
@@ -79,7 +79,7 @@ const Navbar = ({ setIsSidebarOpen }) => {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 10 }}
-                className="absolute right-0 mt-4 w-[calc(100vw-2rem)] sm:w-80 bg-white border border-gray-100 rounded-2xl shadow-2xl p-6 z-50 overflow-hidden"
+                className="absolute right-0 mt-4 w-[calc(100vw-2rem)] sm:w-80 bg-white border border-gray-100 rounded-lg shadow-2xl p-6 z-50 overflow-hidden"
               >
                 <div className="flex items-center justify-between mb-6">
                   <h4 className="font-black text-gray-900">Notifications</h4>
@@ -89,7 +89,7 @@ const Navbar = ({ setIsSidebarOpen }) => {
                 <div className="space-y-4 max-h-80 overflow-y-auto pr-2 custom-scrollbar">
                   {safeNotifications.length > 0 ? (
                     safeNotifications.map((n) => (
-                      <div key={n._id} className={`p-4 rounded-xl border transition-all ${n.isRead ? 'bg-white border-gray-50' : 'bg-primary-50 border-primary-100'}`}>
+                      <div key={n._id} className={`p-4 rounded-lg border transition-all ${n.isRead ? 'bg-white border-gray-50' : 'bg-primary-50 border-primary-100'}`}>
                         <div className="flex items-start justify-between gap-3">
                           <div className="flex-1 min-w-0">
                             <p className="text-sm font-bold text-gray-900 truncate">{n.title}</p>

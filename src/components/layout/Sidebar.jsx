@@ -52,7 +52,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
             </Link>
             <button 
               onClick={() => setIsOpen(false)}
-              className="p-2 hover:bg-gray-100 rounded-md lg:hidden"
+              className="p-2 hover:bg-gray-100 rounded-lg lg:hidden"
             >
               <X size={20} className="text-gray-500" />
             </button>
@@ -67,7 +67,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
                   to={item.path}
                   onClick={() => setIsOpen(false)}
                   className={`
-                    flex items-center gap-4 px-4 py-3.5 rounded-xl transition-all duration-300 group
+                    flex items-center gap-4 px-4 py-3.5 rounded-lg transition-all duration-300 group
                     ${isActive 
                       ? 'bg-primary-600 text-white shadow-xl shadow-primary-600/20' 
                       : 'text-gray-500 hover:bg-gray-50 hover:text-gray-900'}
@@ -86,7 +86,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
                 setIsOpen(false);
                 logout();
               }}
-              className="w-full flex items-center gap-4 px-4 py-3.5 rounded-xl text-red-500 hover:bg-red-50 transition-all font-bold text-sm"
+              className="w-full flex items-center gap-4 px-4 py-3.5 rounded-lg text-red-500 hover:bg-red-50 transition-all font-bold text-sm"
             >
               <LogOut size={22} />
               <span>Logout</span>

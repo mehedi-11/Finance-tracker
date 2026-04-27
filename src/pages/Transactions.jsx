@@ -121,7 +121,7 @@ const Transactions = () => {
             <input 
               type="text" 
               placeholder="Search transactions..." 
-              className="w-full bg-white border border-gray-200 rounded-xl pl-12 pr-4 py-3 text-sm md:text-base text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary-500/50 transition-all shadow-sm"
+              className="w-full bg-white border border-gray-200 rounded-lg pl-12 pr-4 py-3 text-sm md:text-base text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary-500/50 transition-all shadow-sm"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
@@ -129,7 +129,7 @@ const Transactions = () => {
           
           <button 
             onClick={() => setShowMobileFilters(!showMobileFilters)}
-            className="md:hidden flex items-center justify-center gap-2 bg-white border border-gray-200 p-3 rounded-xl text-gray-600 font-bold"
+            className="md:hidden flex items-center justify-center gap-2 bg-white border border-gray-200 p-3 rounded-lg text-gray-600 font-bold"
           >
             <Filter size={18} /> Filters
           </button>
@@ -242,24 +242,24 @@ const Transactions = () => {
                 initial={{ opacity: 0, scale: 0.95, y: 20 }} 
                 animate={{ opacity: 1, scale: 1, y: 0 }} 
                 exit={{ opacity: 0, scale: 0.95, y: 20 }} 
-                className="relative w-full max-w-lg bg-white rounded-3xl shadow-2xl flex flex-col max-h-[90vh]"
+                className="relative w-full max-w-lg bg-white rounded-lg shadow-2xl flex flex-col max-h-[90vh]"
               >
                 <div className="flex items-center justify-between p-8 md:p-10 pb-4">
                   <h2 className="text-2xl font-black text-gray-900">{editingTransaction ? 'Edit Transaction' : 'Add Transaction'}</h2>
-                  <button onClick={() => setIsModalOpen(false)} className="p-3 hover:bg-gray-100 rounded-xl text-gray-400 transition-colors">
+                  <button onClick={() => setIsModalOpen(false)} className="p-3 hover:bg-gray-100 rounded-lg text-gray-400 transition-colors">
                     <X size={24} />
                   </button>
                 </div>
 
                 <div className="flex-1 overflow-y-auto px-8 md:px-10 pb-8 md:pb-10 custom-scrollbar">
                   <form onSubmit={handleSubmit} className="space-y-6">
-                    <div className="flex gap-3 p-1.5 bg-gray-50 rounded-2xl">
+                    <div className="flex gap-3 p-1.5 bg-gray-50 rounded-lg">
                       {['expense', 'income'].map((type) => (
                         <button
                           key={type}
                           type="button"
                           onClick={() => setFormData({ ...formData, type, category: type === 'income' ? 'Salary' : 'Food' })}
-                          className={`flex-1 py-3.5 rounded-xl transition-all capitalize font-black text-sm ${
+                          className={`flex-1 py-3.5 rounded-lg transition-all capitalize font-black text-sm ${
                             formData.type === type 
                               ? type === 'income' ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-500/20' : 'bg-red-600 text-white shadow-lg shadow-red-500/20'
                               : 'text-gray-400 hover:text-gray-600'
@@ -302,7 +302,7 @@ const Transactions = () => {
                 initial={{ opacity: 0, scale: 0.9 }} 
                 animate={{ opacity: 1, scale: 1 }} 
                 exit={{ opacity: 0, scale: 0.9 }}
-                className="relative w-full max-w-sm bg-white rounded-2xl p-8 text-center shadow-2xl"
+                className="relative w-full max-w-sm bg-white rounded-lg p-8 text-center shadow-2xl"
               >
                 <div className="w-20 h-20 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-6">
                   <AlertTriangle className="text-red-500" size={40} />

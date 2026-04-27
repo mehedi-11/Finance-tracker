@@ -55,7 +55,7 @@ const Verify = () => {
       >
         <Card className="p-10 bg-white border-none shadow-2xl">
           <div className="text-center mb-10">
-            <div className="w-16 h-16 bg-emerald-50 rounded-2xl flex items-center justify-center mx-auto mb-4">
+            <div className="w-16 h-16 bg-emerald-50 rounded-lg flex items-center justify-center mx-auto mb-4">
               <ShieldCheck className="text-emerald-600" size={32} />
             </div>
             <h1 className="text-2xl font-black text-gray-900">Verify Email</h1>

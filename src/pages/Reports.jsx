@@ -146,7 +146,7 @@ const Reports = () => {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <Card className="bg-emerald-50 border-none shadow-sm group">
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 bg-emerald-100 rounded-2xl flex items-center justify-center text-emerald-600 transition-transform group-hover:scale-110">
+            <div className="w-12 h-12 bg-emerald-100 rounded-lg flex items-center justify-center text-emerald-600 transition-transform group-hover:scale-110">
               <TrendingUp size={24} />
             </div>
             <div>
@@ -158,7 +158,7 @@ const Reports = () => {
 
         <Card className="bg-red-50 border-none shadow-sm group">
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 bg-red-100 rounded-2xl flex items-center justify-center text-red-600 transition-transform group-hover:scale-110">
+            <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center text-red-600 transition-transform group-hover:scale-110">
               <TrendingDown size={24} />
             </div>
             <div>
@@ -172,7 +172,7 @@ const Reports = () => {
 
         <Card className="bg-primary-50 border-none shadow-sm group">
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 bg-primary-100 rounded-2xl flex items-center justify-center text-primary-600 transition-transform group-hover:scale-110">
+            <div className="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center text-primary-600 transition-transform group-hover:scale-110">
               <BarChart3 size={24} />
             </div>
             <div>

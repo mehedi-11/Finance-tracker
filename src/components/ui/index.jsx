@@ -45,7 +45,7 @@ export const Input = ({ label, type = 'text', className = '', ...props }) => {
 
 export const Card = ({ children, className = '', ...props }) => {
   return (
-    <div className={`bg-white rounded-2xl p-8 shadow-sm border border-gray-100 ${className}`} {...props}>
+    <div className={`bg-white rounded-lg p-8 shadow-sm border border-gray-100 ${className}`} {...props}>
       {children}
     </div>
   );
