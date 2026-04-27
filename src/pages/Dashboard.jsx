@@ -154,7 +154,7 @@ const Dashboard = () => {
       <div className="space-y-8 animate-fade-in pb-20">
         {/* Top Header */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 flex-wrap">
-          <div>
+          <div className="text-center md:text-left w-full md:w-auto">
             <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 leading-tight whitespace-nowrap">Hello, {user?.name || 'User'}!</h1>
             <p className="text-gray-600 font-medium text-sm">Track your progress and plan your future costs.</p>
           </div>
