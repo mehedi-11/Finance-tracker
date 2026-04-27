@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { KeyRound, ArrowLeft, Mail } from 'lucide-react';
 import { Button, Input, Card } from '../components/ui';
@@ -11,21 +11,18 @@ const ForgotPassword = () => {
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const [sent, setSent] = useState(false);
+  const { forgotPassword } = useAuth();
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     try {
-      const response = await fetch(`${API_BASE_URL}/forgot-password`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email }),
-      });
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.message);
-      
-      toast.success('Reset link sent to email!');
+      await forgotPassword(email);
       setSent(true);
+      setTimeout(() => {
+        navigate('/reset-password', { state: { email } });
+      }, 1500);
     } catch (err) {
       toast.error(err.message);
     } finally {

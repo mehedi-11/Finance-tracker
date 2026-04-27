@@ -119,13 +119,48 @@ export const AuthProvider = ({ children }) => {
     toast.success('Password changed successfully!');
   };
 
+  const forgotPassword = async (email) => {
+    const response = await fetch(`${API_URL}/forgot-password`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email }),
+    });
+
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.message || 'Failed to request reset');
+
+    try {
+      // Send reset token via EmailJS
+      await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+        to_email: email,
+        verification_code: data.resetToken,
+        app_name: 'FinanceFlow'
+      });
+      toast.success('Reset code sent to your email!');
+    } catch (error) {
+      toast.error('Email failed. Token: ' + data.resetToken);
+    }
+  };
+
+  const resetPassword = async (token, password) => {
+    const response = await fetch(`${API_URL}/reset-password`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token, password }),
+    });
+
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.message || 'Reset failed');
+    toast.success('Password reset successfully! Please login.');
+  };
+
   const logout = () => {
     setUser(null);
     localStorage.removeItem('finance_app_user');
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, register, verify, login, updateProfile, changePassword, logout }}>
+    <AuthContext.Provider value={{ user, loading, register, verify, login, updateProfile, changePassword, forgotPassword, resetPassword, logout }}>
       {children}
     </AuthContext.Provider>
   );

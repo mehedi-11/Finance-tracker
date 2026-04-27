@@ -100,7 +100,9 @@ const forgotPassword = async (req, res) => {
   const { email } = req.body;
   const user = await User.findOne({ email });
   if (!user) return res.status(404).json({ message: 'Not found' });
-  const token = crypto.randomBytes(20).toString('hex');
+  
+  // Use a 6-digit OTP for reset
+  const token = Math.floor(100000 + Math.random() * 900000).toString();
   user.resetPasswordToken = crypto.createHash('sha256').update(token).digest('hex');
   user.resetPasswordExpire = Date.now() + 10 * 60 * 1000;
   await user.save();

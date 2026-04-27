@@ -15,6 +15,7 @@ import Transactions from './pages/Transactions';
 import Budget from './pages/Budget';
 import Reports from './pages/Reports';
 import Profile from './pages/Profile';
+import ResetPassword from './pages/ResetPassword';
 
 // Components
 import Sidebar from './components/layout/Sidebar';
@@ -42,6 +43,7 @@ function AppContent() {
             <Route path="/register" element={user ? <Navigate to="/dashboard" /> : <Register />} />
             <Route path="/verify" element={<Verify />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
             
             <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
             <Route path="/transactions" element={<ProtectedRoute><Transactions /></ProtectedRoute>} />
