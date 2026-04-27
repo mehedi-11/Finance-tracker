@@ -70,60 +70,60 @@ const Reports = () => {
 
     const element = document.createElement('div');
     element.style.padding = '40px';
-    element.style.width = '800px';
+    element.style.width = '720px'; // A4 width at 96 DPI
     element.style.background = '#ffffff';
     element.innerHTML = `
-      <div style="font-family: 'Inter', sans-serif; color: #1e293b; line-height: 1.5;">
+      <div style="font-family: 'Helvetica', sans-serif; color: #1e293b; line-height: 1.4;">
         <!-- Header -->
-        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 4px solid #4f46e5; padding-bottom: 20px; margin-bottom: 30px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid #4f46e5; padding-bottom: 15px; margin-bottom: 25px;">
           <div>
-            <h1 style="margin:0; color:#4f46e5; font-size: 28px; letter-spacing: -0.5px;">FinanceFlow</h1>
-            <p style="margin:5px 0 0; color:#64748b; font-size: 14px; font-weight: 600; text-transform: uppercase;">Monthly Financial Statement</p>
+            <h1 style="margin:0; color:#4f46e5; font-size: 24px; letter-spacing: -0.5px;">FinanceFlow</h1>
+            <p style="margin:3px 0 0; color:#64748b; font-size: 11px; font-weight: 600; text-transform: uppercase;">Financial Statement</p>
           </div>
           <div style="text-align: right;">
-            <p style="margin:0; font-size: 18px; font-weight: 800; color: #1e293b;">${monthName}</p>
-            <p style="margin:5px 0 0; font-size: 12px; color: #94a3b8;">Generated on: ${new Date().toLocaleDateString()}</p>
+            <p style="margin:0; font-size: 16px; font-weight: 800; color: #1e293b;">${monthName}</p>
+            <p style="margin:3px 0 0; font-size: 10px; color: #94a3b8;">Generated: ${new Date().toLocaleDateString()}</p>
           </div>
         </div>
 
         <!-- Summary Cards -->
-        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 40px;">
-          <div style="background: #f0fdf4; border: 1px solid #dcfce7; padding: 15px; border-radius: 12px;">
-            <p style="margin:0; font-size: 10px; color: #15803d; font-weight: 800; text-transform: uppercase;">Total Income</p>
-            <p style="margin:5px 0 0; font-size: 16px; font-weight: 800; color: #166534;">${formatCurrency(report.income, user?.currency)}</p>
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 30px;">
+          <div style="background: #f0fdf4; border: 1px solid #dcfce7; padding: 12px; border-radius: 10px;">
+            <p style="margin:0; font-size: 9px; color: #15803d; font-weight: 800; text-transform: uppercase;">Income</p>
+            <p style="margin:3px 0 0; font-size: 14px; font-weight: 800; color: #166534;">${formatCurrency(report.income, user?.currency)}</p>
           </div>
-          <div style="background: #fef2f2; border: 1px solid #fee2e2; padding: 15px; border-radius: 12px;">
-            <p style="margin:0; font-size: 10px; color: #b91c1c; font-weight: 800; text-transform: uppercase;">Total Expense</p>
-            <p style="margin:5px 0 0; font-size: 16px; font-weight: 800; color: #991b1b;">${formatCurrency(report.expense, user?.currency)}</p>
+          <div style="background: #fef2f2; border: 1px solid #fee2e2; padding: 12px; border-radius: 10px;">
+            <p style="margin:0; font-size: 9px; color: #b91c1c; font-weight: 800; text-transform: uppercase;">Expense</p>
+            <p style="margin:3px 0 0; font-size: 14px; font-weight: 800; color: #991b1b;">${formatCurrency(report.expense, user?.currency)}</p>
           </div>
-          <div style="background: #eff6ff; border: 1px solid #dbeafe; padding: 15px; border-radius: 12px;">
-            <p style="margin:0; font-size: 10px; color: #1d4ed8; font-weight: 800; text-transform: uppercase;">Net Savings</p>
-            <p style="margin:5px 0 0; font-size: 16px; font-weight: 800; color: #1e40af;">${formatCurrency(report.savings, user?.currency)}</p>
+          <div style="background: #eff6ff; border: 1px solid #dbeafe; padding: 12px; border-radius: 10px;">
+            <p style="margin:0; font-size: 9px; color: #1d4ed8; font-weight: 800; text-transform: uppercase;">Savings</p>
+            <p style="margin:3px 0 0; font-size: 14px; font-weight: 800; color: #1e40af;">${formatCurrency(report.savings, user?.currency)}</p>
           </div>
-          <div style="background: #fffbeb; border: 1px solid #fef3c7; padding: 15px; border-radius: 12px;">
-            <p style="margin:0; font-size: 10px; color: #b45309; font-weight: 800; text-transform: uppercase;">Loans Taken</p>
-            <p style="margin:5px 0 0; font-size: 16px; font-weight: 800; color: #92400e;">${formatCurrency(report.loansTaken, user?.currency)}</p>
+          <div style="background: #fffbeb; border: 1px solid #fef3c7; padding: 12px; border-radius: 10px;">
+            <p style="margin:0; font-size: 9px; color: #b45309; font-weight: 800; text-transform: uppercase;">Loans</p>
+            <p style="margin:3px 0 0; font-size: 14px; font-weight: 800; color: #92400e;">${formatCurrency(report.loansTaken, user?.currency)}</p>
           </div>
         </div>
 
         <!-- Transactions Table -->
-        <h3 style="font-size: 16px; font-weight: 800; color: #1e293b; margin-bottom: 15px; border-left: 4px solid #4f46e5; padding-left: 10px;">Transaction Details</h3>
-        <table style="width: 100%; border-collapse: collapse; margin-bottom: 30px;">
+        <h3 style="font-size: 14px; font-weight: 800; color: #1e293b; margin-bottom: 10px; border-left: 3px solid #4f46e5; padding-left: 8px;">Detailed Transactions</h3>
+        <table style="width: 100%; border-collapse: collapse; margin-bottom: 25px;">
           <thead>
             <tr style="background: #f8fafc;">
-              <th style="padding: 12px; text-align: left; font-size: 11px; color: #64748b; text-transform: uppercase; border-bottom: 2px solid #e2e8f0;">Date</th>
-              <th style="padding: 12px; text-align: left; font-size: 11px; color: #64748b; text-transform: uppercase; border-bottom: 2px solid #e2e8f0;">Category</th>
-              <th style="padding: 12px; text-align: left; font-size: 11px; color: #64748b; text-transform: uppercase; border-bottom: 2px solid #e2e8f0;">Description</th>
-              <th style="padding: 12px; text-align: right; font-size: 11px; color: #64748b; text-transform: uppercase; border-bottom: 2px solid #e2e8f0;">Amount</th>
+              <th style="padding: 8px 12px; text-align: left; font-size: 10px; color: #64748b; text-transform: uppercase; border-bottom: 1px solid #e2e8f0;">Date</th>
+              <th style="padding: 8px 12px; text-align: left; font-size: 10px; color: #64748b; text-transform: uppercase; border-bottom: 1px solid #e2e8f0;">Category</th>
+              <th style="padding: 8px 12px; text-align: left; font-size: 10px; color: #64748b; text-transform: uppercase; border-bottom: 1px solid #e2e8f0;">Description</th>
+              <th style="padding: 8px 12px; text-align: right; font-size: 10px; color: #64748b; text-transform: uppercase; border-bottom: 1px solid #e2e8f0;">Amount</th>
             </tr>
           </thead>
           <tbody>
             ${monthTransactions.map((t, idx) => `
-              <tr style="background: ${idx % 2 === 0 ? '#ffffff' : '#fcfcfd'};">
-                <td style="padding: 12px; font-size: 12px; color: #475569; border-bottom: 1px solid #f1f5f9;">${new Date(t.date).toLocaleDateString()}</td>
-                <td style="padding: 12px; font-size: 12px; font-weight: 600; color: #1e293b; border-bottom: 1px solid #f1f5f9;">${t.category}</td>
-                <td style="padding: 12px; font-size: 12px; color: #64748b; border-bottom: 1px solid #f1f5f9;">${t.description}</td>
-                <td style="padding: 12px; font-size: 12px; font-weight: 800; text-align: right; border-bottom: 1px solid #f1f5f9; color: ${t.type === 'income' ? '#10b981' : '#ef4444'}">
+              <tr style="background: ${idx % 2 === 0 ? '#ffffff' : '#f8fafc'};">
+                <td style="padding: 6px 12px; font-size: 11px; color: #475569; border-bottom: 1px solid #f1f5f9;">${new Date(t.date).toLocaleDateString()}</td>
+                <td style="padding: 6px 12px; font-size: 11px; font-weight: 600; color: #1e293b; border-bottom: 1px solid #f1f5f9;">${t.category}</td>
+                <td style="padding: 6px 12px; font-size: 11px; color: #64748b; border-bottom: 1px solid #f1f5f9;">${t.description}</td>
+                <td style="padding: 6px 12px; font-size: 11px; font-weight: 800; text-align: right; border-bottom: 1px solid #f1f5f9; color: ${t.type === 'income' ? '#10b981' : '#ef4444'}">
                   ${t.type === 'income' ? '+' : '-'}${t.amount}
                 </td>
               </tr>
@@ -132,21 +132,21 @@ const Reports = () => {
         </table>
 
         <!-- Loans Table -->
-        <h3 style="font-size: 16px; font-weight: 800; color: #1e293b; margin-bottom: 15px; border-left: 4px solid #f59e0b; padding-left: 10px;">Loan Activity</h3>
-        <table style="width: 100%; border-collapse: collapse; margin-bottom: 40px;">
+        <h3 style="font-size: 14px; font-weight: 800; color: #1e293b; margin-bottom: 10px; border-left: 3px solid #f59e0b; padding-left: 8px;">Loan Summary</h3>
+        <table style="width: 100%; border-collapse: collapse; margin-bottom: 30px;">
           <thead>
             <tr style="background: #f8fafc;">
-              <th style="padding: 12px; text-align: left; font-size: 11px; color: #64748b; text-transform: uppercase; border-bottom: 2px solid #e2e8f0;">Source</th>
-              <th style="padding: 12px; text-align: left; font-size: 11px; color: #64748b; text-transform: uppercase; border-bottom: 2px solid #e2e8f0;">Purpose</th>
-              <th style="padding: 12px; text-align: right; font-size: 11px; color: #64748b; text-transform: uppercase; border-bottom: 2px solid #e2e8f0;">Amount</th>
+              <th style="padding: 8px 12px; text-align: left; font-size: 10px; color: #64748b; text-transform: uppercase; border-bottom: 1px solid #e2e8f0;">Source</th>
+              <th style="padding: 8px 12px; text-align: left; font-size: 10px; color: #64748b; text-transform: uppercase; border-bottom: 1px solid #e2e8f0;">Purpose</th>
+              <th style="padding: 8px 12px; text-align: right; font-size: 10px; color: #64748b; text-transform: uppercase; border-bottom: 1px solid #e2e8f0;">Amount</th>
             </tr>
           </thead>
           <tbody>
             ${monthLoans.map((l, idx) => `
-              <tr style="background: ${idx % 2 === 0 ? '#ffffff' : '#fcfcfd'};">
-                <td style="padding: 12px; font-size: 12px; font-weight: 600; color: #1e293b; border-bottom: 1px solid #f1f5f9;">${l.lender}</td>
-                <td style="padding: 12px; font-size: 12px; color: #64748b; border-bottom: 1px solid #f1f5f9;">${l.purpose}</td>
-                <td style="padding: 12px; font-size: 12px; font-weight: 800; text-align: right; border-bottom: 1px solid #f1f5f9; color: #f59e0b;">
+              <tr style="background: ${idx % 2 === 0 ? '#ffffff' : '#f8fafc'};">
+                <td style="padding: 6px 12px; font-size: 11px; font-weight: 600; color: #1e293b; border-bottom: 1px solid #f1f5f9;">${l.lender}</td>
+                <td style="padding: 6px 12px; font-size: 11px; color: #64748b; border-bottom: 1px solid #f1f5f9;">${l.purpose}</td>
+                <td style="padding: 6px 12px; font-size: 11px; font-weight: 800; text-align: right; border-bottom: 1px solid #f1f5f9; color: #f59e0b;">
                   ${formatCurrency(l.amount, user?.currency)}
                 </td>
               </tr>
@@ -154,9 +154,8 @@ const Reports = () => {
           </tbody>
         </table>
 
-        <!-- Footer -->
-        <div style="margin-top: 50px; padding-top: 20px; border-top: 1px solid #e2e8f0; text-align: center;">
-          <p style="margin: 0; font-size: 10px; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px;">Powered by FinanceFlow Pro | Digital Financial Companion</p>
+        <div style="margin-top: 40px; padding-top: 15px; border-top: 1px solid #e2e8f0; text-align: center; color: #94a3b8; font-size: 9px; text-transform: uppercase; letter-spacing: 1px;">
+          This is a computer-generated document. | FinanceFlow
         </div>
       </div>
     `;
@@ -164,10 +163,26 @@ const Reports = () => {
     document.body.appendChild(element);
     const canvas = await html2canvas(element, { scale: 2 });
     const imgData = canvas.toDataURL('image/png');
+    
     const pdf = new jsPDF('p', 'mm', 'a4');
     const pdfWidth = pdf.internal.pageSize.getWidth();
-    const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-    pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+    const pdfHeight = pdf.internal.pageSize.getHeight();
+    const imgWidth = pdfWidth;
+    const imgHeight = (canvas.height * imgWidth) / canvas.width;
+    
+    let heightLeft = imgHeight;
+    let position = 0;
+
+    pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+    heightLeft -= pdfHeight;
+
+    while (heightLeft >= 0) {
+      position = heightLeft - imgHeight;
+      pdf.addPage();
+      pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+      heightLeft -= pdfHeight;
+    }
+
     pdf.save(`FinanceFlow-Report-${report.month}.pdf`);
     document.body.removeChild(element);
     setIsDownloading(false);

@@ -21,7 +21,9 @@ import {
   ArrowUpCircle,
   ArrowDownCircle,
   PieChart as PieChartIcon,
-  BarChart3
+  BarChart3,
+  TrendingUp,
+  TrendingDown
 } from 'lucide-react';
 import { 
   BarChart, 
