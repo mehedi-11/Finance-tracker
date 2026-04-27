@@ -123,8 +123,8 @@ const Navbar = ({ setIsSidebarOpen }) => {
         </div>
         
         <Link to="/profile" className="flex items-center gap-2 md:gap-3 hover:opacity-80 transition-opacity">
-          <div className="text-right hidden sm:block">
-            <p className="text-sm font-black text-gray-900 leading-none">{user?.name || 'User'}</p>
+          <div className="text-right">
+            <p className="text-sm font-black text-gray-900 leading-none whitespace-nowrap">{user?.name || 'User'}</p>
             <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest mt-1">Premium</p>
           </div>
           <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-primary-600 to-emerald-500 flex items-center justify-center font-bold text-white shadow-lg ring-2 ring-primary-50/50 shrink-0">

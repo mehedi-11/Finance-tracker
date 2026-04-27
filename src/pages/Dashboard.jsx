@@ -155,7 +155,7 @@ const Dashboard = () => {
         {/* Top Header */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900 leading-tight">Hello, {user?.name || 'User'}!</h1>
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 leading-tight whitespace-nowrap">Hello, {user?.name || 'User'}!</h1>
             <p className="text-gray-600 font-medium text-sm">Track your progress and plan your future costs.</p>
           </div>
           <div className="grid grid-cols-2 sm:flex gap-3">
