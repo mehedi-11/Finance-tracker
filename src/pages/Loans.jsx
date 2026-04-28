@@ -173,7 +173,7 @@ const Loans = () => {
                       </div>
                     </div>
                     
-                    <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <div className="flex items-center gap-1">
                       <button 
                         onClick={() => handleOpenModal(loan)}
                         className="p-2 hover:bg-primary-50 rounded-xl text-gray-400 hover:text-primary-600"

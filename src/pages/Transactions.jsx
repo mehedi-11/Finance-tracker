@@ -325,29 +325,20 @@ const Transactions = () => {
                     <Input label="Date" type="date" value={formData.date} onChange={(e) => setFormData({ ...formData, date: e.target.value })} required />
                     
                     {formData.type === 'expense' && (
-                      <div 
-                        className="flex items-center gap-3 p-4 bg-gray-50 rounded-xl cursor-pointer hover:bg-gray-100 transition-all border border-gray-100" 
-                        onClick={() => setFormData(prev => ({ ...prev, isPaid: !prev.isPaid }))}
+                      <label 
+                        className="flex items-center gap-3 p-4 bg-gray-50 rounded-xl cursor-pointer hover:bg-gray-100 transition-all border border-gray-100"
                       >
-                        <div className={`w-6 h-6 rounded-lg border-2 flex items-center justify-center transition-all ${formData.isPaid ? 'bg-primary-600 border-primary-600 text-white' : 'border-gray-300 bg-white'}`}>
-                          {formData.isPaid && (
-                            <motion.svg 
-                              initial={{ scale: 0 }} 
-                              animate={{ scale: 1 }} 
-                              className="w-4 h-4" 
-                              fill="none" 
-                              stroke="currentColor" 
-                              viewBox="0 0 24 24"
-                            >
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7" />
-                            </motion.svg>
-                          )}
-                        </div>
+                        <input 
+                          type="checkbox"
+                          className="w-5 h-5 rounded border-gray-300 text-primary-600 focus:ring-primary-500 cursor-pointer"
+                          checked={formData.isPaid}
+                          onChange={(e) => setFormData(prev => ({ ...prev, isPaid: e.target.checked }))}
+                        />
                         <div>
                           <p className="text-sm font-black text-gray-900">Mark as Paid</p>
-                          <p className="text-[10px] text-gray-500 font-medium">{formData.isPaid ? 'This will affect your balance' : 'This will not affect balance (Unpaid)'}</p>
+                          <p className="text-[10px] text-gray-500 font-medium">{formData.isPaid ? 'This will deduct from your balance' : 'This will be marked as Unpaid (No balance change)'}</p>
                         </div>
-                      </div>
+                      </label>
                     )}
                     <Button type="submit" className="w-full py-4 text-lg font-bold mt-4">
                       {editingTransaction ? 'Update Record' : 'Save Transaction'}
