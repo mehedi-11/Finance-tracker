@@ -210,52 +210,52 @@ const Dashboard = () => {
   return (
     <>
       <div className="space-y-8 animate-fade-in pb-20">
-        {/* Simple & Elegant Hero Section */}
+        {/* Clean White Hero Section */}
         <div className="relative mb-8">
-          <div className="bg-gradient-to-br from-[#1a0b2e] to-[#2d144e] rounded-3xl p-8 md:p-12 shadow-xl border border-white/5 relative overflow-hidden">
-            {/* Subtle light effect */}
-            <div className="absolute top-0 right-0 w-64 h-64 bg-primary-500/10 rounded-full blur-[80px]"></div>
+          <div className="bg-white rounded-3xl p-8 md:p-12 shadow-sm border border-gray-100 relative overflow-hidden">
+            {/* Subtle soft effect */}
+            <div className="absolute top-0 right-0 w-64 h-64 bg-primary-50 rounded-full blur-[80px] opacity-60"></div>
             
             <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
               <div className="text-center md:text-left">
-                <div className="inline-flex items-center gap-3 px-4 py-1.5 bg-white/5 border border-white/10 rounded-full mb-6">
-                  <Calendar size={14} className="text-primary-400" />
-                  <span className="text-[10px] md:text-xs font-bold text-white/70 uppercase tracking-widest">
+                <div className="inline-flex items-center gap-3 px-4 py-1.5 bg-gray-50 border border-gray-100 rounded-full mb-6">
+                  <Calendar size={14} className="text-primary-600" />
+                  <span className="text-[10px] md:text-xs font-bold text-gray-500 uppercase tracking-widest">
                     {dateTime.toLocaleDateString('en-US', { weekday: 'short', day: 'numeric', month: 'short' })}
                   </span>
-                  <div className="w-[1px] h-3 bg-white/20"></div>
-                  <span className="text-[10px] md:text-xs font-black text-white tracking-widest uppercase">
+                  <div className="w-[1px] h-3 bg-gray-200"></div>
+                  <span className="text-[10px] md:text-xs font-black text-gray-900 tracking-widest uppercase">
                     {dateTime.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true })}
                   </span>
                 </div>
                 
-                <h1 className="text-3xl md:text-5xl font-black text-white leading-tight mb-3">
+                <h1 className="text-3xl md:text-5xl font-black text-gray-900 leading-tight mb-3">
                   {t('dashboard.hello')}, <br />
-                  <span className="text-primary-400">{user?.name || 'User'}!</span>
+                  <span className="text-primary-600">{user?.name || 'User'}!</span>
                 </h1>
-                <p className="text-purple-200/50 text-sm md:text-lg font-medium max-w-md">
+                <p className="text-gray-500 text-sm md:text-lg font-medium max-w-md">
                   {t('dashboard.welcome_msg')}
                 </p>
               </div>
 
               <div className="grid grid-cols-2 gap-3 w-full md:w-auto">
                 <Link to="/budget">
-                  <Button variant="secondary" className="w-full h-12 bg-white/5 border-white/10 text-white hover:bg-white/10 rounded-xl font-bold px-6 text-sm flex items-center gap-2">
-                    <Wallet size={18} className="text-primary-400" /> {t('common.budget')}
+                  <Button variant="secondary" className="w-full h-12 bg-white border-gray-200 text-gray-700 hover:bg-gray-50 hover:border-gray-300 rounded-xl font-bold px-6 text-sm flex items-center gap-2 transition-all">
+                    <Wallet size={18} className="text-primary-600" /> {t('common.budget')}
                   </Button>
                 </Link>
                 <Link to="/loans">
-                  <Button variant="secondary" className="w-full h-12 bg-white/5 border-white/10 text-white hover:bg-white/10 rounded-xl font-bold px-6 text-sm flex items-center gap-2">
-                    <HandCoins size={18} className="text-primary-400" /> {t('common.loans')}
+                  <Button variant="secondary" className="w-full h-12 bg-white border-gray-200 text-gray-700 hover:bg-gray-50 hover:border-gray-300 rounded-xl font-bold px-6 text-sm flex items-center gap-2 transition-all">
+                    <HandCoins size={18} className="text-primary-600" /> {t('common.loans')}
                   </Button>
                 </Link>
                 <Link to="/plans">
-                  <Button variant="secondary" className="w-full h-12 bg-white/5 border-white/10 text-white hover:bg-white/10 rounded-xl font-bold px-6 text-sm flex items-center gap-2">
-                    <StickyNote size={18} className="text-primary-400" /> {t('common.my_plan')}
+                  <Button variant="secondary" className="w-full h-12 bg-white border-gray-200 text-gray-700 hover:bg-gray-50 hover:border-gray-300 rounded-xl font-bold px-6 text-sm flex items-center gap-2 transition-all">
+                    <StickyNote size={18} className="text-primary-600" /> {t('common.my_plan')}
                   </Button>
                 </Link>
                 <Link to="/transactions">
-                  <Button className="w-full h-12 bg-primary-600 hover:bg-primary-500 text-white border-none rounded-xl font-black px-6 text-sm shadow-lg shadow-primary-600/20 flex items-center gap-2">
+                  <Button className="w-full h-12 bg-primary-600 hover:bg-primary-500 text-white border-none rounded-xl font-black px-6 text-sm shadow-md shadow-primary-600/10 flex items-center gap-2 transition-all">
                     <Plus size={18} /> {t('dashboard.add_transaction')}
                   </Button>
                 </Link>
