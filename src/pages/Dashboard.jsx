@@ -56,6 +56,19 @@ const Dashboard = () => {
 
   const [dateTime, setDateTime] = useState(new Date());
   const [isUnpaidModalOpen, setIsUnpaidModalOpen] = useState(false);
+  const [isSavingsModalOpen, setIsSavingsModalOpen] = useState(false);
+  const [isLoansModalOpen, setIsLoansModalOpen] = useState(false);
+
+  const { getMonthlyReports, loans: allLoansData } = useFinance();
+  const allReports = getMonthlyReports();
+  const { start: cycleStartRange } = getCurrentCycleRange();
+  
+  // Exclude current month for savings history
+  const pastSavingsMonths = allReports.filter(report => {
+    return new Date(report.startDate) < cycleStartRange;
+  });
+
+  const unpaidLoans = allLoansData.filter(l => !l.isPaid);
 
   useEffect(() => {
     const timer = setInterval(() => setDateTime(new Date()), 1000);
@@ -145,22 +158,29 @@ const Dashboard = () => {
           <StatCard icon={ArrowUpCircle} color="emerald" label={t('common.total_income')} value={monthTotals.income} />
           <StatCard icon={ArrowDownCircle} color="red" label={t('common.total_expenses')} value={monthTotals.expenses} />
           
-          <Link to="/savings">
-            <StatCard icon={PiggyBank} color="purple" label="Total Savings" value={totalSavings} />
-          </Link>
+          <StatCard 
+            icon={PiggyBank} 
+            color="purple" 
+            label="Total Savings" 
+            value={totalSavings} 
+            onClick={() => setIsSavingsModalOpen(true)}
+          />
           
-          <Link to="/loans">
-            <StatCard icon={HandCoins} color="amber" label="Active Loans" value={activeLoans} />
-          </Link>
+          <StatCard 
+            icon={HandCoins} 
+            color="amber" 
+            label="Active Loans" 
+            value={activeLoans} 
+            onClick={() => setIsLoansModalOpen(true)}
+          />
           
-          <div onClick={() => setIsUnpaidModalOpen(true)} className="cursor-pointer transition-transform hover:-translate-y-1">
-            <StatCard 
-              icon={AlertCircle} 
-              color="rose" 
-              label={`Unpaid Expenses (${unpaidTransactions.length})`} 
-              value={unpaidTransactions.reduce((sum, t) => sum + Number(t.amount), 0)} 
-            />
-          </div>
+          <StatCard 
+            icon={AlertCircle} 
+            color="rose" 
+            label={`Unpaid Expenses (${unpaidTransactions.length})`} 
+            value={unpaidTransactions.reduce((sum, t) => sum + Number(t.amount), 0)} 
+            onClick={() => setIsUnpaidModalOpen(true)}
+          />
         </div>
 
         {/* Extra Insights */}
@@ -336,19 +356,135 @@ const Dashboard = () => {
         </AnimatePresence>,
         document.body
       )}
+
+      {/* Savings History Modal */}
+      {createPortal(
+        <AnimatePresence>
+          {isSavingsModalOpen && (
+            <div className="fixed inset-0 z-[10000] flex items-center justify-center p-4">
+              <motion.div 
+                initial={{ opacity: 0 }} 
+                animate={{ opacity: 1 }} 
+                exit={{ opacity: 0 }} 
+                onClick={() => setIsSavingsModalOpen(false)} 
+                className="absolute inset-0 bg-gray-900/60 backdrop-blur-md" 
+              />
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.95, y: 20 }} 
+                animate={{ opacity: 1, scale: 1, y: 0 }} 
+                exit={{ opacity: 0, scale: 0.95, y: 20 }} 
+                className="relative w-full max-w-2xl bg-white rounded-2xl shadow-2xl flex flex-col max-h-[90vh] overflow-hidden"
+              >
+                <div className="flex items-center justify-between p-6 border-b border-gray-100">
+                  <h2 className="text-xl font-black text-gray-900 flex items-center gap-2">
+                    <PiggyBank className="text-purple-600" /> Savings History
+                  </h2>
+                  <button onClick={() => setIsSavingsModalOpen(false)} className="p-2 hover:bg-gray-100 rounded-xl text-gray-400 transition-colors">
+                    <X size={20} />
+                  </button>
+                </div>
+                
+                <div className="p-6 overflow-y-auto custom-scrollbar">
+                  {pastSavingsMonths.length > 0 ? (
+                    <div className="space-y-4">
+                      {pastSavingsMonths.map(report => (
+                        <div key={report.month} className="flex items-center justify-between p-4 rounded-xl border border-purple-100 bg-purple-50/30">
+                          <div>
+                            <h4 className="font-bold text-gray-900">{report.month}</h4>
+                            <p className="text-xs text-gray-500 font-medium">Saved from income</p>
+                          </div>
+                          <span className="font-black text-purple-600">{formatCurrency(report.savings, user?.currency)}</span>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-center py-10">
+                      <p className="text-gray-500">No past savings history found.</p>
+                    </div>
+                  )}
+                </div>
+              </motion.div>
+            </div>
+          )}
+        </AnimatePresence>,
+        document.body
+      )}
+
+      {/* Active Loans Modal */}
+      {createPortal(
+        <AnimatePresence>
+          {isLoansModalOpen && (
+            <div className="fixed inset-0 z-[10000] flex items-center justify-center p-4">
+              <motion.div 
+                initial={{ opacity: 0 }} 
+                animate={{ opacity: 1 }} 
+                exit={{ opacity: 0 }} 
+                onClick={() => setIsLoansModalOpen(false)} 
+                className="absolute inset-0 bg-gray-900/60 backdrop-blur-md" 
+              />
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.95, y: 20 }} 
+                animate={{ opacity: 1, scale: 1, y: 0 }} 
+                exit={{ opacity: 0, scale: 0.95, y: 20 }} 
+                className="relative w-full max-w-2xl bg-white rounded-2xl shadow-2xl flex flex-col max-h-[90vh] overflow-hidden"
+              >
+                <div className="flex items-center justify-between p-6 border-b border-gray-100">
+                  <h2 className="text-xl font-black text-gray-900 flex items-center gap-2">
+                    <HandCoins className="text-amber-600" /> Active Loans
+                  </h2>
+                  <button onClick={() => setIsLoansModalOpen(false)} className="p-2 hover:bg-gray-100 rounded-xl text-gray-400 transition-colors">
+                    <X size={20} />
+                  </button>
+                </div>
+                
+                <div className="p-6 overflow-y-auto custom-scrollbar">
+                  {unpaidLoans.length > 0 ? (
+                    <div className="space-y-4">
+                      {unpaidLoans.map(loan => (
+                        <div key={loan._id} className="flex items-center justify-between p-4 rounded-xl border border-amber-100 bg-amber-50/30">
+                          <div>
+                            <h4 className="font-bold text-gray-900">{loan.lender}</h4>
+                            <p className="text-xs text-gray-500 font-medium">{loan.purpose} • Due: {new Date(loan.expectedPayDate).toLocaleDateString()}</p>
+                          </div>
+                          <span className="font-black text-amber-600">{formatCurrency(loan.amount, user?.currency)}</span>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-center py-10">
+                      <p className="text-gray-500">No active loans.</p>
+                    </div>
+                  )}
+                </div>
+              </motion.div>
+            </div>
+          )}
+        </AnimatePresence>,
+        document.body
+      )}
     </>
   );
 };
 
-const StatCard = ({ icon: Icon, color, label, value }) => {
+const StatCard = ({ icon: Icon, color, label, value, onClick }) => {
   const { user } = useAuth();
   return (
-    <Card className="relative overflow-hidden group bg-white border-none shadow-sm hover:shadow-md transition-all">
+    <Card 
+      onClick={onClick}
+      className={`relative overflow-hidden group bg-white border-none shadow-sm hover:shadow-md transition-all ${onClick ? 'cursor-pointer hover:-translate-y-1' : ''}`}
+    >
+      {onClick && (
+        <div className="absolute top-2 right-2 z-20">
+          <div className="px-2 py-0.5 bg-yellow-400/20 backdrop-blur-md border border-yellow-400/20 rounded-lg">
+            <span className="text-[8px] font-black uppercase tracking-tighter text-yellow-700">Click Me</span>
+          </div>
+        </div>
+      )}
       <div className={`absolute top-0 right-0 w-32 h-32 bg-${color}-50 rounded-full -mr-16 -mt-16 group-hover:scale-110 transition-transform`}></div>
       <div className="flex items-start justify-between relative z-10">
         <div>
           <p className="text-gray-600 text-xs font-black uppercase tracking-wider mb-1">{label}</p>
-          <h2 className={`text-2xl font-black ${color === 'emerald' ? 'text-emerald-600' : color === 'red' ? 'text-red-600' : 'text-gray-900'}`}>
+          <h2 className={`text-2xl font-black ${color === 'emerald' ? 'text-emerald-600' : color === 'red' ? 'text-red-600' : color === 'purple' ? 'text-purple-600' : color === 'amber' ? 'text-amber-600' : color === 'rose' ? 'text-rose-600' : 'text-gray-900'}`}>
             {formatCurrency(value || 0, user?.currency)}
           </h2>
         </div>
