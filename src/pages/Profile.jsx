@@ -219,64 +219,67 @@ const Profile = () => {
         )}
       </AnimatePresence>
 
-      {/* Reset Data Modal */}
-      <AnimatePresence>
-        {showResetModal && (
-          <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setShowResetModal(false)} className="absolute inset-0 bg-gray-900/40 backdrop-blur-sm" />
-            <motion.div 
-              initial={{ opacity: 0, scale: 0.95, y: 20 }} 
-              animate={{ opacity: 1, scale: 1, y: 0 }} 
-              exit={{ opacity: 0, scale: 0.95, y: 20 }} 
-              className="relative w-full max-w-md bg-white rounded-xl shadow-2xl flex flex-col max-h-[90vh]"
-            >
-              <div className="flex items-center justify-between p-8 pb-4">
-                <h2 className="text-2xl font-bold text-gray-900 flex items-center gap-2"><Trash2 className="text-red-600" /> Reset Data</h2>
-                <button onClick={() => setShowResetModal(false)} className="p-2 hover:bg-gray-100 rounded-xl text-gray-400"><X size={20} /></button>
-              </div>
-              
-              <div className="flex-1 overflow-y-auto px-8 pb-8 custom-scrollbar">
-                <div className="bg-red-50 border border-red-100 rounded-xl p-4 mb-6 flex items-start gap-3">
-                  <AlertTriangle className="text-red-500 shrink-0 mt-0.5" size={20} />
-                  <p className="text-sm text-red-700 font-medium">Warning: This action is permanent. All data in selected categories will be deleted forever.</p>
+      {/* Reset Data Modal via Portal */}
+      {createPortal(
+        <AnimatePresence>
+          {showResetModal && (
+            <div className="fixed inset-0 z-[10000] flex items-center justify-center p-4">
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setShowResetModal(false)} className="absolute inset-0 bg-gray-900/60 backdrop-blur-md" />
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.95, y: 20 }} 
+                animate={{ opacity: 1, scale: 1, y: 0 }} 
+                exit={{ opacity: 0, scale: 0.95, y: 20 }} 
+                className="relative w-full max-w-md bg-white rounded-2xl shadow-2xl flex flex-col max-h-[90vh] overflow-hidden"
+              >
+                <div className="flex items-center justify-between p-8 pb-4">
+                  <h2 className="text-2xl font-black text-gray-900 flex items-center gap-2"><Trash2 className="text-red-600" /> Reset Data</h2>
+                  <button onClick={() => setShowResetModal(false)} className="p-3 hover:bg-gray-100 rounded-xl text-gray-400 transition-colors"><X size={24} /></button>
                 </div>
+                
+                <div className="flex-1 overflow-y-auto px-8 pb-10 custom-scrollbar">
+                  <div className="bg-red-50 border border-red-100 rounded-xl p-5 mb-8 flex items-start gap-4">
+                    <AlertTriangle className="text-red-500 shrink-0 mt-0.5" size={24} />
+                    <p className="text-sm text-red-700 font-bold leading-relaxed">Warning: This action is permanent. All data in selected categories will be deleted forever.</p>
+                  </div>
 
-                <div className="space-y-3 mb-6">
-                  <p className="text-sm font-bold text-gray-700 mb-4 uppercase tracking-wider">Select categories to clear:</p>
-                  
-                  <ResetCheckbox 
-                    label="Transactions (Income & Expenses)" 
-                    checked={resetOptions.transactions} 
-                    onChange={() => toggleResetOption('transactions')} 
+                  <div className="space-y-3 mb-8">
+                    <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-4">Select categories to clear</p>
+                    
+                    <ResetCheckbox 
+                      label="Transactions (Income & Expenses)" 
+                      checked={resetOptions.transactions} 
+                      onChange={() => toggleResetOption('transactions')} 
+                    />
+                    <ResetCheckbox 
+                      label="Loans" 
+                      checked={resetOptions.loans} 
+                      onChange={() => toggleResetOption('loans')} 
+                    />
+                    <ResetCheckbox 
+                      label="Budgets" 
+                      checked={resetOptions.budgets} 
+                      onChange={() => toggleResetOption('budgets')} 
                   />
-                  <ResetCheckbox 
-                    label="Loans" 
-                    checked={resetOptions.loans} 
-                    onChange={() => toggleResetOption('loans')} 
-                  />
-                  <ResetCheckbox 
-                    label="Budgets" 
-                    checked={resetOptions.budgets} 
-                    onChange={() => toggleResetOption('budgets')} 
-                />
-                  <ResetCheckbox 
-                    label="Future Plans / Notes" 
-                    checked={resetOptions.plans} 
-                    onChange={() => toggleResetOption('plans')} 
-                  />
-                </div>
+                    <ResetCheckbox 
+                      label="Future Plans / Notes" 
+                      checked={resetOptions.plans} 
+                      onChange={() => toggleResetOption('plans')} 
+                    />
+                  </div>
 
-                <div className="flex flex-col sm:flex-row gap-4 mt-8">
-                  <Button variant="ghost" className="flex-1 order-2 sm:order-1" onClick={() => setShowResetModal(false)}>Cancel</Button>
-                  <Button variant="danger" className="flex-[2] py-4 font-bold order-1 sm:order-2" onClick={handleResetData} disabled={loading}>
-                    {loading ? 'Deleting...' : 'Delete Selected Data'}
-                  </Button>
+                  <div className="flex flex-col sm:flex-row gap-4">
+                    <Button variant="ghost" className="flex-1 order-2 sm:order-1 font-bold h-14" onClick={() => setShowResetModal(false)}>Cancel</Button>
+                    <Button variant="danger" className="flex-[2] h-14 font-black shadow-lg shadow-red-600/20 order-1 sm:order-2" onClick={handleResetData} disabled={loading}>
+                      {loading ? 'Deleting...' : 'Delete Selected Data'}
+                    </Button>
+                  </div>
                 </div>
-              </div>
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
+              </motion.div>
+            </div>
+          )}
+        </AnimatePresence>,
+        document.body
+      )}
     </div>
   );
 };
