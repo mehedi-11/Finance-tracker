@@ -121,9 +121,10 @@ const Transactions = () => {
 
   const handleTogglePaid = async (transaction) => {
     try {
-      const updatedData = { ...transaction, isPaid: !transaction.isPaid };
+      const isCurrentlyPaid = transaction.isPaid !== false;
+      const updatedData = { ...transaction, isPaid: !isCurrentlyPaid };
       await updateTransaction(transaction._id, updatedData);
-      toast.success(updatedData.isPaid ? 'Marked as Paid' : 'Marked as Unpaid');
+      toast.success(!isCurrentlyPaid ? 'Marked as Paid' : 'Marked as Unpaid');
     } catch (err) {
       toast.error('Toggle failed');
     }
@@ -234,10 +235,10 @@ const Transactions = () => {
                           {t.type === 'expense' && (
                             <button 
                               onClick={() => handleTogglePaid(t)}
-                              className={`p-2 rounded-xl transition-all ${t.isPaid ? 'text-emerald-500 hover:bg-emerald-50' : 'text-amber-500 hover:bg-amber-50'}`}
-                              title={t.isPaid ? "Mark as Unpaid" : "Mark as Paid"}
+                              className={`p-2 rounded-xl transition-all ${t.isPaid !== false ? 'text-emerald-500 hover:bg-emerald-50' : 'text-amber-500 hover:bg-amber-50'}`}
+                              title={t.isPaid !== false ? "Mark as Unpaid" : "Mark as Paid"}
                             >
-                              {t.isPaid ? <CheckCircle size={18} /> : <Circle size={18} />}
+                              {t.isPaid !== false ? <CheckCircle size={18} /> : <Circle size={18} />}
                             </button>
                           )}
                           <button 

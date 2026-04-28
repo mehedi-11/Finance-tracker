@@ -126,14 +126,21 @@ export const FinanceProvider = ({ children }) => {
   };
 
   const updateTransaction = async (id, updatedData) => {
+    // Clean data for backend (some backends fail if _id or timestamps are in body)
+    const { _id, createdAt, updatedAt, __v, user: u, ...cleanData } = updatedData;
+
     const response = await fetch(`${API_URL}/transactions/${id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${user.token}` },
-      body: JSON.stringify(updatedData),
+      body: JSON.stringify(cleanData),
     });
+    
     if (response.ok) {
       const updated = await response.json();
-      setTransactions(prev => prev.map(t => t._id === id ? updated : t));
+      setTransactions(prev => prev.map(t => t._id === id ? { ...t, ...updated } : t));
+      return updated;
+    } else {
+      throw new Error('Update failed');
     }
   };
 
