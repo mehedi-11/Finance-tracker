@@ -16,8 +16,7 @@ import {
   PieChart as PieChartIcon,
   BarChart3,
   TrendingUp,
-  TrendingDown,
-  Wand2
+  TrendingDown
 } from 'lucide-react';
 import { 
   BarChart, 
@@ -43,7 +42,7 @@ import { useTranslation } from 'react-i18next';
 const NOTES_URL = API_ENDPOINTS.NOTES;
 
 const Dashboard = () => {
-  const { transactions, totals, categoryTotals, getMonthlyReports, loans, addTransaction, addLoan, deleteMonthData, fetchFinanceData, generateDummyData } = useFinance();
+  const { transactions, totals, categoryTotals, getMonthlyReports, loans, addTransaction, addLoan, deleteMonthData, fetchFinanceData } = useFinance();
   const { user } = useAuth();
   const { t } = useTranslation();
 
@@ -92,30 +91,13 @@ const Dashboard = () => {
   const [deleteConfirm, setDeleteConfirm] = useState(null);
   const [noteData, setNoteData] = useState({ title: '', content: '', amount: '', plannedDate: '' });
 
-  // Dummy Data State
-  const [showDummyModal, setShowDummyModal] = useState(false);
-  const [dummyOptions, setDummyOptions] = useState({
-    transactions: true,
-    budgets: true,
-    loans: true,
-    plans: true,
-    months: 3
-  });
-  const [isGenerating, setIsGenerating] = useState(false);
+  // Real-time Clock State
+  const [dateTime, setDateTime] = useState(new Date());
 
-  const handleGenerateDummy = async () => {
-    setIsGenerating(true);
-    const loadingToast = toast.loading('Generating premium dummy data...');
-    try {
-      await generateDummyData(dummyOptions);
-      toast.success('Dummy data generated successfully!', { id: loadingToast });
-      setShowDummyModal(false);
-    } catch (err) {
-      toast.error('Failed to generate dummy data', { id: loadingToast });
-    } finally {
-      setIsGenerating(false);
-    }
-  };
+  useEffect(() => {
+    const timer = setInterval(() => setDateTime(new Date()), 1000);
+    return () => clearInterval(timer);
+  }, []);
 
   useEffect(() => {
     if (user?.token) fetchNotes();
@@ -231,17 +213,16 @@ const Dashboard = () => {
         {/* Header Section - Premium Dark Leaf Box for All Screens */}
         <div className="bg-[#1a0b2e] rounded-tl-[30px] md:rounded-tl-[60px] rounded-br-[30px] md:rounded-br-[60px] px-10 py-12 md:px-16 md:py-20 mb-4 shadow-2xl shadow-purple-900/20 animate-fade-in relative z-20 transition-all">
           <div className="max-w-[1400px] mx-auto flex flex-col md:flex-row md:items-center justify-between gap-10 md:gap-4 flex-wrap">
-            <div className="text-center md:text-left w-full md:w-auto relative">
-              <div className="absolute -top-10 left-1/2 -translate-x-1/2 md:left-0 md:translate-x-0">
-                <button 
-                  onClick={() => setShowDummyModal(true)}
-                  className="flex items-center gap-2 px-3 py-1.5 bg-white/10 hover:bg-white/20 border border-white/10 rounded-xl backdrop-blur-md text-white text-[10px] font-black uppercase tracking-widest transition-all group"
-                >
-                  <Wand2 size={14} className="text-primary-300 group-hover:rotate-12 transition-transform" />
-                  Import Dummy Data
-                </button>
+            <div className="text-center md:text-left w-full md:w-auto">
+              <div className="flex flex-col md:flex-row items-center gap-2 md:gap-4 mb-4 md:mb-2">
+                <div className="px-3 py-1 bg-white/10 border border-white/10 rounded-lg backdrop-blur-md text-white text-[10px] md:text-xs font-black uppercase tracking-widest transition-all">
+                  {dateTime.toLocaleDateString('en-US', { weekday: 'short', day: 'numeric', month: 'short' })}
+                </div>
+                <div className="px-3 py-1 bg-primary-500/20 border border-primary-500/20 rounded-lg backdrop-blur-md text-primary-300 text-[10px] md:text-xs font-black uppercase tracking-widest transition-all">
+                  {dateTime.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true })}
+                </div>
               </div>
-              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black text-white leading-tight tracking-tight mt-4 md:mt-0">
+              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black text-white leading-tight tracking-tight">
                 {t('dashboard.hello')}, {user?.name || 'User'}!
               </h1>
               <p className="text-purple-300 font-bold text-sm md:text-lg mt-2 md:mt-1 opacity-90">
@@ -476,86 +457,6 @@ const Dashboard = () => {
                 <div className="grid grid-cols-2 gap-4">
                   <Button variant="secondary" onClick={() => setDeleteConfirm(null)} className="bg-gray-100 border-none text-gray-600">Cancel</Button>
                   <Button onClick={handleDeleteNote} className="bg-red-600 hover:bg-red-700 text-white border-none">Yes, Delete</Button>
-                </div>
-              </motion.div>
-            </div>
-          )}
-        </AnimatePresence>,
-        document.body
-      )}
-
-      {/* Dummy Data Modal */}
-      {createPortal(
-        <AnimatePresence>
-          {showDummyModal && (
-            <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
-              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setShowDummyModal(false)} className="absolute inset-0 bg-gray-900/40 backdrop-blur-sm" />
-              <motion.div 
-                initial={{ opacity: 0, scale: 0.95, y: 20 }} 
-                animate={{ opacity: 1, scale: 1, y: 0 }} 
-                exit={{ opacity: 0, scale: 0.95, y: 20 }} 
-                className="relative w-full max-w-md bg-white rounded-2xl shadow-2xl overflow-hidden"
-              >
-                <div className="bg-gradient-to-br from-primary-600 to-indigo-700 p-8 text-white relative">
-                  <div className="absolute top-0 right-0 p-4">
-                    <button onClick={() => setShowDummyModal(false)} className="p-2 hover:bg-white/10 rounded-xl transition-all">
-                      <X size={20} />
-                    </button>
-                  </div>
-                  <Wand2 size={40} className="mb-4 opacity-50" />
-                  <h2 className="text-2xl font-black tracking-tight">Import Dummy Data</h2>
-                  <p className="text-primary-100 text-sm font-medium mt-1">Populate your app with premium sample data.</p>
-                </div>
-
-                <div className="p-8 space-y-6">
-                  <div className="space-y-4">
-                    <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Select Categories</p>
-                    <div className="grid grid-cols-2 gap-3">
-                      {[
-                        { id: 'transactions', label: 'Reports (Trans)', color: 'bg-emerald-50 text-emerald-600' },
-                        { id: 'budgets', label: 'Budgets', color: 'bg-primary-50 text-primary-600' },
-                        { id: 'loans', label: 'Loans', color: 'bg-amber-50 text-amber-600' },
-                        { id: 'plans', label: 'Future Plans', color: 'bg-indigo-50 text-indigo-600' }
-                      ].map(opt => (
-                        <label key={opt.id} className={`flex items-center gap-3 p-3 rounded-xl border-2 transition-all cursor-pointer ${dummyOptions[opt.id] ? 'border-primary-500 bg-primary-50/30' : 'border-gray-100 hover:border-gray-200'}`}>
-                          <input 
-                            type="checkbox" 
-                            className="w-4 h-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500"
-                            checked={dummyOptions[opt.id]}
-                            onChange={e => setDummyOptions({ ...dummyOptions, [opt.id]: e.target.checked })}
-                          />
-                          <span className="text-xs font-bold text-gray-700">{opt.label}</span>
-                        </label>
-                      ))}
-                    </div>
-                  </div>
-
-                  {dummyOptions.transactions && (
-                    <motion.div 
-                      initial={{ opacity: 0, height: 0 }}
-                      animate={{ opacity: 1, height: 'auto' }}
-                      className="space-y-3"
-                    >
-                      <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Report Duration (Months)</p>
-                      <input 
-                        type="number"
-                        min="1"
-                        max="12"
-                        value={dummyOptions.months}
-                        onChange={e => setDummyOptions({ ...dummyOptions, months: parseInt(e.target.value) || 1 })}
-                        className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm font-bold text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary-500/50"
-                      />
-                      <p className="text-[10px] text-gray-400 italic">Data will be generated for the last {dummyOptions.months} months.</p>
-                    </motion.div>
-                  )}
-
-                  <Button 
-                    onClick={handleGenerateDummy} 
-                    disabled={isGenerating}
-                    className="w-full py-4 text-lg font-black bg-gradient-to-r from-primary-600 to-indigo-600 hover:from-primary-700 hover:to-indigo-700 shadow-xl shadow-primary-600/20"
-                  >
-                    {isGenerating ? 'Generating...' : 'Magic Generate'}
-                  </Button>
                 </div>
               </motion.div>
             </div>

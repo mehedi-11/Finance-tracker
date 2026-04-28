@@ -311,77 +311,7 @@ export const FinanceProvider = ({ children }) => {
       getMonthlyReports,
       totals,
       categoryTotals,
-      fetchFinanceData,
-      generateDummyData: async (options) => {
-        const { transactions, budgets, loans, plans, months } = options;
-        const results = [];
-
-        if (transactions && months > 0) {
-          const categories = ['Food', 'Rent', 'Salary', 'Transport', 'Entertainment', 'Shopping', 'Health', 'Utilities'];
-          const now = new Date();
-          for (let i = 0; i < months; i++) {
-            const date = new Date(now.getFullYear(), now.getMonth() - i, 1);
-            // 2 Income per month
-            for (let j = 0; j < 2; j++) {
-              await addTransaction({
-                description: `Salary Month ${i + 1}`,
-                amount: Math.floor(Math.random() * 5000) + 20000,
-                type: 'income',
-                category: 'Salary',
-                date: new Date(date.getFullYear(), date.getMonth(), Math.floor(Math.random() * 28) + 1).toISOString()
-              });
-            }
-            // 5-10 Expenses per month
-            const expenseCount = Math.floor(Math.random() * 6) + 5;
-            for (let j = 0; j < expenseCount; j++) {
-              const cat = categories[Math.floor(Math.random() * categories.length)];
-              await addTransaction({
-                description: `Dummy ${cat} ${j + 1}`,
-                amount: Math.floor(Math.random() * 1000) + 100,
-                type: 'expense',
-                category: cat,
-                date: new Date(date.getFullYear(), date.getMonth(), Math.floor(Math.random() * 28) + 1).toISOString()
-              });
-            }
-          }
-        }
-
-        if (budgets) {
-          const categories = ['Food', 'Transport', 'Entertainment', 'Health', 'Shopping'];
-          for (const cat of categories) {
-            await setBudget(cat, Math.floor(Math.random() * 5000) + 2000);
-          }
-        }
-
-        if (loans) {
-          for (let i = 0; i < 2; i++) {
-            await addLoan({
-              lender: `Bank ${i + 1}`,
-              amount: Math.floor(Math.random() * 50000) + 10000,
-              type: 'get',
-              purpose: 'Personal Loan',
-              expectedPayDate: new Date(new Date().setMonth(new Date().getMonth() + 6)).toISOString()
-            });
-          }
-        }
-
-        if (plans) {
-          const plansData = [
-            { title: 'Buy a New Car', content: 'Saving for a Toyota', amount: 500000, plannedDate: '2026-12-01' },
-            { title: 'Europe Trip', content: 'Summer vacation', amount: 200000, plannedDate: '2026-06-15' }
-          ];
-          for (const p of plansData) {
-            await fetch(API_ENDPOINTS.NOTES, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${user.token}` },
-              body: JSON.stringify(p)
-            });
-          }
-        }
-
-        await fetchFinanceData();
-        return true;
-      }
+      fetchFinanceData
     }}>
       {children}
     </FinanceContext.Provider>
