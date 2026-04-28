@@ -195,57 +195,7 @@ const Dashboard = () => {
     }
   }, [notes, user]);
 
-  // Seed Dummy Data for 4 months if requested
-  useEffect(() => {
-    const seedData = async () => {
-      if (!user || localStorage.getItem('finance_seeded')) return;
-      
-      const categories = ['Food', 'Transport', 'Rent', 'Salary', 'Shopping', 'Bills'];
-      const months = [1, 2, 3, 4]; // Last 4 months
-      const year = new Date().getFullYear();
 
-      for (const m of months) {
-        const month = new Date().getMonth() - m;
-        const date = new Date(year, month, 15).toISOString();
-        
-        // Add Salary (Income)
-        await addTransaction({
-          type: 'income',
-          amount: 25000 + (Math.random() * 5000),
-          category: 'Salary',
-          description: 'Monthly Salary',
-          date
-        });
-
-        // Add 3 Expenses
-        for (let i = 0; i < 3; i++) {
-          await addTransaction({
-            type: 'expense',
-            amount: 500 + (Math.random() * 2000),
-            category: categories[Math.floor(Math.random() * categories.length)],
-            description: 'Sample expense',
-            date
-          });
-        }
-
-        // Add a Loan
-        await addLoan({
-          lender: 'Bank ' + m,
-          purpose: 'Emergency',
-          amount: 5000,
-          expectedPayDate: date,
-          type: 'get',
-          isPaid: m > 2 // Some paid, some not
-        });
-      }
-
-      localStorage.setItem('finance_seeded', 'true');
-      fetchFinanceData();
-      toast.success('Dummy data seeded for testing!');
-    };
-
-    seedData();
-  }, [user]);
 
   const recentTransactions = currentMonthTransactions.slice(0, 5) || [];
 
