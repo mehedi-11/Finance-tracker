@@ -307,6 +307,13 @@ export const FinanceProvider = ({ children }) => {
   };
   totals.balance = totals.income - totals.expenses;
 
+  const globalTotals = {
+    income: transactions.filter(t => t.type === 'income' && t.isPaid !== false).reduce((sum, t) => sum + Number(t.amount), 0),
+    expenses: transactions.filter(t => t.type === 'expense' && t.isPaid !== false).reduce((sum, t) => sum + Number(t.amount), 0),
+    balance: 0
+  };
+  globalTotals.balance = globalTotals.income - globalTotals.expenses;
+
   const categoryTotals = currentCycleTransactions
     .filter(t => t.type === 'expense' && t.isPaid !== false)
     .reduce((acc, t) => {
@@ -358,6 +365,7 @@ export const FinanceProvider = ({ children }) => {
       },
       getMonthlyReports,
       totals,
+      globalTotals,
       categoryTotals,
       currentCycleTransactions,
       getCurrentCycleRange,

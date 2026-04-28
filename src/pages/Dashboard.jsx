@@ -45,6 +45,7 @@ const Dashboard = () => {
   const { 
     transactions, 
     totals, 
+    globalTotals,
     categoryTotals, 
     getMonthlyReports, 
     loans, 
@@ -255,7 +256,7 @@ const Dashboard = () => {
 
         {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <StatCard icon={Banknote} color="primary" label={t('common.total_balance')} value={monthTotals.balance} />
+          <StatCard icon={Banknote} color="primary" label={t('common.total_balance')} value={globalTotals.balance} />
           <StatCard icon={ArrowUpCircle} color="emerald" label={t('common.total_income')} value={monthTotals.income} />
           <StatCard icon={ArrowDownCircle} color="red" label={t('common.total_expenses')} value={monthTotals.expenses} />
         </div>
