@@ -225,22 +225,13 @@ const Transactions = () => {
                       }`}>
                         <div className="flex flex-col">
                           <span>{t.type === 'income' ? '+' : '-'}{formatCurrency(t.amount, user?.currency)}</span>
-                          {t.type === 'expense' && !t.isPaid && (
+                          {t.type === 'expense' && t.isPaid === false && (
                             <span className="text-[10px] text-amber-600 font-black uppercase tracking-tighter">Unpaid</span>
                           )}
                         </div>
                       </td>
                       <td className="px-4 md:px-6 py-4 text-right">
                         <div className="flex items-center justify-end gap-1 md:gap-2">
-                          {t.type === 'expense' && (
-                            <button 
-                              onClick={() => handleTogglePaid(t)}
-                              className={`p-2 rounded-xl transition-all ${t.isPaid !== false ? 'text-emerald-500 hover:bg-emerald-50' : 'text-amber-500 hover:bg-amber-50'}`}
-                              title={t.isPaid !== false ? "Mark as Unpaid" : "Mark as Paid"}
-                            >
-                              {t.isPaid !== false ? <CheckCircle size={18} /> : <Circle size={18} />}
-                            </button>
-                          )}
                           <button 
                             onClick={() => handleOpenModal(t)}
                             className="p-2 hover:bg-primary-50 rounded-xl text-gray-400 hover:text-primary-600 transition-colors"
@@ -325,20 +316,20 @@ const Transactions = () => {
                     <Input label="Date" type="date" value={formData.date} onChange={(e) => setFormData({ ...formData, date: e.target.value })} required />
                     
                     {formData.type === 'expense' && (
-                      <label 
-                        className="flex items-center gap-3 p-4 bg-gray-50 rounded-xl cursor-pointer hover:bg-gray-100 transition-all border border-gray-100"
-                      >
-                        <input 
-                          type="checkbox"
-                          className="w-5 h-5 rounded border-gray-300 text-primary-600 focus:ring-primary-500 cursor-pointer"
-                          checked={formData.isPaid}
-                          onChange={(e) => setFormData(prev => ({ ...prev, isPaid: e.target.checked }))}
-                        />
-                        <div>
-                          <p className="text-sm font-black text-gray-900">Mark as Paid</p>
-                          <p className="text-[10px] text-gray-500 font-medium">{formData.isPaid ? 'This will deduct from your balance' : 'This will be marked as Unpaid (No balance change)'}</p>
-                        </div>
-                      </label>
+                      <div className="space-y-1.5">
+                        <label className="text-sm font-bold text-gray-700 ml-1">Payment Status</label>
+                        <select 
+                          className="input-premium" 
+                          value={formData.isPaid ? 'true' : 'false'} 
+                          onChange={(e) => setFormData(prev => ({ ...prev, isPaid: e.target.value === 'true' }))}
+                        >
+                          <option value="true">Paid</option>
+                          <option value="false">Unpaid</option>
+                        </select>
+                        <p className="text-[10px] text-gray-500 italic ml-1">
+                          {formData.isPaid ? 'This will deduct from your balance.' : 'This will be ignored (No balance/expense change).'}
+                        </p>
+                      </div>
                     )}
                     <Button type="submit" className="w-full py-4 text-lg font-bold mt-4">
                       {editingTransaction ? 'Update Record' : 'Save Transaction'}
