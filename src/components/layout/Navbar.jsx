@@ -48,6 +48,9 @@ const Navbar = ({ setIsSidebarOpen }) => {
       if (!e.target.closest('.global-search-container')) {
         setSearchResults([]);
       }
+      if (!e.target.closest('.notification-container')) {
+        setShowDropdown(false);
+      }
     };
     document.addEventListener('click', handleClickOutside);
     return () => document.removeEventListener('click', handleClickOutside);
@@ -162,7 +165,7 @@ const Navbar = ({ setIsSidebarOpen }) => {
 
 
       <div className="flex items-center gap-2 md:gap-6">
-        <div className="relative">
+        <div className="relative notification-container">
           <button 
             onClick={() => setShowDropdown(!showDropdown)}
             className="relative p-2 text-gray-500 hover:text-gray-900 transition-colors"

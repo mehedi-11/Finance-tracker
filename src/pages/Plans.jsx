@@ -9,7 +9,8 @@ import {
   X,
   AlertTriangle,
   StickyNote,
-  Calendar
+  Calendar,
+  Check
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useFinance } from '../context/FinanceContext';
