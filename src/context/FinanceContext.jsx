@@ -106,14 +106,20 @@ export const FinanceProvider = ({ children }) => {
   }, [loans, user]);
 
   const addTransaction = async (transaction) => {
+    // Clean data for backend
+    const { _id, createdAt, updatedAt, __v, user: u, ...cleanData } = transaction;
+
     const response = await fetch(`${API_URL}/transactions`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${user.token}` },
-      body: JSON.stringify(transaction),
+      body: JSON.stringify(cleanData),
     });
     if (response.ok) {
       const newTransaction = await response.json();
-      setTransactions(prev => [newTransaction, ...prev]);
+      // Force preserve isPaid in local state if backend strips it
+      const finalTransaction = { ...transaction, ...newTransaction };
+      setTransactions(prev => [finalTransaction, ...prev]);
+      return finalTransaction;
     }
   };
 
@@ -137,7 +143,8 @@ export const FinanceProvider = ({ children }) => {
     
     if (response.ok) {
       const updated = await response.json();
-      setTransactions(prev => prev.map(t => t._id === id ? { ...t, ...updated } : t));
+      // Force preserve isPaid in local state if backend strips it
+      setTransactions(prev => prev.map(t => t._id === id ? { ...t, ...updated, isPaid: updated.isPaid !== undefined ? updated.isPaid : updatedData.isPaid } : t));
       return updated;
     } else {
       throw new Error('Update failed');
