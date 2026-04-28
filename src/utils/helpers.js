@@ -13,7 +13,7 @@ export const formatDate = (dateString) => {
 };
 
 export const categories = {
-  income: ['Salary', 'Freelance', 'Investment', 'Gift', 'Other'],
+  income: ['Salary', 'Freelance', 'Investment', 'Gift', 'Saving', 'Other'],
   expense: ['Food', 'Rent', 'Transport', 'Shopping', 'Entertainment', 'Health', 'Bills', 'Other']
 };
 

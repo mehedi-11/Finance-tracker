@@ -9,7 +9,8 @@ import {
   X,
   HandCoins,
   StickyNote,
-  HelpCircle
+  HelpCircle,
+  PiggyBank
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { motion } from 'framer-motion';
@@ -31,6 +32,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
     { icon: Wallet, label: t('common.budget'), path: '/budget' },
     { icon: HandCoins, label: t('common.loans'), path: '/loans' },
     { icon: StickyNote, label: t('common.my_plan'), path: '/plans' },
+    { icon: PiggyBank, label: 'Savings', path: '/savings' },
     { icon: PieChart, label: t('common.reports'), path: '/reports' },
     { icon: User, label: t('common.profile'), path: '/profile' },
     { icon: HelpCircle, label: t('common.help_support'), path: '/help' },

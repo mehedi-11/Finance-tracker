@@ -337,6 +337,15 @@ export const FinanceProvider = ({ children }) => {
       return acc;
     }, {});
 
+  const pureGlobalIncome = transactions
+    .filter(t => t.type === 'income' && t.isPaid !== false && t.category !== 'Saving')
+    .reduce((sum, t) => sum + Number(t.amount), 0);
+
+  const totalSavings = pureGlobalIncome - globalTotals.expenses - totals.balance;
+
+  const unpaidTransactions = currentCycleTransactions.filter(t => t.type === 'expense' && t.isPaid === false);
+  const activeLoans = loans.filter(l => !l.isPaid).reduce((sum, l) => sum + Number(l.amount), 0);
+
   return (
     <FinanceContext.Provider value={{ 
       transactions, 
@@ -383,7 +392,10 @@ export const FinanceProvider = ({ children }) => {
       categoryTotals,
       currentCycleTransactions,
       getCurrentCycleRange,
-      fetchFinanceData
+      fetchFinanceData,
+      totalSavings,
+      unpaidTransactions,
+      activeLoans
     }}>
       {children}
     </FinanceContext.Provider>

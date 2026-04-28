@@ -20,6 +20,7 @@ import ResetPassword from './pages/ResetPassword';
 import Loans from './pages/Loans';
 import Plans from './pages/Plans';
 import HelpSupport from './pages/HelpSupport';
+import Savings from './pages/Savings';
 
 // Components
 import Sidebar from './components/layout/Sidebar';
@@ -60,6 +61,7 @@ function AppContent() {
             <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
             <Route path="/loans" element={<ProtectedRoute><Loans /></ProtectedRoute>} />
             <Route path="/plans" element={<ProtectedRoute><Plans /></ProtectedRoute>} />
+            <Route path="/savings" element={<ProtectedRoute><Savings /></ProtectedRoute>} />
             <Route path="/help" element={<ProtectedRoute><HelpSupport /></ProtectedRoute>} />
           </Routes>
         </main>

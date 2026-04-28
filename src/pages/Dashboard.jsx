@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { 
   Plus, 
@@ -12,7 +14,10 @@ import {
   TrendingDown,
   Calendar,
   HandCoins,
-  StickyNote
+  StickyNote,
+  PiggyBank,
+  AlertCircle,
+  X
 } from 'lucide-react';
 import { 
   BarChart, 
@@ -39,7 +44,10 @@ const Dashboard = () => {
     globalTotals,
     categoryTotals, 
     currentCycleTransactions,
-    getCurrentCycleRange
+    getCurrentCycleRange,
+    totalSavings,
+    unpaidTransactions,
+    activeLoans
   } = useFinance();
   const { user } = useAuth();
   const { t } = useTranslation();
@@ -47,6 +55,7 @@ const Dashboard = () => {
   const { start: cycleStart, end: cycleEnd } = getCurrentCycleRange();
 
   const [dateTime, setDateTime] = useState(new Date());
+  const [isUnpaidModalOpen, setIsUnpaidModalOpen] = useState(false);
 
   useEffect(() => {
     const timer = setInterval(() => setDateTime(new Date()), 1000);
@@ -131,10 +140,27 @@ const Dashboard = () => {
         </div>
 
         {/* Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <StatCard icon={Banknote} color="primary" label={t('common.total_balance')} value={globalTotals.balance} />
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <StatCard icon={Banknote} color="primary" label="Current Month Balance" value={monthTotals.balance} />
           <StatCard icon={ArrowUpCircle} color="emerald" label={t('common.total_income')} value={monthTotals.income} />
           <StatCard icon={ArrowDownCircle} color="red" label={t('common.total_expenses')} value={monthTotals.expenses} />
+          
+          <Link to="/savings">
+            <StatCard icon={PiggyBank} color="purple" label="Total Savings" value={totalSavings} />
+          </Link>
+          
+          <Link to="/loans">
+            <StatCard icon={HandCoins} color="amber" label="Active Loans" value={activeLoans} />
+          </Link>
+          
+          <div onClick={() => setIsUnpaidModalOpen(true)} className="cursor-pointer transition-transform hover:-translate-y-1">
+            <StatCard 
+              icon={AlertCircle} 
+              color="rose" 
+              label={`Unpaid Expenses (${unpaidTransactions.length})`} 
+              value={unpaidTransactions.reduce((sum, t) => sum + Number(t.amount), 0)} 
+            />
+          </div>
         </div>
 
         {/* Extra Insights */}
@@ -253,6 +279,63 @@ const Dashboard = () => {
           </Card>
         </div>
       </div>
+
+      {/* Unpaid Transactions Modal via Portal */}
+      {createPortal(
+        <AnimatePresence>
+          {isUnpaidModalOpen && (
+            <div className="fixed inset-0 z-[10000] flex items-center justify-center p-4">
+              <motion.div 
+                initial={{ opacity: 0 }} 
+                animate={{ opacity: 1 }} 
+                exit={{ opacity: 0 }} 
+                onClick={() => setIsUnpaidModalOpen(false)} 
+                className="absolute inset-0 bg-gray-900/60 backdrop-blur-md" 
+              />
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.95, y: 20 }} 
+                animate={{ opacity: 1, scale: 1, y: 0 }} 
+                exit={{ opacity: 0, scale: 0.95, y: 20 }} 
+                className="relative w-full max-w-2xl bg-white rounded-2xl shadow-2xl flex flex-col max-h-[90vh] overflow-hidden"
+              >
+                <div className="flex items-center justify-between p-6 border-b border-gray-100">
+                  <h2 className="text-xl font-black text-gray-900 flex items-center gap-2">
+                    <AlertCircle className="text-rose-600" /> Unpaid Transactions
+                  </h2>
+                  <button onClick={() => setIsUnpaidModalOpen(false)} className="p-2 hover:bg-gray-100 rounded-xl text-gray-400 transition-colors">
+                    <X size={20} />
+                  </button>
+                </div>
+                
+                <div className="p-6 overflow-y-auto custom-scrollbar">
+                  {unpaidTransactions.length > 0 ? (
+                    <div className="space-y-4">
+                      {unpaidTransactions.map(t => (
+                        <div key={t._id} className="flex items-center justify-between p-4 rounded-xl border border-rose-100 bg-rose-50/30">
+                          <div>
+                            <h4 className="font-bold text-gray-900">{t.description}</h4>
+                            <p className="text-xs text-gray-500 font-medium">{t.category} • {new Date(t.date).toLocaleDateString()}</p>
+                          </div>
+                          <span className="font-black text-rose-600">{formatCurrency(t.amount, user?.currency)}</span>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-center py-10">
+                      <div className="w-16 h-16 bg-emerald-50 text-emerald-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <Banknote size={32} />
+                      </div>
+                      <h3 className="text-lg font-bold text-gray-900 mb-1">All Caught Up!</h3>
+                      <p className="text-gray-500 text-sm">You don't have any unpaid expenses.</p>
+                    </div>
+                  )}
+                </div>
+              </motion.div>
+            </div>
+          )}
+        </AnimatePresence>,
+        document.body
+      )}
     </>
   );
 };
