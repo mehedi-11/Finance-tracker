@@ -28,6 +28,10 @@ const transactionSchema = mongoose.Schema({
     required: true,
     default: Date.now,
   },
+  isPaid: {
+    type: Boolean,
+    default: true,
+  },
 }, {
   timestamps: true,
 });

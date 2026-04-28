@@ -11,7 +11,7 @@ const getTransactions = async (req, res) => {
 // @desc    Add a transaction
 // @route   POST /api/finance/transactions
 const addTransaction = async (req, res) => {
-  const { description, amount, type, category, date } = req.body;
+  const { description, amount, type, category, date, isPaid } = req.body;
 
   const transaction = new Transaction({
     user: req.user._id,
@@ -20,6 +20,7 @@ const addTransaction = async (req, res) => {
     type,
     category,
     date: date || Date.now(),
+    isPaid: isPaid !== undefined ? isPaid : true,
   });
 
   const createdTransaction = await transaction.save();
@@ -41,6 +42,7 @@ const updateTransaction = async (req, res) => {
     transaction.type = req.body.type || transaction.type;
     transaction.category = req.body.category || transaction.category;
     transaction.date = req.body.date || transaction.date;
+    transaction.isPaid = req.body.isPaid !== undefined ? req.body.isPaid : transaction.isPaid;
 
     const updatedTransaction = await transaction.save();
     res.json(updatedTransaction);
