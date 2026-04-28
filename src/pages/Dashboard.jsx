@@ -210,56 +210,89 @@ const Dashboard = () => {
   return (
     <>
       <div className="space-y-8 animate-fade-in pb-20">
-        {/* Header Section - Premium Dark Leaf Box for All Screens */}
-        <div className="bg-[#1a0b2e] rounded-tl-[30px] md:rounded-tl-[60px] rounded-br-[30px] md:rounded-br-[60px] px-10 py-12 md:px-16 md:py-20 mb-4 shadow-2xl shadow-purple-900/20 animate-fade-in relative z-20 transition-all">
-          <div className="max-w-[1400px] mx-auto flex flex-col md:flex-row md:items-center justify-between gap-10 md:gap-4 flex-wrap">
-            <div className="text-center md:text-left w-full md:w-auto">
-              <div className="flex flex-col md:flex-row items-center gap-2 md:gap-4 mb-4 md:mb-2">
-                <div className="px-6 py-2 bg-white/5 border border-white/10 rounded-full backdrop-blur-xl text-white text-[10px] md:text-xs flex items-center gap-4 shadow-2xl shadow-black/20 ring-1 ring-white/5">
-                  <div className="flex items-center gap-2">
-                    <Calendar size={14} className="text-primary-400" />
-                    <span className="font-bold opacity-80 uppercase tracking-widest">
-                      {dateTime.toLocaleDateString('en-US', { weekday: 'short', day: 'numeric', month: 'short' })}
-                    </span>
-                  </div>
-                  <div className="w-[1px] h-3 bg-white/20"></div>
-                  <div className="flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.8)]"></span>
-                    <span className="font-black tracking-widest">
-                      {dateTime.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true })}
-                    </span>
-                  </div>
-                </div>
-              </div>
-              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black text-white leading-tight tracking-tight">
-                {t('dashboard.hello')}, {user?.name || 'User'}!
-              </h1>
-              <p className="text-purple-300 font-bold text-sm md:text-lg mt-2 md:mt-1 opacity-90">
-                {t('dashboard.welcome_msg')}
-              </p>
+        {/* Floating UI Hero Section */}
+        <div className="relative mb-20">
+          {/* Main Hero Container with Organic Shapes */}
+          <div className="bg-[#1a0b2e] rounded-tl-[40px] md:rounded-tl-[100px] rounded-br-[40px] md:rounded-br-[100px] p-8 md:p-20 overflow-hidden relative min-h-[450px] flex items-center transition-all shadow-2xl shadow-purple-900/30">
+            {/* Abstract Background Elements */}
+            <div className="absolute -top-24 -right-24 w-96 h-96 bg-primary-600/20 rounded-full blur-[100px] animate-pulse"></div>
+            <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-emerald-600/10 rounded-full blur-[100px]"></div>
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full opacity-20 pointer-events-none">
+              <svg width="100%" height="100%" viewBox="0 0 100 100" preserveAspectRatio="none">
+                <circle cx="20" cy="20" r="0.5" fill="white" />
+                <circle cx="80" cy="40" r="0.5" fill="white" />
+                <circle cx="40" cy="80" r="0.5" fill="white" />
+                <circle cx="60" cy="10" r="0.5" fill="white" />
+              </svg>
             </div>
-            
-            <div className="grid grid-cols-2 gap-3 sm:gap-4 w-full md:w-auto">
-              <Link to="/budget" className="w-full">
-                <Button variant="secondary" className="w-full h-11 flex items-center justify-center gap-2 bg-white/5 border-white/10 text-white hover:bg-white/20 backdrop-blur-xl rounded-xl transition-all text-xs md:text-sm font-bold px-3">
-                  <Wallet size={18} className="text-primary-300" /> {t('common.budget')}
-                </Button>
-              </Link>
-              <Link to="/loans" className="w-full">
-                <Button variant="secondary" className="w-full h-11 flex items-center justify-center gap-2 bg-white/5 border-white/10 text-white hover:bg-white/20 backdrop-blur-xl rounded-xl transition-all text-xs md:text-sm font-bold px-3">
-                  <HandCoins size={18} className="text-primary-300" /> {t('common.loans')}
-                </Button>
-              </Link>
-              <Link to="/plans" className="w-full">
-                <Button variant="secondary" className="w-full h-11 flex items-center justify-center gap-2 bg-white/5 border-white/10 text-white hover:bg-white/20 backdrop-blur-xl rounded-xl transition-all text-xs md:text-sm font-bold px-3">
-                  <StickyNote size={18} className="text-primary-300" /> {t('common.my_plan')}
-                </Button>
-              </Link>
-              <Link to="/transactions" className="w-full">
-                <Button className="w-full h-11 flex items-center justify-center gap-2 bg-primary-600 text-white hover:bg-primary-700 border-none rounded-xl shadow-lg shadow-primary-600/20 transition-all text-xs md:text-sm font-bold px-3">
-                  <Plus size={18} /> {t('dashboard.add_transaction')}
-                </Button>
-              </Link>
+
+            <div className="max-w-[1400px] mx-auto w-full relative z-10 flex flex-col md:flex-row items-center justify-between gap-12">
+              {/* Floating Welcome Card */}
+              <motion.div 
+                initial={{ x: -100, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                transition={{ duration: 0.8, ease: "easeOut" }}
+                className="bg-white/5 border border-white/10 backdrop-blur-3xl p-8 md:p-12 rounded-[30px] md:rounded-[60px] shadow-2xl w-full md:w-auto ring-1 ring-white/5"
+              >
+                <div className="flex flex-col items-center md:items-start text-center md:text-left">
+                  <div className="mb-6">
+                    <div className="px-6 py-2.5 bg-white/5 border border-white/10 rounded-full backdrop-blur-xl text-white text-[10px] md:text-xs flex items-center gap-4 shadow-xl ring-1 ring-white/5">
+                      <div className="flex items-center gap-2">
+                        <Calendar size={14} className="text-primary-400" />
+                        <span className="font-bold opacity-80 uppercase tracking-widest">
+                          {dateTime.toLocaleDateString('en-US', { weekday: 'short', day: 'numeric', month: 'short' })}
+                        </span>
+                      </div>
+                      <div className="w-[1px] h-3 bg-white/20"></div>
+                      <div className="flex items-center gap-2">
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.8)]"></span>
+                        <span className="font-black tracking-widest uppercase">
+                          {dateTime.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true })}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white leading-[1.1] tracking-tight mb-4">
+                    {t('dashboard.hello')}, <br />
+                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 to-purple-400">
+                      {user?.name || 'User'}!
+                    </span>
+                  </h1>
+                  <p className="text-purple-200/60 font-medium text-base md:text-xl max-w-md">
+                    {t('dashboard.welcome_msg')}
+                  </p>
+                </div>
+              </motion.div>
+
+              {/* Floating Action Overlay Card */}
+              <motion.div 
+                initial={{ y: 100, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
+                className="grid grid-cols-2 gap-4 bg-[#260d45]/80 border border-white/10 backdrop-blur-2xl p-6 md:p-8 rounded-[30px] md:rounded-[50px] shadow-[0_30px_60px_-12px_rgba(0,0,0,0.5)] w-full md:w-auto md:absolute md:-bottom-12 md:right-0 md:translate-x-0"
+              >
+                <Link to="/budget" className="w-full">
+                  <Button variant="secondary" className="w-full h-14 flex items-center justify-center gap-3 bg-white/5 border-white/5 text-white hover:bg-white/10 backdrop-blur-xl rounded-2xl transition-all text-xs md:text-sm font-black px-6 uppercase tracking-wider group">
+                    <Wallet size={20} className="text-primary-400 group-hover:scale-110 transition-transform" /> {t('common.budget')}
+                  </Button>
+                </Link>
+                <Link to="/loans" className="w-full">
+                  <Button variant="secondary" className="w-full h-14 flex items-center justify-center gap-3 bg-white/5 border-white/5 text-white hover:bg-white/10 backdrop-blur-xl rounded-2xl transition-all text-xs md:text-sm font-black px-6 uppercase tracking-wider group">
+                    <HandCoins size={20} className="text-primary-400 group-hover:scale-110 transition-transform" /> {t('common.loans')}
+                  </Button>
+                </Link>
+                <Link to="/plans" className="w-full">
+                  <Button variant="secondary" className="w-full h-14 flex items-center justify-center gap-3 bg-white/5 border-white/5 text-white hover:bg-white/10 backdrop-blur-xl rounded-2xl transition-all text-xs md:text-sm font-black px-6 uppercase tracking-wider group">
+                    <StickyNote size={20} className="text-primary-400 group-hover:scale-110 transition-transform" /> {t('common.my_plan')}
+                  </Button>
+                </Link>
+                <Link to="/transactions" className="w-full">
+                  <Button className="w-full h-14 flex items-center justify-center gap-3 bg-primary-600 text-white hover:bg-primary-500 border-none rounded-2xl shadow-xl shadow-primary-600/20 transition-all text-xs md:text-sm font-black px-6 uppercase tracking-wider group">
+                    <Plus size={20} className="group-hover:rotate-90 transition-transform" /> {t('dashboard.add_transaction')}
+                  </Button>
+                </Link>
+              </motion.div>
             </div>
           </div>
         </div>

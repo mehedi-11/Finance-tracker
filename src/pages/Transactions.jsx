@@ -213,7 +213,7 @@ const Transactions = () => {
                         {t.type === 'expense' && t.isPaid === false && (
                           <div className="absolute top-1 right-1 md:top-2 md:right-2">
                             <span className="px-1.5 py-0.5 bg-amber-100 text-amber-700 text-[8px] md:text-[9px] font-black uppercase rounded-md shadow-sm border border-amber-200">
-                              Unpaid
+                              U
                             </span>
                           </div>
                         )}
