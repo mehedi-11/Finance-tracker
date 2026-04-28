@@ -121,7 +121,7 @@ const Reports = () => {
                 <td style="padding: 6px 12px; font-size: 11px; color: #64748b; border-bottom: 1px solid #f1f5f9;">${t.description}</td>
                 <td style="padding: 6px 12px; font-size: 11px; font-weight: 800; text-align: right; border-bottom: 1px solid #f1f5f9; color: ${t.type === 'income' ? '#10b981' : '#ef4444'}">
                   ${t.type === 'income' ? '+' : '-'}${t.amount}
-                  ${t.isPaid === false ? '<br/><span style="font-size:8px; color:#f59e0b;">(Unpaid)</span>' : ''}
+                  ${t.type === 'expense' && t.isPaid === false ? '<br/><span style="font-size:8px; color:#f59e0b;">(Unpaid)</span>' : ''}
                 </td>
               </tr>
             `).join('')}
@@ -348,7 +348,7 @@ const Reports = () => {
                                 <td className={`px-4 py-3 text-right font-bold ${t.type === 'income' ? 'text-emerald-600' : 'text-red-600'}`}>
                                   <div className="flex flex-col items-end">
                                     <span>{t.type === 'income' ? '+' : '-'}{formatCurrency(t.amount, user?.currency)}</span>
-                                    {t.isPaid === false && <span className="text-[9px] text-amber-600 font-black uppercase tracking-tighter">Unpaid</span>}
+                                    {t.type === 'expense' && t.isPaid === false && <span className="text-[9px] text-amber-600 font-black uppercase tracking-tighter">Unpaid</span>}
                                   </div>
                                 </td>
                               </tr>
