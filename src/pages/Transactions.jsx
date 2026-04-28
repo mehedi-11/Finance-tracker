@@ -10,7 +10,9 @@ import {
   ArrowDownRight,
   X,
   Filter,
-  AlertTriangle
+  AlertTriangle,
+  CheckCircle,
+  Circle
 } from 'lucide-react';
 import { useFinance } from '../context/FinanceContext';
 import { useAuth } from '../context/AuthContext';
@@ -117,6 +119,16 @@ const Transactions = () => {
     }
   };
 
+  const handleTogglePaid = async (transaction) => {
+    try {
+      const updatedData = { ...transaction, isPaid: !transaction.isPaid };
+      await updateTransaction(transaction._id, updatedData);
+      toast.success(updatedData.isPaid ? 'Marked as Paid' : 'Marked as Unpaid');
+    } catch (err) {
+      toast.error('Toggle failed');
+    }
+  };
+
   return (
     <>
       <div className="space-y-6 md:space-y-8 animate-fade-in pb-20">
@@ -212,13 +224,20 @@ const Transactions = () => {
                       }`}>
                         <div className="flex flex-col">
                           <span>{t.type === 'income' ? '+' : '-'}{formatCurrency(t.amount, user?.currency)}</span>
-                          {!t.isPaid && (
+                          {t.type === 'expense' && !t.isPaid && (
                             <span className="text-[10px] text-amber-600 font-black uppercase tracking-tighter">Unpaid</span>
                           )}
                         </div>
                       </td>
                       <td className="px-4 md:px-6 py-4 text-right">
                         <div className="flex items-center justify-end gap-1 md:gap-2">
+                          <button 
+                            onClick={() => handleTogglePaid(t)}
+                            className={`p-2 rounded-xl transition-all ${t.isPaid ? 'text-emerald-500 hover:bg-emerald-50' : 'text-amber-500 hover:bg-amber-50'}`}
+                            title={t.isPaid ? "Mark as Unpaid" : "Mark as Paid"}
+                          >
+                            {t.isPaid ? <CheckCircle size={18} /> : <Circle size={18} />}
+                          </button>
                           <button 
                             onClick={() => handleOpenModal(t)}
                             className="p-2 hover:bg-primary-50 rounded-xl text-gray-400 hover:text-primary-600 transition-colors"
@@ -302,10 +321,11 @@ const Transactions = () => {
                     </div>
                     <Input label="Date" type="date" value={formData.date} onChange={(e) => setFormData({ ...formData, date: e.target.value })} required />
                     
-                    <div className="flex items-center gap-3 p-4 bg-gray-50 rounded-xl cursor-pointer hover:bg-gray-100 transition-all border border-gray-100" onClick={() => setFormData({ ...formData, isPaid: !formData.isPaid })}>
+                    <div 
+                      className="flex items-center gap-3 p-4 bg-gray-50 rounded-xl cursor-pointer hover:bg-gray-100 transition-all border border-gray-100" 
+                      onClick={() => setFormData(prev => ({ ...prev, isPaid: !prev.isPaid }))}
+                    >
                       <div className={`w-6 h-6 rounded-lg border-2 flex items-center justify-center transition-all ${formData.isPaid ? 'bg-primary-600 border-primary-600 text-white' : 'border-gray-300 bg-white'}`}>
-                        {formData.isPaid && <Plus size={14} className="rotate-45" style={{ transform: 'rotate(0deg)' }} />}
-                        {/* Custom check icon or similar */}
                         {formData.isPaid && (
                           <motion.svg 
                             initial={{ scale: 0 }} 
