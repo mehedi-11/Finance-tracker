@@ -232,6 +232,7 @@ export const FinanceProvider = ({ children }) => {
       const month = d.getMonth();
       const day = d.getDate();
       
+      let cycleDate;
       if (day >= startDay) {
         cycleDate = new Date(year, month, startDay);
       } else {
