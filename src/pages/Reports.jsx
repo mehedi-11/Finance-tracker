@@ -7,7 +7,8 @@ import {
   Download,
   X,
   AlertTriangle,
-  DownloadCloud
+  DownloadCloud,
+  Search
 } from 'lucide-react';
 import { useFinance } from '../context/FinanceContext';
 import { useAuth } from '../context/AuthContext';
@@ -28,8 +29,12 @@ const Reports = () => {
   const [deleteConfirm, setDeleteConfirm] = useState(null);
   const [isDownloading, setIsDownloading] = useState(false);
   const [isImporting, setIsImporting] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
 
   const monthlyReports = getMonthlyReports();
+  const filteredReports = monthlyReports.filter(r => 
+    r.month.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   const handleImportDummyData = async () => {
     setIsImporting(true);
@@ -256,7 +261,21 @@ const Reports = () => {
 
 
       <div className="space-y-6 pt-8">
-        <h2 className="text-2xl font-bold text-gray-900">Monthly Records</h2>
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <h2 className="text-2xl font-bold text-gray-900">Monthly Records</h2>
+          <div className="relative group min-w-[300px]">
+            <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
+              <Search size={18} className="text-gray-400 group-focus-within:text-primary-600 transition-colors" />
+            </div>
+            <input 
+              type="text"
+              placeholder="Search by month name..."
+              className="w-full h-12 pl-12 pr-4 bg-white border-none shadow-sm rounded-xl text-sm font-bold focus:ring-2 focus:ring-primary-600/20 transition-all"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>
+        </div>
         <Card className="p-0 bg-white border-none shadow-sm overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse min-w-[800px]">
@@ -270,8 +289,8 @@ const Reports = () => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-50">
-                {monthlyReports.length > 0 ? (
-                  monthlyReports.map((report) => {
+                {filteredReports.length > 0 ? (
+                  filteredReports.map((report) => {
                     return (
                       <tr key={report.month} className="hover:bg-gray-50/50 transition-colors">
                         <td className="px-6 py-4 font-bold text-gray-900">{report.month}</td>

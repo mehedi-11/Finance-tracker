@@ -8,7 +8,8 @@ import {
   Trash2, 
   AlertCircle,
   AlertTriangle,
-  ArrowRight
+  ArrowRight,
+  Search
 } from 'lucide-react';
 import { useFinance } from '../context/FinanceContext';
 import { useAuth } from '../context/AuthContext';
@@ -36,6 +37,7 @@ const Budget = () => {
   const [selectedCategory, setSelectedCategory] = useState(categories.expense[0]);
   const [amount, setAmount] = useState('');
   const [deleteConfirm, setDeleteConfirm] = useState(null);
+  const [searchQuery, setSearchQuery] = useState('');
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -119,8 +121,23 @@ const Budget = () => {
           </div>
 
           <div className="lg:col-span-2 space-y-4 md:space-y-6">
-            {budgets.length > 0 ? (
-              budgets.map((budget) => {
+            <div className="relative group">
+              <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
+                <Search size={18} className="text-gray-400 group-focus-within:text-primary-600 transition-colors" />
+              </div>
+              <input 
+                type="text"
+                placeholder="Search by category..."
+                className="w-full h-14 pl-12 pr-4 bg-white border-none shadow-sm rounded-2xl text-sm font-bold focus:ring-2 focus:ring-primary-600/20 transition-all"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+            </div>
+
+            {budgets.filter(b => b.category.toLowerCase().includes(searchQuery.toLowerCase())).length > 0 ? (
+              budgets
+                .filter(b => b.category.toLowerCase().includes(searchQuery.toLowerCase()))
+                .map((budget) => {
                 const spent = monthCategoryTotals[budget.category] || 0;
                 const percentage = Math.min((spent / budget.amount) * 100, 100);
                 const isOver = spent > budget.amount;

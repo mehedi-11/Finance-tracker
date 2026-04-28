@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { 
   PiggyBank, 
-  ArrowRight
+  ArrowRight,
+  Search
 } from 'lucide-react';
 import { useFinance } from '../context/FinanceContext';
 import { useAuth } from '../context/AuthContext';
@@ -13,6 +14,7 @@ const Savings = () => {
   const { getMonthlyReports, totalSavings, getCurrentCycleRange } = useFinance();
   const { user } = useAuth();
   const { t } = useTranslation();
+  const [searchQuery, setSearchQuery] = useState('');
 
   const allReports = getMonthlyReports();
   const { start } = getCurrentCycleRange();
@@ -21,6 +23,10 @@ const Savings = () => {
   const pastMonths = allReports.filter(report => {
     return new Date(report.startDate) < start;
   });
+
+  const filteredPastMonths = pastMonths.filter(m => 
+    m.month.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   return (
     <div className="space-y-8 animate-fade-in pb-20">
@@ -50,7 +56,21 @@ const Savings = () => {
       </Card>
 
       <div className="space-y-6 pt-4">
-        <h2 className="text-2xl font-bold text-gray-900">Savings History</h2>
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <h2 className="text-2xl font-bold text-gray-900">Savings History</h2>
+          <div className="relative group min-w-[300px]">
+            <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
+              <Search size={18} className="text-gray-400 group-focus-within:text-primary-600 transition-colors" />
+            </div>
+            <input 
+              type="text"
+              placeholder="Search by month (e.g. Oct 2023)..."
+              className="w-full h-12 pl-12 pr-4 bg-white border-none shadow-sm rounded-xl text-sm font-bold focus:ring-2 focus:ring-primary-600/20 transition-all"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>
+        </div>
         <Card className="p-0 bg-white border-none shadow-sm overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse min-w-[800px]">
@@ -63,8 +83,8 @@ const Savings = () => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-50">
-                {pastMonths.length > 0 ? (
-                  pastMonths.map((report) => (
+                {filteredPastMonths.length > 0 ? (
+                  filteredPastMonths.map((report) => (
                     <tr key={report.month} className="hover:bg-gray-50/50 transition-colors">
                       <td className="px-6 py-4 font-bold text-gray-900">{report.month}</td>
                       <td className="px-6 py-4 font-bold text-emerald-600">
