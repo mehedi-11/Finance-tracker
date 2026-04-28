@@ -49,20 +49,15 @@ const Reports = () => {
     setIsDownloading(true);
     const monthTransactions = transactions.filter(t => {
       const d = new Date(t.date);
-      return `${d.getFullYear()}-${String(dateToMonth(d))}` === report.month;
+      return d >= new Date(report.startDate) && d <= new Date(report.endDate);
     });
-
-    function dateToMonth(d) {
-      return String(d.getMonth() + 1).padStart(2, '0');
-    }
 
     const monthLoans = loans.filter(l => {
       const d = new Date(l.createdAt || l.expectedPayDate);
-      return `${d.getFullYear()}-${String(dateToMonth(d))}` === report.month;
+      return d >= new Date(report.startDate) && d <= new Date(report.endDate);
     });
 
-    const [year, month] = report.month.split('-');
-    const monthName = new Date(year, month - 1).toLocaleString('default', { month: 'long', year: 'numeric' });
+    const cycleName = report.month;
 
     const element = document.createElement('div');
     element.style.padding = '0.4in';
@@ -77,7 +72,7 @@ const Reports = () => {
             <p style="margin:3px 0 0; color:#64748b; font-size: 11px; font-weight: 600; text-transform: uppercase;">Financial Statement</p>
           </div>
           <div style="text-align: right;">
-            <p style="margin:0; font-size: 16px; font-weight: 800; color: #1e293b;">${monthName}</p>
+            <p style="margin:0; font-size: 16px; font-weight: 800; color: #1e293b;">${cycleName}</p>
             <p style="margin:3px 0 0; font-size: 10px; color: #94a3b8;">Generated: ${new Date().toLocaleDateString()}</p>
           </div>
         </div>
@@ -227,11 +222,9 @@ const Reports = () => {
               <tbody className="divide-y divide-gray-50">
                 {monthlyReports.length > 0 ? (
                   monthlyReports.map((report) => {
-                    const [year, month] = report.month.split('-');
-                    const monthName = new Date(year, month - 1).toLocaleString('default', { month: 'long', year: 'numeric' });
                     return (
                       <tr key={report.month} className="hover:bg-gray-50/50 transition-colors">
-                        <td className="px-6 py-4 font-bold text-gray-900">{monthName}</td>
+                        <td className="px-6 py-4 font-bold text-gray-900">{report.month}</td>
                         <td className="px-6 py-4 font-bold text-emerald-600">{formatCurrency(report.income, user?.currency)}</td>
                         <td className="px-6 py-4 font-bold text-red-600">{formatCurrency(report.expense, user?.currency)}</td>
                         <td className="px-6 py-4 font-bold text-primary-600">{formatCurrency(report.savings, user?.currency)}</td>
@@ -292,7 +285,7 @@ const Reports = () => {
                 <div className="flex items-center justify-between p-6 border-b">
                   <div>
                     <h2 className="text-xl font-bold text-gray-900">Financial Overview</h2>
-                    <p className="text-sm text-gray-500">{new Date(viewingReport.month.split('-')[0], viewingReport.month.split('-')[1]-1).toLocaleString('default', { month: 'long', year: 'numeric' })}</p>
+                    <p className="text-sm text-gray-500">{viewingReport.month}</p>
                   </div>
                   <div className="flex items-center gap-2">
                     <Button 

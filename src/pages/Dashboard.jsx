@@ -42,29 +42,27 @@ import { useTranslation } from 'react-i18next';
 const NOTES_URL = API_ENDPOINTS.NOTES;
 
 const Dashboard = () => {
-  const { transactions, totals, categoryTotals, getMonthlyReports, loans, addTransaction, addLoan, deleteMonthData, fetchFinanceData } = useFinance();
+  const { 
+    transactions, 
+    totals, 
+    categoryTotals, 
+    getMonthlyReports, 
+    loans, 
+    addTransaction, 
+    addLoan, 
+    deleteMonthData, 
+    fetchFinanceData,
+    currentCycleTransactions,
+    getCurrentCycleRange
+  } = useFinance();
   const { user } = useAuth();
   const { t } = useTranslation();
 
-  const currentMonth = new Date().toISOString().slice(0, 7); // YYYY-MM
+  const { start: cycleStart, end: cycleEnd } = getCurrentCycleRange();
+  const cycleRangeText = `${cycleStart.toLocaleDateString('en-US', { day: 'numeric', month: 'short' })} - ${cycleEnd.toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' })}`;
 
-  const currentMonthTransactions = transactions.filter(t => {
-    const d = new Date(t.date);
-    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}` === currentMonth;
-  });
-
-  const monthTotals = {
-    income: currentMonthTransactions.filter(t => t.type === 'income' && t.isPaid !== false).reduce((sum, t) => sum + Number(t.amount), 0),
-    expenses: currentMonthTransactions.filter(t => t.type === 'expense' && t.isPaid !== false).reduce((sum, t) => sum + Number(t.amount), 0),
-  };
-  monthTotals.balance = monthTotals.income - monthTotals.expenses;
-
-  const monthCategoryTotals = currentMonthTransactions
-    .filter(t => t.type === 'expense' && t.isPaid !== false)
-    .reduce((acc, t) => {
-      acc[t.category] = (acc[t.category] || 0) + Number(t.amount);
-      return acc;
-    }, {});
+  const monthTotals = totals;
+  const monthCategoryTotals = categoryTotals;
 
   const COLORS = ['#8b5cf6', '#10b981', '#f59e0b', '#ef4444', '#3b82f6', '#ec4899', '#06b6d4', '#84cc16'];
 
@@ -219,7 +217,7 @@ const Dashboard = () => {
                   {dateTime.toLocaleDateString('en-US', { weekday: 'short', day: 'numeric', month: 'short' })}
                 </div>
                 <div className="px-3 py-1 bg-primary-500/20 border border-primary-500/20 rounded-lg backdrop-blur-md text-primary-300 text-[10px] md:text-xs font-black uppercase tracking-widest transition-all">
-                  {dateTime.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true })}
+                  Cycle: {cycleRangeText}
                 </div>
               </div>
               <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black text-white leading-tight tracking-tight">

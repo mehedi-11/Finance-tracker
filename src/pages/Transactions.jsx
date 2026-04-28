@@ -23,7 +23,7 @@ import { useTranslation } from 'react-i18next';
 
 const Transactions = () => {
   const { t } = useTranslation();
-  const { transactions, addTransaction, deleteTransaction, updateTransaction, loans } = useFinance();
+  const { transactions, addTransaction, deleteTransaction, updateTransaction, loans, getCurrentCycleRange } = useFinance();
   const { user } = useAuth();
   
   // Combine default categories with active loans for expense type
@@ -49,16 +49,16 @@ const Transactions = () => {
     isPaid: true
   });
 
-  const currentMonth = new Date().toISOString().slice(0, 7); // YYYY-MM
-
+  const { start: cycleStart, end: cycleEnd } = getCurrentCycleRange();
+  
   const filteredTransactions = transactions.filter(t => {
     const d = new Date(t.date);
-    const monthMatch = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}` === currentMonth;
+    const cycleMatch = d >= cycleStart && d <= cycleEnd;
     const searchMatch = t.description.toLowerCase().includes(searchTerm.toLowerCase()) || 
                        t.category.toLowerCase().includes(searchTerm.toLowerCase());
     const typeMatch = filterType === 'all' || t.type === filterType;
     
-    return monthMatch && searchMatch && typeMatch;
+    return cycleMatch && searchMatch && typeMatch;
   });
 
   const handleOpenModal = (transaction = null) => {

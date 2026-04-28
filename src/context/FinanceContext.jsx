@@ -224,45 +224,89 @@ export const FinanceProvider = ({ children }) => {
   // Aggregations
   const getMonthlyReports = () => {
     const reports = {};
-    
+    const startDay = user?.monthStartDay || 1;
+
+    const getCycleKey = (dateStr) => {
+      const d = new Date(dateStr);
+      const year = d.getFullYear();
+      const month = d.getMonth();
+      const day = d.getDate();
+      
+      if (day >= startDay) {
+        cycleDate = new Date(year, month, startDay);
+      } else {
+        cycleDate = new Date(year, month - 1, startDay);
+      }
+      
+      const cycleStart = new Date(cycleDate);
+      const cycleEnd = new Date(cycleDate.getFullYear(), cycleDate.getMonth() + 1, startDay - 1, 23, 59, 59);
+
+      const startText = cycleStart.toLocaleDateString('en-US', { day: 'numeric', month: 'short' });
+      const endText = cycleEnd.toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' });
+      
+      const key = `${startText} - ${endText}`;
+      return { key, start: cycleStart, end: cycleEnd };
+    };
+
     // Process Transactions
     transactions.forEach(t => {
-      const date = new Date(t.date);
-      const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
-      if (!reports[monthKey]) reports[monthKey] = { income: 0, expense: 0, loansTaken: 0, loansPaid: 0 };
+      const { key, start, end } = getCycleKey(t.date);
+      if (!reports[key]) reports[key] = { income: 0, expense: 0, loansTaken: 0, loansPaid: 0, month: key, startDate: start, endDate: end };
       
-      // Only count paid transactions in monthly report totals
       if (t.isPaid !== false) {
-        if (t.type === 'income') reports[monthKey].income += Number(t.amount);
-        else reports[monthKey].expense += Number(t.amount);
+        if (t.type === 'income') reports[key].income += Number(t.amount);
+        else reports[key].expense += Number(t.amount);
       }
     });
 
     // Process Loans
     loans.forEach(l => {
-      const date = new Date(l.createdAt || l.expectedPayDate);
-      const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
-      if (!reports[monthKey]) reports[monthKey] = { income: 0, expense: 0, loansTaken: 0, loansPaid: 0 };
+      const { key, start, end } = getCycleKey(l.createdAt || l.expectedPayDate);
+      if (!reports[key]) reports[key] = { income: 0, expense: 0, loansTaken: 0, loansPaid: 0, month: key, startDate: start, endDate: end };
       
-      if (l.type === 'get') reports[monthKey].loansTaken += Number(l.amount);
-      if (l.isPaid) reports[monthKey].loansPaid += Number(l.amount);
+      if (l.type === 'get') reports[key].loansTaken += Number(l.amount);
+      if (l.isPaid) reports[key].loansPaid += Number(l.amount);
     });
 
-    return Object.keys(reports).sort().reverse().map(key => ({
-      month: key,
+    return Object.keys(reports).reverse().map(key => ({
       ...reports[key],
       savings: reports[key].income - reports[key].expense
     }));
   };
 
+  const getCurrentCycleRange = () => {
+    const startDay = user?.monthStartDay || 1;
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = now.getMonth();
+    const day = now.getDate();
+
+    let start, end;
+    if (day >= startDay) {
+      start = new Date(year, month, startDay);
+      end = new Date(year, month + 1, startDay - 1, 23, 59, 59);
+    } else {
+      start = new Date(year, month - 1, startDay);
+      end = new Date(year, month, startDay - 1, 23, 59, 59);
+    }
+    return { start, end };
+  };
+
+  const { start: cycleStart, end: cycleEnd } = getCurrentCycleRange();
+
+  const currentCycleTransactions = transactions.filter(t => {
+    const d = new Date(t.date);
+    return d >= cycleStart && d <= cycleEnd;
+  });
+
   const totals = {
-    income: transactions.filter(t => t.type === 'income' && t.isPaid !== false).reduce((sum, t) => sum + Number(t.amount), 0),
-    expenses: transactions.filter(t => t.type === 'expense' && t.isPaid !== false).reduce((sum, t) => sum + Number(t.amount), 0),
+    income: currentCycleTransactions.filter(t => t.type === 'income' && t.isPaid !== false).reduce((sum, t) => sum + Number(t.amount), 0),
+    expenses: currentCycleTransactions.filter(t => t.type === 'expense' && t.isPaid !== false).reduce((sum, t) => sum + Number(t.amount), 0),
     balance: 0
   };
   totals.balance = totals.income - totals.expenses;
 
-  const categoryTotals = transactions
+  const categoryTotals = currentCycleTransactions
     .filter(t => t.type === 'expense' && t.isPaid !== false)
     .reduce((acc, t) => {
       acc[t.category] = (acc[t.category] || 0) + Number(t.amount);
@@ -314,6 +358,8 @@ export const FinanceProvider = ({ children }) => {
       getMonthlyReports,
       totals,
       categoryTotals,
+      currentCycleTransactions,
+      getCurrentCycleRange,
       fetchFinanceData
     }}>
       {children}

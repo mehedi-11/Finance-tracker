@@ -24,7 +24,8 @@ const Profile = () => {
     phone: user?.phone || '',
     dob: user?.dob ? user.dob.split('T')[0] : '',
     address: user?.address || '',
-    currency: user?.currency || 'BDT'
+    currency: user?.currency || 'BDT',
+    monthStartDay: user?.monthStartDay || 1
   });
 
   const [passwordData, setPasswordData] = useState({
@@ -158,6 +159,18 @@ const Profile = () => {
                 <div className="md:col-span-2">
                   <Input label="Address" value={formData.address} onChange={(e) => setFormData({...formData, address: e.target.value})} />
                 </div>
+                <div className="md:col-span-2 space-y-1.5">
+                  <label className="text-sm font-bold text-gray-700 ml-1">Month Start Day</label>
+                  <input 
+                    type="number" 
+                    min="1" 
+                    max="31" 
+                    className="input-premium" 
+                    value={formData.monthStartDay} 
+                    onChange={(e) => setFormData({ ...formData, monthStartDay: parseInt(e.target.value) || 1 })} 
+                  />
+                  <p className="text-[10px] text-gray-500 italic ml-1 text-right">Cycle starts on this day every month.</p>
+                </div>
               </div>
               <Button type="submit" className="w-full mt-4" disabled={loading}>
                 {loading ? 'Saving...' : t('common.save')}
@@ -169,6 +182,7 @@ const Profile = () => {
               <ProfileItem icon={Globe} label="Currency" value={currencies.find(c => c.code === user?.currency)?.name || user?.currency} />
               <ProfileItem icon={Phone} label="Phone" value={user?.phone || 'Not set'} />
               <ProfileItem icon={MapPin} label="Address" value={user?.address || 'Not set'} />
+              <ProfileItem icon={Settings} label="Month Start Day" value={`Starts on Day ${user?.monthStartDay || 1}`} />
             </div>
           )}
         </Card>
