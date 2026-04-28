@@ -203,7 +203,7 @@ const Dashboard = () => {
 
 
 
-  const recentTransactions = currentMonthTransactions.slice(0, 5) || [];
+  const recentTransactions = currentCycleTransactions.slice(0, 5) || [];
 
   return (
     <>
@@ -269,7 +269,7 @@ const Dashboard = () => {
             <div>
               <p className="text-[10px] uppercase font-black text-gray-400 tracking-widest mb-1">{t('reports.highest_income')}</p>
               <h4 className="text-xl font-bold text-emerald-700">
-                {currentMonthTransactions
+                {currentCycleTransactions
                   .filter(t => t.type === 'income')
                   .sort((a,b) => b.amount - a.amount)[0]?.category || 'N/A'}
               </h4>
