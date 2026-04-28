@@ -45,7 +45,11 @@ const Profile = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      await updateProfile(formData);
+      const updateData = {
+        ...formData,
+        monthStartDay: parseInt(formData.monthStartDay) || 1
+      };
+      await updateProfile(updateData);
       setIsEditing(false);
     } catch (err) {
       toast.error(err.message);
@@ -167,7 +171,19 @@ const Profile = () => {
                     max="31" 
                     className="input-premium" 
                     value={formData.monthStartDay} 
-                    onChange={(e) => setFormData({ ...formData, monthStartDay: parseInt(e.target.value) || 1 })} 
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      if (val === '') {
+                        setFormData({ ...formData, monthStartDay: '' });
+                        return;
+                      }
+                      const num = parseInt(val);
+                      if (num >= 1 && num <= 31) {
+                        setFormData({ ...formData, monthStartDay: num });
+                      } else if (num > 31) {
+                        setFormData({ ...formData, monthStartDay: 31 });
+                      }
+                    }} 
                   />
                   <p className="text-[10px] text-gray-500 italic ml-1 text-right">Cycle starts on this day every month.</p>
                 </div>
