@@ -14,7 +14,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useFinance } from '../context/FinanceContext';
-import { Button, Card, Input, Badge } from '../components/ui';
+import { Button, Card, Input } from '../components/ui';
 import { formatCurrency, formatDate } from '../utils/helpers';
 import { API_ENDPOINTS } from '../config';
 import toast from 'react-hot-toast';
@@ -28,7 +28,8 @@ const Plans = () => {
     try {
       const cached = localStorage.getItem('finance_notes');
       return cached ? JSON.parse(cached) : [];
-    } catch (e) {
+    } catch (error) {
+      console.error(error);
       return [];
     }
   });
@@ -52,7 +53,7 @@ const Plans = () => {
     fetchNotes();
   }, [user]);
 
-  const fetchNotes = async () => {
+  async function fetchNotes() {
     if (!user?.token) return;
     try {
       const response = await fetch(API_ENDPOINTS.NOTES, {
@@ -66,7 +67,7 @@ const Plans = () => {
     } catch (err) {
       console.error('Failed to fetch notes:', err);
     }
-  };
+  }
 
   const currentMonth = new Date().toISOString().slice(0, 7); // YYYY-MM
 
@@ -122,7 +123,8 @@ const Plans = () => {
         setIsModalOpen(false);
         fetchNotes();
       }
-    } catch (err) {
+    } catch (error) {
+      console.error(error);
       toast.error('Operation failed');
     } finally {
       setLoading(false);
@@ -141,7 +143,8 @@ const Plans = () => {
         setDeleteConfirm(null);
         fetchNotes();
       }
-    } catch (err) {
+    } catch (error) {
+      console.error(error);
       toast.error('Delete failed');
     }
   };
@@ -172,7 +175,8 @@ const Plans = () => {
         fetchNotes();
         toast.success('Expense recorded and plan marked as done!');
       }
-    } catch (err) {
+    } catch (error) {
+      console.error(error);
       toast.error('Failed to process plan completion');
     }
   };

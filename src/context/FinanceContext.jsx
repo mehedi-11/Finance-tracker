@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { useAuth } from './AuthContext';
 
 const FinanceContext = createContext();
@@ -37,7 +37,7 @@ export const FinanceProvider = ({ children }) => {
   });
   const [loading, setLoading] = useState(true);
 
-  const fetchFinanceData = async () => {
+  const fetchFinanceData = useCallback(async () => {
     if (!user?.token) {
       setLoading(false);
       return;
@@ -77,7 +77,7 @@ export const FinanceProvider = ({ children }) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [user?.token]);
 
   useEffect(() => {
     if (user) {
@@ -90,7 +90,7 @@ export const FinanceProvider = ({ children }) => {
       localStorage.removeItem('finance_budgets');
       localStorage.removeItem('finance_loans');
     }
-  }, [user]);
+  }, [user, fetchFinanceData]);
 
   // Sync state to localStorage
   useEffect(() => {
@@ -107,6 +107,7 @@ export const FinanceProvider = ({ children }) => {
 
   const addTransaction = async (transaction) => {
     // Clean data for backend
+    // eslint-disable-next-line no-unused-vars
     const { _id, createdAt, updatedAt, __v, user: u, ...cleanData } = transaction;
 
     const response = await fetch(`${API_URL}/transactions`, {
@@ -133,6 +134,7 @@ export const FinanceProvider = ({ children }) => {
 
   const updateTransaction = async (id, updatedData) => {
     // Clean data for backend (some backends fail if _id or timestamps are in body)
+    // eslint-disable-next-line no-unused-vars
     const { _id, createdAt, updatedAt, __v, user: u, ...cleanData } = updatedData;
 
     const response = await fetch(`${API_URL}/transactions/${id}`, {
@@ -353,8 +355,6 @@ export const FinanceProvider = ({ children }) => {
       deleteBudget,
       clearBudgets,
       deleteMonthData: async (monthKey) => {
-        const [year, month] = monthKey.split('-');
-        
         // Delete Transactions
         const transToDelete = transactions.filter(t => {
           const d = new Date(t.date);

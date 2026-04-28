@@ -1,9 +1,7 @@
-import { useState, useEffect } from 'react';
-import { Bell, Search, Menu, Check, ChevronDown, HandCoins, ArrowDownCircle, ArrowUpCircle, TrendingUp, TrendingDown, Wallet, PieChart, StickyNote, X } from 'lucide-react';
+import { useState, useEffect, useMemo } from 'react';
+import { Bell, Search, Menu, Check, HandCoins, TrendingUp, TrendingDown, PieChart, X } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useFinance } from '../../context/FinanceContext';
-import { useTranslation } from 'react-i18next';
-import { Badge, Card } from '../ui';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
 import { formatCurrency } from '../../utils/helpers';
@@ -14,15 +12,13 @@ const API_BASE_URL = import.meta.env.VITE_API_URL
 
 const Navbar = ({ setIsSidebarOpen }) => {
   const { user } = useAuth();
-  const { transactions, budgets, loans, getMonthlyReports } = useFinance();
-  const { t } = useTranslation();
+  const { transactions, budgets, loans } = useFinance();
   const navigate = useNavigate();
   const [notifications, setNotifications] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
   const [globalSearch, setGlobalSearch] = useState('');
-  const [searchResults, setSearchResults] = useState([]);
-
-  useEffect(() => {
+  const [showResults, setShowResults] = useState(false);
+  const searchResults = useMemo(() => {
     if (globalSearch.trim().length > 1) {
       const query = globalSearch.toLowerCase();
       
@@ -37,16 +33,15 @@ const Navbar = ({ setIsSidebarOpen }) => {
           .map(l => ({ ...l, description: `${l.lender} - ${l.purpose}`, source: 'Loan', icon: HandCoins, path: '/loans' }))
       ];
       
-      setSearchResults(results.slice(0, 8));
-    } else {
-      setSearchResults([]);
+      return results.slice(0, 8);
     }
+    return [];
   }, [globalSearch, transactions, budgets, loans]);
 
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (!e.target.closest('.global-search-container')) {
-        setSearchResults([]);
+        setShowResults(false);
       }
       if (!e.target.closest('.notification-container')) {
         setShowDropdown(false);
@@ -60,7 +55,7 @@ const Navbar = ({ setIsSidebarOpen }) => {
     if (user?.token) fetchNotifications();
   }, [user]);
 
-  const fetchNotifications = async () => {
+  async function fetchNotifications() {
     try {
       const response = await fetch(`${API_BASE_URL}/notifications`, {
         headers: { 'Authorization': `Bearer ${user.token}` }
@@ -72,7 +67,7 @@ const Navbar = ({ setIsSidebarOpen }) => {
     } catch (err) {
       console.error('Notification fetch error:', err);
     }
-  };
+  }
 
   const markAsRead = async (id) => {
     try {
@@ -108,11 +103,18 @@ const Navbar = ({ setIsSidebarOpen }) => {
             placeholder="Search transactions, budgets, loans..."
             className="w-full bg-gray-50 border border-gray-100 rounded-2xl pl-12 pr-12 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:bg-white transition-all"
             value={globalSearch}
-            onChange={(e) => setGlobalSearch(e.target.value)}
+            onChange={(e) => {
+              setGlobalSearch(e.target.value);
+              setShowResults(true);
+            }}
+            onFocus={() => setShowResults(true)}
           />
           {globalSearch && (
             <button 
-              onClick={() => setGlobalSearch('')}
+              onClick={() => {
+                setGlobalSearch('');
+                setShowResults(false);
+              }}
               className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
             >
               <X size={16} />
@@ -120,7 +122,7 @@ const Navbar = ({ setIsSidebarOpen }) => {
           )}
           
           <AnimatePresence>
-            {searchResults.length > 0 && (
+            {showResults && searchResults.length > 0 && (
               <motion.div 
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -135,6 +137,7 @@ const Navbar = ({ setIsSidebarOpen }) => {
                       onClick={() => {
                         navigate(res.path);
                         setGlobalSearch('');
+                        setShowResults(false);
                       }}
                       className="w-full flex items-center justify-between p-3 hover:bg-primary-50 rounded-xl transition-colors text-left group/item"
                     >

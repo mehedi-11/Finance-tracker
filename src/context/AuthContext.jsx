@@ -17,10 +17,7 @@ const EMAILJS_PUBLIC_KEY = 'F39LsRFNqk0FODJ_n';
 emailjs.init(EMAILJS_PUBLIC_KEY);
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
+  const [user, setUser] = useState(() => {
     try {
       const savedUser = localStorage.getItem('finance_app_user');
       const loginTime = localStorage.getItem('finance_login_time');
@@ -30,9 +27,11 @@ export const AuthProvider = ({ children }) => {
         const oneHour = 60 * 60 * 1000;
         
         if (currentTime - parseInt(loginTime) > oneHour) {
-          logout();
+          localStorage.removeItem('finance_app_user');
+          localStorage.removeItem('finance_login_time');
+          return null;
         } else {
-          setUser(JSON.parse(savedUser));
+          return JSON.parse(savedUser);
         }
       }
     } catch (err) {
@@ -40,8 +39,9 @@ export const AuthProvider = ({ children }) => {
       localStorage.removeItem('finance_app_user');
       localStorage.removeItem('finance_login_time');
     }
-    setLoading(false);
-  }, []);
+    return null;
+  });
+  const [loading, setLoading] = useState(false);
 
   // Check for auto-logout every minute
   useEffect(() => {
@@ -80,6 +80,7 @@ export const AuthProvider = ({ children }) => {
       });
       toast.success('Verification code sent!');
     } catch (error) {
+      console.error('EmailJS error:', error);
       toast.error('Email failed. Code: ' + data.verificationCode);
     }
     return data;
@@ -176,6 +177,7 @@ export const AuthProvider = ({ children }) => {
       });
       toast.success('Reset code sent to your email!');
     } catch (error) {
+      console.error('EmailJS error:', error);
       toast.error('Email failed. Token: ' + data.resetToken);
     }
   };
@@ -192,11 +194,11 @@ export const AuthProvider = ({ children }) => {
     toast.success('Password reset successfully! Please login.');
   };
 
-  const logout = () => {
+  function logout() {
     setUser(null);
     localStorage.removeItem('finance_app_user');
     localStorage.removeItem('finance_login_time');
-  };
+  }
 
   return (
     <AuthContext.Provider value={{ user, loading, register, verify, login, updateProfile, changePassword, forgotPassword, resetPassword, logout }}>

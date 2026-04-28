@@ -10,13 +10,11 @@ import {
   ArrowDownRight,
   X,
   Filter,
-  AlertTriangle,
-  CheckCircle,
-  Circle
+  AlertTriangle
 } from 'lucide-react';
 import { useFinance } from '../context/FinanceContext';
 import { useAuth } from '../context/AuthContext';
-import { Button, Card, Input, Badge } from '../components/ui';
+import { Button, Card, Input } from '../components/ui';
 import { formatCurrency, formatDate, categories } from '../utils/helpers';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
@@ -102,7 +100,8 @@ const Transactions = () => {
         toast.success('Transaction added!');
       }
       setIsModalOpen(false);
-    } catch (err) {
+    } catch (error) {
+      console.error(error);
       toast.error('Operation failed');
     }
   };
@@ -113,22 +112,14 @@ const Transactions = () => {
         await deleteTransaction(deleteConfirm);
         toast.success('Transaction deleted');
         setDeleteConfirm(null);
-      } catch (err) {
+      } catch (error) {
+        console.error(error);
         toast.error('Delete failed');
       }
     }
   };
 
-  const handleTogglePaid = async (transaction) => {
-    try {
-      const isCurrentlyPaid = transaction.isPaid !== false;
-      const updatedData = { ...transaction, isPaid: !isCurrentlyPaid };
-      await updateTransaction(transaction._id, updatedData);
-      toast.success(!isCurrentlyPaid ? 'Marked as Paid' : 'Marked as Unpaid');
-    } catch (err) {
-      toast.error('Toggle failed');
-    }
-  };
+
 
   return (
     <>

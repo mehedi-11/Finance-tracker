@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { createPortal } from 'react-dom';
 import { 
@@ -16,7 +16,6 @@ import { useAuth } from '../context/AuthContext';
 import { useFinance } from '../context/FinanceContext';
 import { Button, Card, Input, Badge } from '../components/ui';
 import { formatCurrency, formatDate } from '../utils/helpers';
-import { API_ENDPOINTS } from '../config';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 
@@ -86,7 +85,8 @@ const Loans = () => {
         toast.success('Loan record saved!');
       }
       setIsModalOpen(false);
-    } catch (err) {
+    } catch (error) {
+      console.error(error);
       toast.error('Operation failed');
     } finally {
       setLoading(false);
@@ -99,17 +99,9 @@ const Loans = () => {
       await deleteLoan(deleteConfirm);
       toast.success('Record removed');
       setDeleteConfirm(null);
-    } catch (err) {
+    } catch (error) {
+      console.error(error);
       toast.error('Delete failed');
-    }
-  };
-
-  const togglePaidStatus = async (loan) => {
-    try {
-      await updateLoan(loan._id, { isPaid: !loan.isPaid });
-      toast.success('Status updated!');
-    } catch (err) {
-      toast.error('Failed to update status');
     }
   };
 

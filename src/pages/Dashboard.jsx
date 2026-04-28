@@ -1,15 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
-import { createPortal } from 'react-dom';
 import { 
   Plus, 
   Wallet, 
-  StickyNote, 
-  Trash2, 
-  X, 
-  AlertTriangle,
-  HandCoins,
   Banknote,
   ArrowUpCircle,
   ArrowDownCircle,
@@ -17,7 +10,9 @@ import {
   BarChart3,
   TrendingUp,
   TrendingDown,
-  Calendar
+  Calendar,
+  HandCoins,
+  StickyNote
 } from 'lucide-react';
 import { 
   BarChart, 
@@ -34,26 +29,15 @@ import {
 } from 'recharts';
 import { useFinance } from '../context/FinanceContext';
 import { useAuth } from '../context/AuthContext';
-import { Button, Card, Input } from '../components/ui';
-import { formatCurrency, formatDate } from '../utils/helpers';
-import { API_ENDPOINTS } from '../config';
-import toast from 'react-hot-toast';
+import { Button, Card } from '../components/ui';
+import { formatCurrency } from '../utils/helpers';
 import { useTranslation } from 'react-i18next';
-
-const NOTES_URL = API_ENDPOINTS.NOTES;
 
 const Dashboard = () => {
   const { 
-    transactions, 
     totals, 
     globalTotals,
     categoryTotals, 
-    getMonthlyReports, 
-    loans, 
-    addTransaction, 
-    addLoan, 
-    deleteMonthData, 
-    fetchFinanceData,
     currentCycleTransactions,
     getCurrentCycleRange
   } = useFinance();
@@ -61,7 +45,13 @@ const Dashboard = () => {
   const { t } = useTranslation();
 
   const { start: cycleStart, end: cycleEnd } = getCurrentCycleRange();
-  const cycleRangeText = `${cycleStart.toLocaleDateString('en-US', { day: 'numeric', month: 'short' })} - ${cycleEnd.toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' })}`;
+
+  const [dateTime, setDateTime] = useState(new Date());
+
+  useEffect(() => {
+    const timer = setInterval(() => setDateTime(new Date()), 1000);
+    return () => clearInterval(timer);
+  }, []);
 
   const monthTotals = totals;
   const monthCategoryTotals = categoryTotals;
@@ -78,134 +68,7 @@ const Dashboard = () => {
     { name: t('common.income'), amount: monthTotals.income, fill: '#10b981' },
     { name: t('common.expense'), amount: monthTotals.expenses, fill: '#ef4444' }
   ];
-  const [notes, setNotes] = useState(() => {
-    try {
-      const cached = localStorage.getItem('finance_notes');
-      return cached ? JSON.parse(cached) : [];
-    } catch (e) {
-      return [];
-    }
-  });
-  const [isNoteModalOpen, setIsNoteModalOpen] = useState(false);
-  const [editingNote, setEditingNote] = useState(null);
-  const [deleteConfirm, setDeleteConfirm] = useState(null);
-  const [noteData, setNoteData] = useState({ title: '', content: '', amount: '', plannedDate: '' });
 
-  // Real-time Clock State
-  const [dateTime, setDateTime] = useState(new Date());
-
-  useEffect(() => {
-    const timer = setInterval(() => setDateTime(new Date()), 1000);
-    return () => clearInterval(timer);
-  }, []);
-
-  useEffect(() => {
-    if (user?.token) fetchNotes();
-  }, [user]);
-
-  const fetchNotes = async () => {
-    try {
-      const response = await fetch(NOTES_URL, {
-        headers: { 'Authorization': `Bearer ${user.token}` }
-      });
-      const data = await response.json();
-      if (Array.isArray(data)) {
-        setNotes(data);
-        localStorage.setItem('finance_notes', JSON.stringify(data));
-      }
-    } catch (err) {
-      console.error('Notes fetch error:', err);
-    }
-  };
-
-  const handleOpenModal = (note = null) => {
-    if (note) {
-      setEditingNote(note);
-      setNoteData({
-        title: note.title,
-        content: note.content || '',
-        amount: note.amount || '',
-        plannedDate: note.plannedDate ? note.plannedDate.split('T')[0] : ''
-      });
-    } else {
-      setEditingNote(null);
-      setNoteData({ title: '', content: '', amount: '', plannedDate: '' });
-    }
-    setIsNoteModalOpen(true);
-  };
-
-  const handleAddOrUpdateNote = async (e) => {
-    e.preventDefault();
-    const url = editingNote ? `${NOTES_URL}/${editingNote._id}` : NOTES_URL;
-    const method = editingNote ? 'PUT' : 'POST';
-
-    try {
-      const response = await fetch(url, {
-        method,
-        headers: { 
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${user.token}`
-        },
-        body: JSON.stringify(noteData),
-      });
-      if (response.ok) {
-        toast.success(editingNote ? 'Plan updated!' : 'Future plan noted!');
-        setIsNoteModalOpen(false);
-        fetchNotes();
-        setNoteData({ title: '', content: '', amount: '', plannedDate: '' });
-      }
-    } catch (err) {
-      toast.error('Failed to save note');
-    }
-  };
-
-  const handleDeleteNote = async () => {
-    if (!deleteConfirm) return;
-    try {
-      const response = await fetch(`${NOTES_URL}/${deleteConfirm}`, {
-        method: 'DELETE',
-        headers: { 'Authorization': `Bearer ${user.token}` }
-      });
-      if (response.ok) {
-        toast.success('Note removed');
-        setDeleteConfirm(null);
-        fetchNotes();
-      }
-    } catch (err) {
-      toast.error('Failed to delete note');
-    }
-  };
-
-  const toggleNoteStatus = async (note) => {
-    try {
-      const response = await fetch(`${NOTES_URL}/${note._id}`, {
-        method: 'PUT',
-        headers: { 
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${user.token}`
-        },
-        body: JSON.stringify({ isCompleted: !note.isCompleted }),
-      });
-      if (response.ok) {
-        fetchNotes();
-        toast.success(note.isCompleted ? 'Marked as active' : 'Marked as completed!');
-      }
-    } catch (err) {
-      toast.error('Failed to update status');
-    }
-  };
-  // Sync notes to localStorage whenever they change
-  useEffect(() => {
-    if (user && notes.length > 0) {
-      localStorage.setItem('finance_notes', JSON.stringify(notes));
-    } else if (!user) {
-      localStorage.removeItem('finance_notes');
-    }
-  }, [notes, user]);
-
-
-
-  const recentTransactions = currentCycleTransactions.slice(0, 5) || [];
 
   return (
     <>
@@ -390,92 +253,6 @@ const Dashboard = () => {
           </Card>
         </div>
       </div>
-
-      {/* Note Modal via Portal */}
-      {createPortal(
-        <AnimatePresence>
-          {isNoteModalOpen && (
-            <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
-              <motion.div 
-                initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-                onClick={() => setIsNoteModalOpen(false)}
-                className="absolute inset-0 bg-gray-900/40 backdrop-blur-sm"
-              />
-              <motion.div 
-                initial={{ opacity: 0, scale: 0.95, y: 20 }}
-                animate={{ opacity: 1, scale: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.95, y: 20 }}
-                className="relative w-full max-w-md bg-white border border-gray-100 rounded-xl shadow-2xl flex flex-col max-h-[90vh]"
-              >
-                {/* Fixed Header */}
-                <div className="flex items-center justify-between p-8 md:p-10 pb-4">
-                  <h2 className="text-2xl font-black text-gray-900 flex items-center gap-2">
-                    <StickyNote className="text-primary-600" /> {editingNote ? 'Edit Plan' : 'New Plan'}
-                  </h2>
-                  <button 
-                    onClick={() => setIsNoteModalOpen(false)} 
-                    className="p-3 hover:bg-gray-100 rounded-xl text-gray-400 transition-colors"
-                  >
-                    <X size={24} />
-                  </button>
-                </div>
-
-                {/* Scrollable Content */}
-                <div className="flex-1 overflow-y-auto px-8 md:px-10 pb-8 md:pb-10 custom-scrollbar">
-                  <form onSubmit={handleAddOrUpdateNote} className="space-y-6">
-                    <Input label="Title" placeholder="e.g. New Laptop" value={noteData.title} onChange={e => setNoteData({...noteData, title: e.target.value})} required />
-                    <div className="grid grid-cols-2 gap-4">
-                      <Input label="Amount" type="number" placeholder="0.00" value={noteData.amount} onChange={e => setNoteData({...noteData, amount: e.target.value})} />
-                      <Input label="Planned Date" type="date" value={noteData.plannedDate} onChange={e => setNoteData({...noteData, plannedDate: e.target.value})} />
-                    </div>
-                    <div className="space-y-1.5">
-                      <label className="text-sm font-bold text-gray-700 ml-1">Notes / Description</label>
-                      <textarea 
-                        className="w-full bg-gray-50 border border-gray-200 rounded-xl p-4 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary-500/50"
-                        rows={3}
-                        value={noteData.content}
-                        onChange={e => setNoteData({...noteData, content: e.target.value})}
-                      />
-                    </div>
-                    <Button type="submit" className="w-full py-4 text-lg font-bold mt-4">
-                      {editingNote ? 'Save Changes' : 'Add to Future Plans'}
-                    </Button>
-                  </form>
-                </div>
-              </motion.div>
-            </div>
-          )}
-        </AnimatePresence>,
-        document.body
-      )}
-
-      {/* Delete Confirmation Modal via Portal */}
-      {createPortal(
-        <AnimatePresence>
-          {deleteConfirm && (
-            <div className="fixed inset-0 z-[10000] flex items-center justify-center p-4">
-              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setDeleteConfirm(null)} className="absolute inset-0 bg-gray-900/60 backdrop-blur-md" />
-              <motion.div 
-                initial={{ opacity: 0, scale: 0.9 }} 
-                animate={{ opacity: 1, scale: 1 }} 
-                exit={{ opacity: 0, scale: 0.9 }}
-                className="relative w-full max-w-sm bg-white rounded-xl p-8 text-center shadow-2xl"
-              >
-                <div className="w-20 h-20 bg-red-50 rounded-xl flex items-center justify-center mx-auto mb-6">
-                  <AlertTriangle className="text-red-500" size={40} />
-                </div>
-                <h3 className="text-xl font-black text-gray-900 mb-2">Are you sure?</h3>
-                <p className="text-gray-500 text-sm font-medium mb-8">This action cannot be undone. This plan will be permanently removed.</p>
-                <div className="grid grid-cols-2 gap-4">
-                  <Button variant="secondary" onClick={() => setDeleteConfirm(null)} className="bg-gray-100 border-none text-gray-600">Cancel</Button>
-                  <Button onClick={handleDeleteNote} className="bg-red-600 hover:bg-red-700 text-white border-none">Yes, Delete</Button>
-                </div>
-              </motion.div>
-            </div>
-          )}
-        </AnimatePresence>,
-        document.body
-      )}
     </>
   );
 };

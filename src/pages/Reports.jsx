@@ -1,21 +1,7 @@
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
-  BarChart, 
-  Bar, 
-  XAxis, 
-  YAxis, 
-  CartesianGrid, 
-  Tooltip, 
-  ResponsiveContainer, 
-  PieChart, 
-  Pie, 
-  Cell,
-  Legend
-} from 'recharts';
-import { 
-  PieChart as PieChartIcon, 
   Eye,
   Trash2,
   Download,
@@ -25,17 +11,15 @@ import {
 import { useFinance } from '../context/FinanceContext';
 import { useAuth } from '../context/AuthContext';
 import { useTranslation } from 'react-i18next';
-import { Card, Badge, Button } from '../components/ui';
+import { Card, Button } from '../components/ui';
 import { formatCurrency } from '../utils/helpers';
 import toast from 'react-hot-toast';
-
-const COLORS = ['#8b5cf6', '#10b981', '#f59e0b', '#ef4444', '#3b82f6', '#ec4899', '#06b6d4', '#84cc16'];
 
 import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
 
 const Reports = () => {
-  const { getMonthlyReports, transactions, loans, deleteMonthData, fetchFinanceData } = useFinance();
+  const { getMonthlyReports, transactions, loans, deleteMonthData } = useFinance();
   const { user } = useAuth();
   const { t } = useTranslation();
   

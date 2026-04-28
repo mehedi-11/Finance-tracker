@@ -56,7 +56,8 @@ const Budget = () => {
         await deleteBudget(deleteConfirm);
         toast.success('Budget removed');
         setDeleteConfirm(null);
-      } catch (err) {
+      } catch (error) {
+        console.error(error);
         toast.error('Failed to remove budget');
       }
     }
