@@ -14,7 +14,7 @@ export const formatDate = (dateString) => {
 
 export const categories = {
   income: ['Salary', 'Freelance', 'Investment', 'Gift', 'Saving', 'Other'],
-  expense: ['Food', 'Rent', 'Transport', 'Shopping', 'Entertainment', 'Health', 'Bills', 'Other']
+  expense: ['Food and grocery', 'Tuition fees', 'Rent', 'Transport', 'Shopping', 'Entertainment', 'Health', 'Bills', 'Other']
 };
 
 export const currencies = [
