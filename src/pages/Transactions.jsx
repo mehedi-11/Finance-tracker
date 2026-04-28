@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { createPortal } from 'react-dom';
-import { 
-  Plus, 
-  Search, 
-  Trash2, 
-  Edit2, 
-  ArrowUpRight, 
+import {
+  Plus,
+  Search,
+  Trash2,
+  Edit2,
+  ArrowUpRight,
   ArrowDownRight,
   X,
   Filter,
@@ -25,7 +25,7 @@ const Transactions = () => {
   const { t } = useTranslation();
   const { transactions, addTransaction, deleteTransaction, updateTransaction, loans, getCurrentCycleRange } = useFinance();
   const { user } = useAuth();
-  
+
   // Combine default categories with active loans for expense type
   const dynamicCategories = {
     ...categories,
@@ -36,10 +36,10 @@ const Transactions = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showMobileFilters, setShowMobileFilters] = useState(false);
   const [editingTransaction, setEditingTransaction] = useState(null);
-  
+
   // Delete confirmation state
   const [deleteConfirm, setDeleteConfirm] = useState(null);
-  
+
   const [formData, setFormData] = useState({
     description: '',
     amount: '',
@@ -50,14 +50,14 @@ const Transactions = () => {
   });
 
   const { start: cycleStart, end: cycleEnd } = getCurrentCycleRange();
-  
+
   const filteredTransactions = transactions.filter(t => {
     const d = new Date(t.date);
     const cycleMatch = d >= cycleStart && d <= cycleEnd;
-    const searchMatch = t.description.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                       t.category.toLowerCase().includes(searchTerm.toLowerCase());
+    const searchMatch = t.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      t.category.toLowerCase().includes(searchTerm.toLowerCase());
     const typeMatch = filterType === 'all' || t.type === filterType;
-    
+
     return cycleMatch && searchMatch && typeMatch;
   });
 
@@ -147,16 +147,16 @@ const Transactions = () => {
         <div className="flex flex-col md:flex-row gap-4">
           <div className="flex-1 relative">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
-            <input 
-              type="text" 
+            <input
+              type="text"
               placeholder={t('transactions.search_placeholder')}
               className="w-full bg-white border border-gray-200 rounded-xl pl-12 pr-4 py-3 text-sm md:text-base text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary-500/50 transition-all shadow-sm"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
-          
-          <button 
+
+          <button
             onClick={() => setShowMobileFilters(!showMobileFilters)}
             className="md:hidden flex items-center justify-center gap-2 bg-white border border-gray-200 p-3 rounded-xl text-gray-600 font-bold"
           >
@@ -168,11 +168,10 @@ const Transactions = () => {
               <button
                 key={type}
                 onClick={() => setFilterType(type)}
-                className={`flex-1 md:flex-none px-4 md:px-6 py-2.5 md:py-3 rounded-xl border transition-all capitalize font-bold text-xs md:text-sm ${
-                  filterType === type 
-                    ? 'bg-primary-600 border-primary-500 text-white shadow-lg shadow-primary-500/20' 
-                    : 'bg-white border-gray-200 text-gray-500 hover:bg-gray-50'
-                }`}
+                className={`flex-1 md:flex-none px-4 md:px-6 py-2.5 md:py-3 rounded-xl border transition-all capitalize font-bold text-xs md:text-sm ${filterType === type
+                  ? 'bg-primary-600 border-primary-500 text-white shadow-lg shadow-primary-500/20'
+                  : 'bg-white border-gray-200 text-gray-500 hover:bg-gray-50'
+                  }`}
               >
                 {t(`common.${type}`)}
               </button>
@@ -196,7 +195,7 @@ const Transactions = () => {
               <tbody className="divide-y divide-gray-50">
                 {filteredTransactions.length > 0 ? (
                   filteredTransactions.map((t) => (
-                    <motion.tr 
+                    <motion.tr
                       key={t._id}
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
@@ -204,9 +203,8 @@ const Transactions = () => {
                     >
                       <td className="px-4 md:px-6 py-4">
                         <div className="flex items-center gap-3">
-                          <div className={`w-8 h-8 md:w-10 md:h-10 rounded-xl flex items-center justify-center ${
-                            t.type === 'income' ? 'bg-emerald-100 text-emerald-600' : 'bg-red-100 text-red-600'
-                          }`}>
+                          <div className={`w-8 h-8 md:w-10 md:h-10 rounded-xl flex items-center justify-center ${t.type === 'income' ? 'bg-emerald-100 text-emerald-600' : 'bg-red-100 text-red-600'
+                            }`}>
                             {t.type === 'income' ? <ArrowUpRight size={16} /> : <ArrowDownRight size={16} />}
                           </div>
                           <span className="font-bold text-gray-900 text-sm md:text-base">{t.description}</span>
@@ -220,9 +218,8 @@ const Transactions = () => {
                       <td className="px-4 md:px-6 py-4 text-gray-500 font-medium text-xs md:text-sm">
                         {formatDate(t.date)}
                       </td>
-                      <td className={`px-4 md:px-6 py-4 font-black text-sm md:text-base ${
-                        t.type === 'income' ? 'text-emerald-600' : 'text-red-600'
-                      }`}>
+                      <td className={`px-4 md:px-6 py-4 font-black text-sm md:text-base ${t.type === 'income' ? 'text-emerald-600' : 'text-red-600'
+                        }`}>
                         <div className="flex flex-col">
                           <span>{t.type === 'income' ? '+' : '-'}{formatCurrency(t.amount, user?.currency)}</span>
                           {t.type === 'expense' && t.isPaid === false && (
@@ -232,13 +229,13 @@ const Transactions = () => {
                       </td>
                       <td className="px-4 md:px-6 py-4 text-right">
                         <div className="flex items-center justify-end gap-1 md:gap-2">
-                          <button 
+                          <button
                             onClick={() => handleOpenModal(t)}
                             className="p-2 hover:bg-primary-50 rounded-xl text-gray-400 hover:text-primary-600 transition-colors"
                           >
                             <Edit2 size={16} />
                           </button>
-                          <button 
+                          <button
                             onClick={() => setDeleteConfirm(t._id)}
                             className="p-2 hover:bg-red-50 rounded-xl text-gray-400 hover:text-red-600 transition-colors"
                           >
@@ -272,10 +269,10 @@ const Transactions = () => {
           {isModalOpen && (
             <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
               <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setIsModalOpen(false)} className="absolute inset-0 bg-gray-900/40 backdrop-blur-sm" />
-              <motion.div 
-                initial={{ opacity: 0, scale: 0.95, y: 20 }} 
-                animate={{ opacity: 1, scale: 1, y: 0 }} 
-                exit={{ opacity: 0, scale: 0.95, y: 20 }} 
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.95, y: 20 }}
                 className="relative w-full max-w-lg bg-white rounded-xl shadow-2xl flex flex-col max-h-[90vh]"
               >
                 <div className="flex items-center justify-between p-8 md:p-10 pb-4">
@@ -293,11 +290,10 @@ const Transactions = () => {
                           key={type}
                           type="button"
                           onClick={() => setFormData({ ...formData, type, category: type === 'income' ? 'Salary' : 'Food', isPaid: type === 'income' ? true : formData.isPaid })}
-                          className={`flex-1 py-3.5 rounded-xl transition-all capitalize font-black text-sm ${
-                            formData.type === type 
-                              ? type === 'income' ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-500/20' : 'bg-red-600 text-white shadow-lg shadow-red-500/20'
-                              : 'text-gray-400 hover:text-gray-600'
-                          }`}
+                          className={`flex-1 py-3.5 rounded-xl transition-all capitalize font-black text-sm ${formData.type === type
+                            ? type === 'income' ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-500/20' : 'bg-red-600 text-white shadow-lg shadow-red-500/20'
+                            : 'text-gray-400 hover:text-gray-600'
+                            }`}
                         >
                           {type}
                         </button>
@@ -314,13 +310,13 @@ const Transactions = () => {
                       </div>
                     </div>
                     <Input label="Date" type="date" value={formData.date} onChange={(e) => setFormData({ ...formData, date: e.target.value })} required />
-                    
+
                     {formData.type === 'expense' && (
                       <div className="space-y-1.5">
                         <label className="text-sm font-bold text-gray-700 ml-1">Payment Status</label>
-                        <select 
-                          className="input-premium" 
-                          value={formData.isPaid ? 'true' : 'false'} 
+                        <select
+                          className="input-premium"
+                          value={formData.isPaid ? 'true' : 'false'}
                           onChange={(e) => setFormData(prev => ({ ...prev, isPaid: e.target.value === 'true' }))}
                         >
                           <option value="true">Paid</option>
@@ -349,9 +345,9 @@ const Transactions = () => {
           {deleteConfirm && (
             <div className="fixed inset-0 z-[10000] flex items-center justify-center p-4">
               <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setDeleteConfirm(null)} className="absolute inset-0 bg-gray-900/60 backdrop-blur-md" />
-              <motion.div 
-                initial={{ opacity: 0, scale: 0.9 }} 
-                animate={{ opacity: 1, scale: 1 }} 
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.9 }}
                 className="relative w-full max-w-sm bg-white rounded-xl p-8 text-center shadow-2xl"
               >
