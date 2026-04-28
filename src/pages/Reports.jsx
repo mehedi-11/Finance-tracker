@@ -6,7 +6,8 @@ import {
   Trash2,
   Download,
   X,
-  AlertTriangle
+  AlertTriangle,
+  DownloadCloud
 } from 'lucide-react';
 import { useFinance } from '../context/FinanceContext';
 import { useAuth } from '../context/AuthContext';
@@ -19,15 +20,72 @@ import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
 
 const Reports = () => {
-  const { getMonthlyReports, transactions, loans, deleteMonthData } = useFinance();
+  const { getMonthlyReports, transactions, loans, deleteMonthData, addTransaction } = useFinance();
   const { user } = useAuth();
   const { t } = useTranslation();
   
   const [viewingReport, setViewingReport] = useState(null);
   const [deleteConfirm, setDeleteConfirm] = useState(null);
   const [isDownloading, setIsDownloading] = useState(false);
+  const [isImporting, setIsImporting] = useState(false);
 
   const monthlyReports = getMonthlyReports();
+
+  const handleImportDummyData = async () => {
+    setIsImporting(true);
+    try {
+      const now = new Date();
+      const transactionsToAdd = [];
+      const categories = {
+        income: ['Salary', 'Freelance', 'Investments'],
+        expense: ['Food', 'Transport', 'Utilities', 'Entertainment', 'Shopping']
+      };
+
+      // Generate for previous 3 months
+      for (let i = 1; i <= 3; i++) {
+        const targetMonth = new Date(now.getFullYear(), now.getMonth() - i, 15); 
+        
+        // Income
+        const incDay = Math.floor(Math.random() * 5) + 1;
+        const incDate = new Date(targetMonth.getFullYear(), targetMonth.getMonth(), incDay);
+        transactionsToAdd.push({
+          description: 'Monthly Salary (Dummy)',
+          amount: Math.floor(Math.random() * 30000) + 50000,
+          type: 'income',
+          category: 'Salary',
+          date: incDate.toISOString().split('T')[0],
+          isPaid: true
+        });
+
+        // Expenses
+        const numExpenses = Math.floor(Math.random() * 5) + 5;
+        for (let j = 0; j < numExpenses; j++) {
+          const expCat = categories.expense[Math.floor(Math.random() * categories.expense.length)];
+          const expDay = Math.floor(Math.random() * 28) + 1;
+          const expDate = new Date(targetMonth.getFullYear(), targetMonth.getMonth(), expDay);
+          transactionsToAdd.push({
+            description: `Dummy ${expCat} Expense`,
+            amount: Math.floor(Math.random() * 2000) + 500,
+            type: 'expense',
+            category: expCat,
+            date: expDate.toISOString().split('T')[0],
+            isPaid: true
+          });
+        }
+      }
+
+      for (const t of transactionsToAdd) {
+        await addTransaction(t);
+      }
+      
+      toast.success('Dummy data imported for previous 3 months!');
+    } catch (err) {
+      console.error(err);
+      toast.error('Failed to import dummy data');
+    } finally {
+      setIsImporting(false);
+    }
+  };
 
   const handleDownload = async (report) => {
     setIsDownloading(true);
@@ -186,6 +244,14 @@ const Reports = () => {
           <h1 className="text-3xl font-bold text-gray-900">{t('reports.title')}</h1>
           <p className="text-gray-500 font-medium">{t('reports.subtitle')}</p>
         </div>
+        <Button 
+          variant="secondary" 
+          className="flex items-center justify-center gap-2 w-full md:w-auto font-bold text-primary-600 hover:bg-primary-50 border-primary-100"
+          onClick={handleImportDummyData}
+          disabled={isImporting}
+        >
+          <DownloadCloud size={18} /> {isImporting ? 'Importing...' : 'Import Demo Data'}
+        </Button>
       </div>
 
 

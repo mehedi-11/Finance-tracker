@@ -3,7 +3,7 @@ import { createPortal } from 'react-dom';
 import { useAuth } from '../context/AuthContext';
 import { useFinance } from '../context/FinanceContext';
 import { Card, Button, Badge, Input } from '../components/ui';
-import { Mail, Shield, LogOut, Settings, Phone, MapPin, KeyRound, Globe, X, Trash2, AlertTriangle, CheckSquare, Square, DownloadCloud } from 'lucide-react';
+import { Mail, Shield, LogOut, Settings, Phone, MapPin, KeyRound, Globe, X, Trash2, AlertTriangle, CheckSquare, Square } from 'lucide-react';
 import { currencies } from '../utils/helpers';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
@@ -12,7 +12,7 @@ import toast from 'react-hot-toast';
 
 const Profile = () => {
   const { user, logout, updateProfile, changePassword } = useAuth();
-  const { clearTransactions, clearLoans, clearBudgets, addTransaction } = useFinance();
+  const { clearTransactions, clearLoans, clearBudgets } = useFinance();
   const { t } = useTranslation();
   const [isEditing, setIsEditing] = useState(false);
   const [showPasswordModal, setShowPasswordModal] = useState(false);
@@ -99,62 +99,6 @@ const Profile = () => {
       setResetOptions({ transactions: false, loans: false, budgets: false, plans: false });
     } catch (err) {
       toast.error(err.message || 'Failed to reset data');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleImportDummyData = async () => {
-    setLoading(true);
-    try {
-      const now = new Date();
-      const transactionsToAdd = [];
-      const categories = {
-        income: ['Salary', 'Freelance', 'Investments'],
-        expense: ['Food', 'Transport', 'Utilities', 'Entertainment', 'Shopping']
-      };
-
-      // Generate for previous 3 months
-      for (let i = 1; i <= 3; i++) {
-        const targetMonth = new Date(now.getFullYear(), now.getMonth() - i, 15); 
-        
-        // Income
-        const incDay = Math.floor(Math.random() * 5) + 1;
-        const incDate = new Date(targetMonth.getFullYear(), targetMonth.getMonth(), incDay);
-        transactionsToAdd.push({
-          description: 'Monthly Salary (Dummy)',
-          amount: Math.floor(Math.random() * 30000) + 50000,
-          type: 'income',
-          category: 'Salary',
-          date: incDate.toISOString().split('T')[0],
-          isPaid: true
-        });
-
-        // Expenses
-        const numExpenses = Math.floor(Math.random() * 5) + 5;
-        for (let j = 0; j < numExpenses; j++) {
-          const expCat = categories.expense[Math.floor(Math.random() * categories.expense.length)];
-          const expDay = Math.floor(Math.random() * 28) + 1;
-          const expDate = new Date(targetMonth.getFullYear(), targetMonth.getMonth(), expDay);
-          transactionsToAdd.push({
-            description: `Dummy ${expCat} Expense`,
-            amount: Math.floor(Math.random() * 2000) + 500,
-            type: 'expense',
-            category: expCat,
-            date: expDate.toISOString().split('T')[0],
-            isPaid: true
-          });
-        }
-      }
-
-      for (const t of transactionsToAdd) {
-        await addTransaction(t);
-      }
-      
-      toast.success('Dummy data imported for previous 3 months!');
-    } catch (err) {
-      console.error(err);
-      toast.error('Failed to import dummy data');
     } finally {
       setLoading(false);
     }
@@ -261,15 +205,6 @@ const Profile = () => {
               disabled={loading}
             >
               <Trash2 size={18} /> Reset Data
-            </Button>
-
-            <Button 
-              variant="secondary" 
-              className="w-full text-left justify-start gap-3 font-bold text-primary-600 hover:bg-primary-50 border-primary-100"
-              onClick={handleImportDummyData}
-              disabled={loading}
-            >
-              <DownloadCloud size={18} /> {loading ? 'Importing...' : 'Import Dummy Data (Past 3 Months)'}
             </Button>
 
             <Button variant="danger" className="w-full text-left justify-start gap-3 mt-4 font-bold" onClick={logout}>
