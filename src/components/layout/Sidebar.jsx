@@ -52,7 +52,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
         ${isOpen ? 'translate-x-0' : '-translate-x-full'}
       `}>
         <div className="h-full flex flex-col p-6">
-          <div className="flex items-center justify-between mb-10 px-2">
+          <div className="flex items-center justify-between mb-6 px-2">
             <Link to="/dashboard" className="flex items-center gap-3" onClick={() => setIsOpen(false)}>
               <div className="w-10 h-10 bg-primary-600 rounded-xl flex items-center justify-center shadow-lg shadow-primary-600/20">
                 <Wallet className="text-white" size={24} />
@@ -67,7 +67,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
             </button>
           </div>
 
-          <nav className="flex-1 space-y-2 overflow-y-auto custom-scrollbar pr-2">
+          <nav className="flex-1 space-y-1 overflow-y-auto custom-scrollbar pr-2">
             {menuItems.map((item) => {
               const isActive = location.pathname === item.path;
               return (
@@ -76,7 +76,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
                   to={item.path}
                   onClick={() => setIsOpen(false)}
                   className={`
-                    flex items-center gap-4 px-4 py-3.5 rounded-xl transition-all duration-300 group
+                    flex items-center gap-4 px-4 py-2.5 rounded-xl transition-all duration-300 group
                     ${isActive 
                       ? 'bg-primary-600 text-white shadow-xl shadow-primary-600/20' 
                       : 'text-gray-500 hover:bg-gray-50 hover:text-gray-900'}
@@ -89,10 +89,10 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
             })}
           </nav>
 
-          <div className="pt-6 border-t border-gray-50 space-y-2">
+          <div className="pt-6 border-t border-gray-50 space-y-1">
             <button
               onClick={toggleLanguage}
-              className="w-full flex items-center justify-between px-4 py-3.5 rounded-xl text-gray-600 hover:bg-gray-50 transition-all font-bold text-sm"
+              className="w-full flex items-center justify-between px-4 py-2.5 rounded-xl text-gray-600 hover:bg-gray-50 transition-all font-bold text-sm"
             >
               <div className="flex items-center gap-4">
                 <Languages size={22} className="text-primary-600" />
@@ -108,7 +108,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
                 setIsOpen(false);
                 logout();
               }}
-              className="w-full flex items-center gap-4 px-4 py-3.5 rounded-xl text-red-500 hover:bg-red-50 transition-all font-bold text-sm"
+              className="w-full flex items-center gap-4 px-4 py-2.5 rounded-xl text-red-500 hover:bg-red-50 transition-all font-bold text-sm"
             >
               <LogOut size={22} />
               <span>{t('common.logout')}</span>
