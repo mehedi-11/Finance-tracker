@@ -34,15 +34,15 @@ const Savings = () => {
         </div>
       </div>
 
-      <Card className="bg-primary-600 text-white border-none shadow-lg p-8 md:p-10 relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
+      <Card className="border-none shadow-sm p-8 md:p-10 relative overflow-hidden bg-white">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-primary-50 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
         <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6">
           <div>
-            <p className="text-primary-100 font-bold uppercase tracking-widest text-sm mb-2">Total Available Savings</p>
-            <h2 className="text-5xl md:text-6xl font-black">{formatCurrency(totalSavings, user?.currency)}</h2>
+            <p className="text-gray-500 font-bold uppercase tracking-widest text-sm mb-2">Total Available Savings</p>
+            <h2 className="text-5xl md:text-6xl font-black text-gray-900">{formatCurrency(totalSavings, user?.currency)}</h2>
           </div>
           <div className="text-right">
-            <p className="text-primary-100 text-sm max-w-xs">
+            <p className="text-gray-600 text-sm max-w-xs">
               This is the sum of all your past months' unspent income. You can transfer this to your current balance at any time by adding an income transaction with the category "Saving".
             </p>
           </div>
