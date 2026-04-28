@@ -185,11 +185,10 @@ const Transactions = () => {
             <table className="w-full text-left border-collapse min-w-[600px]">
               <thead>
                 <tr className="border-b border-gray-50 text-gray-400 text-[10px] md:text-xs uppercase tracking-widest font-black">
-                  <th className="px-4 md:px-6 py-4">{t('common.description')}</th>
-                  <th className="px-4 md:px-6 py-4">{t('common.category')}</th>
-                  <th className="px-4 md:px-6 py-4">{t('common.date')}</th>
-                  <th className="px-4 md:px-6 py-4">{t('common.amount')}</th>
-                  <th className="px-4 md:px-6 py-4 text-right">{t('common.actions')}</th>
+                  <th className="px-4 md:px-6 py-4">Description / Category</th>
+                  <th className="px-4 md:px-6 py-4">Amount</th>
+                  <th className="px-4 md:px-6 py-4">Date</th>
+                  <th className="px-4 md:px-6 py-4 text-right">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-50">
@@ -199,33 +198,31 @@ const Transactions = () => {
                       key={t._id}
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
-                      className="hover:bg-gray-50/50 transition-colors group"
+                      className="hover:bg-gray-50/50 transition-colors group relative"
                     >
                       <td className="px-4 md:px-6 py-4">
                         <div className="flex items-center gap-3">
-                          <div className={`w-8 h-8 md:w-10 md:h-10 rounded-xl flex items-center justify-center ${t.type === 'income' ? 'bg-emerald-100 text-emerald-600' : 'bg-red-100 text-red-600'
-                            }`}>
+                          <div className={`w-8 h-8 md:w-10 md:h-10 rounded-xl flex items-center justify-center shrink-0 ${t.type === 'income' ? 'bg-emerald-100 text-emerald-600' : 'bg-red-100 text-red-600'}`}>
                             {t.type === 'income' ? <ArrowUpRight size={16} /> : <ArrowDownRight size={16} />}
                           </div>
-                          <span className="font-bold text-gray-900 text-sm md:text-base">{t.description}</span>
+                          <div className="flex flex-col">
+                            <span className="font-bold text-gray-900 text-sm md:text-base leading-tight">{t.description}</span>
+                            <span className="text-[10px] md:text-xs font-bold text-gray-400 uppercase tracking-wider">{t.category}</span>
+                          </div>
                         </div>
+                        {t.type === 'expense' && t.isPaid === false && (
+                          <div className="absolute top-1 right-1 md:top-2 md:right-2">
+                            <span className="px-1.5 py-0.5 bg-amber-100 text-amber-700 text-[8px] md:text-[9px] font-black uppercase rounded-md shadow-sm border border-amber-200">
+                              Unpaid
+                            </span>
+                          </div>
+                        )}
                       </td>
-                      <td className="px-4 md:px-6 py-4">
-                        <Badge variant={t.type === 'income' ? 'success' : 'info'}>
-                          {t.category}
-                        </Badge>
+                      <td className={`px-4 md:px-6 py-4 font-black text-sm md:text-base ${t.type === 'income' ? 'text-emerald-600' : 'text-red-600'}`}>
+                        {t.type === 'income' ? '+' : '-'}{formatCurrency(t.amount, user?.currency)}
                       </td>
                       <td className="px-4 md:px-6 py-4 text-gray-500 font-medium text-xs md:text-sm">
                         {formatDate(t.date)}
-                      </td>
-                      <td className={`px-4 md:px-6 py-4 font-black text-sm md:text-base ${t.type === 'income' ? 'text-emerald-600' : 'text-red-600'
-                        }`}>
-                        <div className="flex flex-col">
-                          <span>{t.type === 'income' ? '+' : '-'}{formatCurrency(t.amount, user?.currency)}</span>
-                          {t.type === 'expense' && t.isPaid === false && (
-                            <span className="text-[10px] text-amber-600 font-black uppercase tracking-tighter">Unpaid</span>
-                          )}
-                        </div>
                       </td>
                       <td className="px-4 md:px-6 py-4 text-right">
                         <div className="flex items-center justify-end gap-1 md:gap-2">
