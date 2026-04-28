@@ -43,7 +43,8 @@ const Transactions = () => {
     amount: '',
     type: 'expense',
     category: 'Food',
-    date: new Date().toISOString().split('T')[0]
+    date: new Date().toISOString().split('T')[0],
+    isPaid: true
   });
 
   const currentMonth = new Date().toISOString().slice(0, 7); // YYYY-MM
@@ -66,7 +67,8 @@ const Transactions = () => {
         amount: transaction.amount,
         type: transaction.type,
         category: transaction.category,
-        date: transaction.date ? transaction.date.split('T')[0] : new Date().toISOString().split('T')[0]
+        date: transaction.date ? transaction.date.split('T')[0] : new Date().toISOString().split('T')[0],
+        isPaid: transaction.isPaid ?? true
       });
     } else {
       setEditingTransaction(null);
@@ -75,7 +77,8 @@ const Transactions = () => {
         amount: '',
         type: 'expense',
         category: 'Food',
-        date: new Date().toISOString().split('T')[0]
+        date: new Date().toISOString().split('T')[0],
+        isPaid: true
       });
     }
     setIsModalOpen(true);
@@ -207,7 +210,12 @@ const Transactions = () => {
                       <td className={`px-4 md:px-6 py-4 font-black text-sm md:text-base ${
                         t.type === 'income' ? 'text-emerald-600' : 'text-red-600'
                       }`}>
-                        {t.type === 'income' ? '+' : '-'}{formatCurrency(t.amount, user?.currency)}
+                        <div className="flex flex-col">
+                          <span>{t.type === 'income' ? '+' : '-'}{formatCurrency(t.amount, user?.currency)}</span>
+                          {!t.isPaid && (
+                            <span className="text-[10px] text-amber-600 font-black uppercase tracking-tighter">Unpaid</span>
+                          )}
+                        </div>
                       </td>
                       <td className="px-4 md:px-6 py-4 text-right">
                         <div className="flex items-center justify-end gap-1 md:gap-2">
@@ -293,6 +301,29 @@ const Transactions = () => {
                       </div>
                     </div>
                     <Input label="Date" type="date" value={formData.date} onChange={(e) => setFormData({ ...formData, date: e.target.value })} required />
+                    
+                    <div className="flex items-center gap-3 p-4 bg-gray-50 rounded-xl cursor-pointer hover:bg-gray-100 transition-all border border-gray-100" onClick={() => setFormData({ ...formData, isPaid: !formData.isPaid })}>
+                      <div className={`w-6 h-6 rounded-lg border-2 flex items-center justify-center transition-all ${formData.isPaid ? 'bg-primary-600 border-primary-600 text-white' : 'border-gray-300 bg-white'}`}>
+                        {formData.isPaid && <Plus size={14} className="rotate-45" style={{ transform: 'rotate(0deg)' }} />}
+                        {/* Custom check icon or similar */}
+                        {formData.isPaid && (
+                          <motion.svg 
+                            initial={{ scale: 0 }} 
+                            animate={{ scale: 1 }} 
+                            className="w-4 h-4" 
+                            fill="none" 
+                            stroke="currentColor" 
+                            viewBox="0 0 24 24"
+                          >
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7" />
+                          </motion.svg>
+                        )}
+                      </div>
+                      <div>
+                        <p className="text-sm font-black text-gray-900">Mark as Paid</p>
+                        <p className="text-[10px] text-gray-500 font-medium">{formData.isPaid ? 'This will affect your balance' : 'This will not affect balance (Unpaid)'}</p>
+                      </div>
+                    </div>
                     <Button type="submit" className="w-full py-4 text-lg font-bold mt-4">
                       {editingTransaction ? 'Update Record' : 'Save Transaction'}
                     </Button>

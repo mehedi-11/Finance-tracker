@@ -54,13 +54,13 @@ const Dashboard = () => {
   });
 
   const monthTotals = {
-    income: currentMonthTransactions.filter(t => t.type === 'income').reduce((sum, t) => sum + Number(t.amount), 0),
-    expenses: currentMonthTransactions.filter(t => t.type === 'expense').reduce((sum, t) => sum + Number(t.amount), 0),
+    income: currentMonthTransactions.filter(t => t.type === 'income' && t.isPaid !== false).reduce((sum, t) => sum + Number(t.amount), 0),
+    expenses: currentMonthTransactions.filter(t => t.type === 'expense' && t.isPaid !== false).reduce((sum, t) => sum + Number(t.amount), 0),
   };
   monthTotals.balance = monthTotals.income - monthTotals.expenses;
 
   const monthCategoryTotals = currentMonthTransactions
-    .filter(t => t.type === 'expense')
+    .filter(t => t.type === 'expense' && t.isPaid !== false)
     .reduce((acc, t) => {
       acc[t.category] = (acc[t.category] || 0) + Number(t.amount);
       return acc;

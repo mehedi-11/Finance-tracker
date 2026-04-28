@@ -231,8 +231,11 @@ export const FinanceProvider = ({ children }) => {
       const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
       if (!reports[monthKey]) reports[monthKey] = { income: 0, expense: 0, loansTaken: 0, loansPaid: 0 };
       
-      if (t.type === 'income') reports[monthKey].income += Number(t.amount);
-      else reports[monthKey].expense += Number(t.amount);
+      // Only count paid transactions in monthly report totals
+      if (t.isPaid !== false) {
+        if (t.type === 'income') reports[monthKey].income += Number(t.amount);
+        else reports[monthKey].expense += Number(t.amount);
+      }
     });
 
     // Process Loans
@@ -253,14 +256,14 @@ export const FinanceProvider = ({ children }) => {
   };
 
   const totals = {
-    income: transactions.filter(t => t.type === 'income').reduce((sum, t) => sum + Number(t.amount), 0),
-    expenses: transactions.filter(t => t.type === 'expense').reduce((sum, t) => sum + Number(t.amount), 0),
+    income: transactions.filter(t => t.type === 'income' && t.isPaid !== false).reduce((sum, t) => sum + Number(t.amount), 0),
+    expenses: transactions.filter(t => t.type === 'expense' && t.isPaid !== false).reduce((sum, t) => sum + Number(t.amount), 0),
     balance: 0
   };
   totals.balance = totals.income - totals.expenses;
 
   const categoryTotals = transactions
-    .filter(t => t.type === 'expense')
+    .filter(t => t.type === 'expense' && t.isPaid !== false)
     .reduce((acc, t) => {
       acc[t.category] = (acc[t.category] || 0) + Number(t.amount);
       return acc;
