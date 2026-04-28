@@ -212,9 +212,12 @@ const Dashboard = () => {
       <div className="space-y-8 animate-fade-in pb-20">
         {/* Clean White Hero Section */}
         <div className="relative mb-8">
-          <div className="bg-white rounded-3xl p-8 md:p-12 shadow-sm border border-gray-100 relative overflow-hidden">
-            {/* Subtle soft effect */}
-            <div className="absolute top-0 right-0 w-64 h-64 bg-primary-50 rounded-full blur-[80px] opacity-60"></div>
+          <div className="bg-white rounded-3xl p-8 md:p-12 shadow-sm border border-gray-100 relative overflow-hidden group">
+            {/* Decorative background shape */}
+            <div className="absolute -top-10 -right-10 w-48 h-48 bg-primary-50 rounded-full blur-3xl opacity-60 group-hover:bg-primary-100 transition-all"></div>
+            <div className="absolute top-4 right-4 opacity-[0.04] text-primary-900 pointer-events-none transform rotate-12 transition-transform group-hover:rotate-0 duration-700">
+              <Wallet size={180} />
+            </div>
             
             <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
               <div className="text-center md:text-left">
