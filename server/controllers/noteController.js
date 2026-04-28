@@ -37,9 +37,14 @@ const updateNote = async (req, res) => {
 };
 
 // @desc    Delete a note
+// @route   DELETE /api/notes/:id
 const deleteNote = async (req, res) => {
   const note = await Note.findById(req.params.id);
-  if (note && note.user.toString() === req.user._id.toString()) {
+
+  if (note) {
+    if (note.user.toString() !== req.user._id.toString()) {
+      return res.status(401).json({ message: 'Not authorized' });
+    }
     await note.deleteOne();
     res.json({ message: 'Note removed' });
   } else {
@@ -47,4 +52,11 @@ const deleteNote = async (req, res) => {
   }
 };
 
-module.exports = { getNotes, createNote, updateNote, deleteNote };
+// @desc    Delete all notes
+// @route   DELETE /api/notes
+const deleteAllNotes = async (req, res) => {
+  await Note.deleteMany({ user: req.user._id });
+  res.json({ message: 'All notes removed' });
+};
+
+module.exports = { getNotes, createNote, updateNote, deleteNote, deleteAllNotes };

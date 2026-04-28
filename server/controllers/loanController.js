@@ -73,4 +73,9 @@ const deleteLoan = async (req, res) => {
   }
 };
 
-module.exports = { getLoans, addLoan, updateLoan, deleteLoan };
+const deleteAllLoans = async (req, res) => {
+  await Loan.deleteMany({ user: req.user._id });
+  res.json({ message: 'All loans removed' });
+};
+
+module.exports = { getLoans, addLoan, updateLoan, deleteLoan, deleteAllLoans };

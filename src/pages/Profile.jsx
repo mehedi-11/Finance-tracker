@@ -1,17 +1,21 @@
 import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
+import { useFinance } from '../context/FinanceContext';
 import { Card, Button, Badge, Input } from '../components/ui';
-import { Mail, Shield, LogOut, Settings, Phone, MapPin, KeyRound, Globe, X } from 'lucide-react';
+import { Mail, Shield, LogOut, Settings, Phone, MapPin, KeyRound, Globe, X, Trash2, AlertTriangle, CheckSquare, Square } from 'lucide-react';
 import { currencies } from '../utils/helpers';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
+import { API_ENDPOINTS } from '../config';
 import toast from 'react-hot-toast';
 
 const Profile = () => {
   const { user, logout, updateProfile, changePassword } = useAuth();
+  const { clearTransactions, clearLoans, clearBudgets } = useFinance();
   const { t } = useTranslation();
   const [isEditing, setIsEditing] = useState(false);
   const [showPasswordModal, setShowPasswordModal] = useState(false);
+  const [showResetModal, setShowResetModal] = useState(false);
   const [loading, setLoading] = useState(false);
   
   const [formData, setFormData] = useState({
@@ -26,6 +30,13 @@ const Profile = () => {
     currentPassword: '',
     newPassword: '',
     confirmPassword: ''
+  });
+
+  const [resetOptions, setResetOptions] = useState({
+    transactions: false,
+    loans: false,
+    budgets: false,
+    plans: false
   });
 
   const handleUpdate = async (e) => {
@@ -56,6 +67,43 @@ const Profile = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const clearNotes = async () => {
+    const response = await fetch(API_ENDPOINTS.NOTES, {
+      method: 'DELETE',
+      headers: { 'Authorization': `Bearer ${user.token}` }
+    });
+    if (response.ok) {
+      localStorage.removeItem('finance_notes');
+    } else {
+      throw new Error('Failed to clear plans');
+    }
+  };
+
+  const handleResetData = async () => {
+    const selectedCount = Object.values(resetOptions).filter(Boolean).length;
+    if (selectedCount === 0) return toast.error('Please select at least one category');
+
+    setLoading(true);
+    try {
+      if (resetOptions.transactions) await clearTransactions();
+      if (resetOptions.loans) await clearLoans();
+      if (resetOptions.budgets) await clearBudgets();
+      if (resetOptions.plans) await clearNotes();
+      
+      toast.success('Selected data has been cleared');
+      setShowResetModal(false);
+      setResetOptions({ transactions: false, loans: false, budgets: false, plans: false });
+    } catch (err) {
+      toast.error(err.message || 'Failed to reset data');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const toggleResetOption = (key) => {
+    setResetOptions(prev => ({ ...prev, [key]: !prev[key] }));
   };
 
   return (
@@ -125,7 +173,7 @@ const Profile = () => {
         </Card>
 
         <Card className="space-y-6 bg-white border-none shadow-sm">
-          <h3 className="text-xl font-bold text-gray-900">Security</h3>
+          <h3 className="text-xl font-bold text-gray-900">Security & Data</h3>
           <div className="space-y-4">
             <Button 
               variant="secondary" 
@@ -134,6 +182,15 @@ const Profile = () => {
             >
               <KeyRound size={18} /> {t('profile.change_password')}
             </Button>
+            
+            <Button 
+              variant="secondary" 
+              className="w-full text-left justify-start gap-3 font-bold text-red-500 hover:bg-red-50 border-red-100"
+              onClick={() => setShowResetModal(true)}
+            >
+              <Trash2 size={18} /> Reset Data
+            </Button>
+
             <Button variant="danger" className="w-full text-left justify-start gap-3 mt-4 font-bold" onClick={logout}>
               <LogOut size={18} /> {t('common.logout')}
             </Button>
@@ -161,9 +218,73 @@ const Profile = () => {
           </div>
         )}
       </AnimatePresence>
+
+      {/* Reset Data Modal */}
+      <AnimatePresence>
+        {showResetModal && (
+          <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setShowResetModal(false)} className="absolute inset-0 bg-gray-900/40 backdrop-blur-sm" />
+            <motion.div initial={{ opacity: 0, scale: 0.95, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95, y: 20 }} className="relative w-full max-w-md bg-white rounded-xl p-8 shadow-2xl">
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-2xl font-bold text-gray-900 flex items-center gap-2"><Trash2 className="text-red-600" /> Reset Data</h2>
+                <button onClick={() => setShowResetModal(false)} className="p-2 hover:bg-gray-100 rounded-xl text-gray-400"><X size={20} /></button>
+              </div>
+              
+              <div className="bg-red-50 border border-red-100 rounded-xl p-4 mb-8 flex items-start gap-3">
+                <AlertTriangle className="text-red-500 shrink-0 mt-0.5" size={20} />
+                <p className="text-sm text-red-700 font-medium">Warning: This action is permanent. All data in selected categories will be deleted forever.</p>
+              </div>
+
+              <div className="space-y-3 mb-8">
+                <p className="text-sm font-bold text-gray-700 mb-4 uppercase tracking-wider">Select categories to clear:</p>
+                
+                <ResetCheckbox 
+                  label="Transactions (Income & Expenses)" 
+                  checked={resetOptions.transactions} 
+                  onChange={() => toggleResetOption('transactions')} 
+                />
+                <ResetCheckbox 
+                  label="Loans" 
+                  checked={resetOptions.loans} 
+                  onChange={() => toggleResetOption('loans')} 
+                />
+                <ResetCheckbox 
+                  label="Budgets" 
+                  checked={resetOptions.budgets} 
+                  onChange={() => toggleResetOption('budgets')} 
+                />
+                <ResetCheckbox 
+                  label="Future Plans / Notes" 
+                  checked={resetOptions.plans} 
+                  onChange={() => toggleResetOption('plans')} 
+                />
+              </div>
+
+              <div className="flex gap-4">
+                <Button variant="ghost" className="flex-1" onClick={() => setShowResetModal(false)}>Cancel</Button>
+                <Button variant="danger" className="flex-[2] py-4 font-bold" onClick={handleResetData} disabled={loading}>
+                  {loading ? 'Deleting...' : 'Delete Selected Data'}
+                </Button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
+
+const ResetCheckbox = ({ label, checked, onChange }) => (
+  <button 
+    onClick={onChange}
+    className={`w-full flex items-center justify-between p-4 rounded-xl border-2 transition-all ${
+      checked ? 'bg-red-50 border-red-200 text-red-700' : 'bg-gray-50 border-gray-100 text-gray-600 hover:border-gray-200'
+    }`}
+  >
+    <span className="font-bold text-sm">{label}</span>
+    {checked ? <CheckSquare size={20} /> : <Square size={20} className="text-gray-300" />}
+  </button>
+);
 
 const ProfileItem = ({ icon: Icon, label, value }) => (
   <div className="p-4 bg-gray-50 rounded-xl border border-gray-100">

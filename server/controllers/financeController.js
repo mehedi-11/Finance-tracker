@@ -65,6 +65,13 @@ const deleteTransaction = async (req, res) => {
   }
 };
 
+// @desc    Delete all transactions
+// @route   DELETE /api/finance/transactions
+const deleteAllTransactions = async (req, res) => {
+  await Transaction.deleteMany({ user: req.user._id });
+  res.json({ message: 'All transactions removed' });
+};
+
 // @desc    Get all budgets
 // @route   GET /api/finance/budgets
 const getBudgets = async (req, res) => {
@@ -110,12 +117,21 @@ const deleteBudget = async (req, res) => {
   }
 };
 
+// @desc    Delete all budgets
+// @route   DELETE /api/finance/budgets
+const deleteAllBudgets = async (req, res) => {
+  await Budget.deleteMany({ user: req.user._id });
+  res.json({ message: 'All budgets removed' });
+};
+
 module.exports = {
   getTransactions,
   addTransaction,
   updateTransaction,
   deleteTransaction,
+  deleteAllTransactions,
   getBudgets,
   setBudget,
   deleteBudget,
+  deleteAllBudgets,
 };

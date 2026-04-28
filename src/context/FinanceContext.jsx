@@ -137,6 +137,17 @@ export const FinanceProvider = ({ children }) => {
     }
   };
 
+  const clearTransactions = async () => {
+    const response = await fetch(`${API_URL}/transactions`, {
+      method: 'DELETE',
+      headers: { 'Authorization': `Bearer ${user.token}` }
+    });
+    if (response.ok) {
+      setTransactions([]);
+      localStorage.removeItem('finance_transactions');
+    }
+  };
+
   // Loans CRUD
   const addLoan = async (loanData) => {
     const response = await fetch(API_ENDPOINTS.LOANS, {
@@ -164,6 +175,17 @@ export const FinanceProvider = ({ children }) => {
     if (response.ok) fetchFinanceData();
   };
 
+  const clearLoans = async () => {
+    const response = await fetch(API_ENDPOINTS.LOANS, {
+      method: 'DELETE',
+      headers: { 'Authorization': `Bearer ${user.token}` }
+    });
+    if (response.ok) {
+      setLoans([]);
+      localStorage.removeItem('finance_loans');
+    }
+  };
+
   const setBudget = async (category, amount) => {
     const response = await fetch(`${API_URL}/budgets`, {
       method: 'POST',
@@ -186,6 +208,17 @@ export const FinanceProvider = ({ children }) => {
       headers: { 'Authorization': `Bearer ${user.token}` }
     });
     if (response.ok) setBudgets(prev => prev.filter(b => b._id !== id));
+  };
+
+  const clearBudgets = async () => {
+    const response = await fetch(`${API_URL}/budgets`, {
+      method: 'DELETE',
+      headers: { 'Authorization': `Bearer ${user.token}` }
+    });
+    if (response.ok) {
+      setBudgets([]);
+      localStorage.removeItem('finance_budgets');
+    }
   };
 
   // Aggregations
@@ -242,11 +275,14 @@ export const FinanceProvider = ({ children }) => {
       addTransaction, 
       deleteTransaction, 
       updateTransaction,
+      clearTransactions,
       addLoan,
       deleteLoan,
       updateLoan,
+      clearLoans,
       setBudget,
       deleteBudget,
+      clearBudgets,
       deleteMonthData: async (monthKey) => {
         const [year, month] = monthKey.split('-');
         
