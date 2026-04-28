@@ -202,38 +202,64 @@ const Dashboard = () => {
   return (
     <>
       <div className="space-y-8 animate-fade-in pb-20">
-        {/* Header Section - Premium Dark Leaf Box for All Screens */}
-        <div className="bg-[#1a0b2e] rounded-tl-[30px] md:rounded-tl-[60px] rounded-br-[30px] md:rounded-br-[60px] px-10 py-12 md:px-16 md:py-20 mb-4 shadow-2xl shadow-purple-900/20 animate-fade-in relative z-20 transition-all">
-          <div className="max-w-[1400px] mx-auto flex flex-col md:flex-row md:items-center justify-between gap-10 md:gap-4 flex-wrap">
-            <div className="text-center md:text-left w-full md:w-auto">
-              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black text-white leading-tight tracking-tight">
-                {t('dashboard.hello')}, {user?.name || 'User'}!
+        {/* Header Section - Unique & Formal Premium Design */}
+        <div className="relative overflow-hidden bg-gradient-to-br from-[#1a0b2e] via-[#2d1250] to-[#1a0b2e] rounded-[2rem] md:rounded-[3rem] px-8 py-10 md:px-16 md:py-16 mb-8 shadow-2xl shadow-purple-900/30 animate-fade-in z-20 transition-all border border-white/5">
+          {/* Decorative background elements */}
+          <div className="absolute top-0 right-0 -mr-20 -mt-20 w-80 h-80 bg-primary-500/10 rounded-full blur-[100px] pointer-events-none"></div>
+          <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-60 h-60 bg-emerald-500/10 rounded-full blur-[80px] pointer-events-none"></div>
+          <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-[0.03] pointer-events-none"></div>
+
+          <div className="max-w-[1400px] mx-auto flex flex-col lg:flex-row lg:items-center justify-between gap-12 relative z-10">
+            <div className="text-center lg:text-left space-y-4">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 backdrop-blur-md mb-2">
+                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                <span className="text-[10px] font-black text-emerald-400 uppercase tracking-[0.2em]">{t('dashboard.status_active') || 'Active Session'}</span>
+              </div>
+              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white leading-tight tracking-tight">
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-white to-purple-300">
+                  {t('dashboard.hello')}, {user?.name || 'User'}!
+                </span>
               </h1>
-              <p className="text-purple-300 font-bold text-sm md:text-lg mt-2 md:mt-1 opacity-90">
-                {t('dashboard.welcome_msg')}
+              <p className="text-purple-200/70 font-medium text-sm md:text-xl max-w-xl mx-auto lg:mx-0 leading-relaxed">
+                {t('dashboard.welcome_msg') || 'Monitor your financial health and plan for a better future.'}
               </p>
             </div>
             
-            <div className="grid grid-cols-2 gap-3 sm:gap-4 w-full md:w-auto">
-              <Link to="/budget" className="w-full">
-                <Button variant="secondary" className="w-full h-11 flex items-center justify-center gap-2 bg-white/5 border-white/10 text-white hover:bg-white/20 backdrop-blur-xl rounded-xl transition-all text-xs md:text-sm font-bold px-3">
-                  <Wallet size={18} className="text-primary-300" /> {t('common.budget')}
-                </Button>
+            <div className="grid grid-cols-2 gap-4 w-full lg:w-auto min-w-[320px]">
+              <Link to="/budget" className="group">
+                <div className="h-full bg-white/5 border border-white/10 p-4 rounded-2xl backdrop-blur-xl hover:bg-white/10 hover:border-white/20 transition-all duration-300 flex flex-col gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-primary-500/20 flex items-center justify-center text-primary-300 group-hover:scale-110 transition-transform">
+                    <Wallet size={20} />
+                  </div>
+                  <span className="text-white font-bold text-sm tracking-wide">{t('common.budget')}</span>
+                </div>
               </Link>
-              <Link to="/loans" className="w-full">
-                <Button variant="secondary" className="w-full h-11 flex items-center justify-center gap-2 bg-white/5 border-white/10 text-white hover:bg-white/20 backdrop-blur-xl rounded-xl transition-all text-xs md:text-sm font-bold px-3">
-                  <HandCoins size={18} className="text-primary-300" /> {t('common.loans')}
-                </Button>
+
+              <Link to="/loans" className="group">
+                <div className="h-full bg-white/5 border border-white/10 p-4 rounded-2xl backdrop-blur-xl hover:bg-white/10 hover:border-white/20 transition-all duration-300 flex flex-col gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-emerald-500/20 flex items-center justify-center text-emerald-300 group-hover:scale-110 transition-transform">
+                    <HandCoins size={20} />
+                  </div>
+                  <span className="text-white font-bold text-sm tracking-wide">{t('common.loans')}</span>
+                </div>
               </Link>
-              <Link to="/plans" className="w-full">
-                <Button variant="secondary" className="w-full h-11 flex items-center justify-center gap-2 bg-white/5 border-white/10 text-white hover:bg-white/20 backdrop-blur-xl rounded-xl transition-all text-xs md:text-sm font-bold px-3">
-                  <StickyNote size={18} className="text-primary-300" /> {t('common.my_plan')}
-                </Button>
+
+              <Link to="/plans" className="group">
+                <div className="h-full bg-white/5 border border-white/10 p-4 rounded-2xl backdrop-blur-xl hover:bg-white/10 hover:border-white/20 transition-all duration-300 flex flex-col gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-amber-500/20 flex items-center justify-center text-amber-300 group-hover:scale-110 transition-transform">
+                    <StickyNote size={20} />
+                  </div>
+                  <span className="text-white font-bold text-sm tracking-wide">{t('common.my_plan')}</span>
+                </div>
               </Link>
-              <Link to="/transactions" className="w-full">
-                <Button className="w-full h-11 flex items-center justify-center gap-2 bg-primary-600 text-white hover:bg-primary-700 border-none rounded-xl shadow-lg shadow-primary-600/20 transition-all text-xs md:text-sm font-bold px-3">
-                  <Plus size={18} /> {t('dashboard.add_transaction')}
-                </Button>
+
+              <Link to="/transactions" className="group">
+                <div className="h-full bg-primary-600 p-4 rounded-2xl shadow-lg shadow-primary-600/20 hover:bg-primary-700 transition-all duration-300 flex flex-col gap-3 border border-primary-500/50">
+                  <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center text-white group-hover:rotate-90 transition-transform duration-500">
+                    <Plus size={20} />
+                  </div>
+                  <span className="text-white font-bold text-sm tracking-wide">{t('dashboard.add_transaction')}</span>
+                </div>
               </Link>
             </div>
           </div>
