@@ -220,8 +220,6 @@ const Reports = () => {
                   <th className="px-6 py-4 text-emerald-600">Total Income</th>
                   <th className="px-6 py-4 text-red-600">Total Expense</th>
                   <th className="px-6 py-4 text-primary-600">Savings</th>
-                  <th className="px-6 py-4 text-amber-600">Loan Taken</th>
-                  <th className="px-6 py-4 text-indigo-600">Loan Paid</th>
                   <th className="px-6 py-4 text-right">Actions</th>
                 </tr>
               </thead>
@@ -236,8 +234,6 @@ const Reports = () => {
                         <td className="px-6 py-4 font-bold text-emerald-600">{formatCurrency(report.income, user?.currency)}</td>
                         <td className="px-6 py-4 font-bold text-red-600">{formatCurrency(report.expense, user?.currency)}</td>
                         <td className="px-6 py-4 font-bold text-primary-600">{formatCurrency(report.savings, user?.currency)}</td>
-                        <td className="px-6 py-4 font-bold text-amber-600">{formatCurrency(report.loansTaken, user?.currency)}</td>
-                        <td className="px-6 py-4 font-bold text-indigo-600">{formatCurrency(report.loansPaid, user?.currency)}</td>
                         <td className="px-6 py-4 text-right">
                           <div className="flex items-center justify-end gap-2">
                             <button 
@@ -269,7 +265,7 @@ const Reports = () => {
                   })
                 ) : (
                   <tr>
-                    <td colSpan="7" className="px-6 py-20 text-center text-gray-400 font-bold">
+                    <td colSpan="5" className="px-6 py-20 text-center text-gray-400 font-bold">
                       No monthly records generated yet.
                     </td>
                   </tr>
@@ -312,7 +308,7 @@ const Reports = () => {
                 </div>
 
                 <div className="flex-1 overflow-y-auto p-6 space-y-8">
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     <div className="p-4 bg-emerald-50 rounded-xl">
                       <p className="text-[10px] uppercase font-black text-emerald-600 mb-1">Income</p>
                       <p className="text-lg font-bold text-emerald-700">{formatCurrency(viewingReport.income, user?.currency)}</p>
@@ -324,10 +320,6 @@ const Reports = () => {
                     <div className="p-4 bg-primary-50 rounded-xl">
                       <p className="text-[10px] uppercase font-black text-primary-600 mb-1">Savings</p>
                       <p className="text-lg font-bold text-primary-700">{formatCurrency(viewingReport.savings, user?.currency)}</p>
-                    </div>
-                    <div className="p-4 bg-amber-50 rounded-xl">
-                      <p className="text-[10px] uppercase font-black text-amber-600 mb-1">Loan</p>
-                      <p className="text-lg font-bold text-amber-700">{formatCurrency(viewingReport.loansTaken, user?.currency)}</p>
                     </div>
                   </div>
 
