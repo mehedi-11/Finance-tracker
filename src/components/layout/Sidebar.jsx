@@ -67,7 +67,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
             </button>
           </div>
 
-          <nav className="flex-1 space-y-2">
+          <nav className="flex-1 space-y-2 overflow-y-auto custom-scrollbar pr-2">
             {menuItems.map((item) => {
               const isActive = location.pathname === item.path;
               return (
