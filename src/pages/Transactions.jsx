@@ -231,13 +231,15 @@ const Transactions = () => {
                       </td>
                       <td className="px-4 md:px-6 py-4 text-right">
                         <div className="flex items-center justify-end gap-1 md:gap-2">
-                          <button 
-                            onClick={() => handleTogglePaid(t)}
-                            className={`p-2 rounded-xl transition-all ${t.isPaid ? 'text-emerald-500 hover:bg-emerald-50' : 'text-amber-500 hover:bg-amber-50'}`}
-                            title={t.isPaid ? "Mark as Unpaid" : "Mark as Paid"}
-                          >
-                            {t.isPaid ? <CheckCircle size={18} /> : <Circle size={18} />}
-                          </button>
+                          {t.type === 'expense' && (
+                            <button 
+                              onClick={() => handleTogglePaid(t)}
+                              className={`p-2 rounded-xl transition-all ${t.isPaid ? 'text-emerald-500 hover:bg-emerald-50' : 'text-amber-500 hover:bg-amber-50'}`}
+                              title={t.isPaid ? "Mark as Unpaid" : "Mark as Paid"}
+                            >
+                              {t.isPaid ? <CheckCircle size={18} /> : <Circle size={18} />}
+                            </button>
+                          )}
                           <button 
                             onClick={() => handleOpenModal(t)}
                             className="p-2 hover:bg-primary-50 rounded-xl text-gray-400 hover:text-primary-600 transition-colors"
