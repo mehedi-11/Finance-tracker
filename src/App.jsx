@@ -26,6 +26,7 @@ import Savings from './pages/Savings';
 import Sidebar from './components/layout/Sidebar';
 import Navbar from './components/layout/Navbar';
 import Footer from './components/layout/Footer';
+import BottomNav from './components/layout/BottomNav';
 
 const ProtectedRoute = ({ children }) => {
   const { user, loading: authLoading } = useAuth();
@@ -66,6 +67,7 @@ function AppContent() {
           </Routes>
         </main>
         {user && <Footer />}
+        {user && <BottomNav />}
       </div>
     </div>
   );
