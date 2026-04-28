@@ -298,7 +298,7 @@ const Transactions = () => {
                         <button
                           key={type}
                           type="button"
-                          onClick={() => setFormData({ ...formData, type, category: type === 'income' ? 'Salary' : 'Food' })}
+                          onClick={() => setFormData({ ...formData, type, category: type === 'income' ? 'Salary' : 'Food', isPaid: type === 'income' ? true : formData.isPaid })}
                           className={`flex-1 py-3.5 rounded-xl transition-all capitalize font-black text-sm ${
                             formData.type === type 
                               ? type === 'income' ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-500/20' : 'bg-red-600 text-white shadow-lg shadow-red-500/20'
@@ -321,29 +321,31 @@ const Transactions = () => {
                     </div>
                     <Input label="Date" type="date" value={formData.date} onChange={(e) => setFormData({ ...formData, date: e.target.value })} required />
                     
-                    <div 
-                      className="flex items-center gap-3 p-4 bg-gray-50 rounded-xl cursor-pointer hover:bg-gray-100 transition-all border border-gray-100" 
-                      onClick={() => setFormData(prev => ({ ...prev, isPaid: !prev.isPaid }))}
-                    >
-                      <div className={`w-6 h-6 rounded-lg border-2 flex items-center justify-center transition-all ${formData.isPaid ? 'bg-primary-600 border-primary-600 text-white' : 'border-gray-300 bg-white'}`}>
-                        {formData.isPaid && (
-                          <motion.svg 
-                            initial={{ scale: 0 }} 
-                            animate={{ scale: 1 }} 
-                            className="w-4 h-4" 
-                            fill="none" 
-                            stroke="currentColor" 
-                            viewBox="0 0 24 24"
-                          >
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7" />
-                          </motion.svg>
-                        )}
+                    {formData.type === 'expense' && (
+                      <div 
+                        className="flex items-center gap-3 p-4 bg-gray-50 rounded-xl cursor-pointer hover:bg-gray-100 transition-all border border-gray-100" 
+                        onClick={() => setFormData(prev => ({ ...prev, isPaid: !prev.isPaid }))}
+                      >
+                        <div className={`w-6 h-6 rounded-lg border-2 flex items-center justify-center transition-all ${formData.isPaid ? 'bg-primary-600 border-primary-600 text-white' : 'border-gray-300 bg-white'}`}>
+                          {formData.isPaid && (
+                            <motion.svg 
+                              initial={{ scale: 0 }} 
+                              animate={{ scale: 1 }} 
+                              className="w-4 h-4" 
+                              fill="none" 
+                              stroke="currentColor" 
+                              viewBox="0 0 24 24"
+                            >
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7" />
+                            </motion.svg>
+                          )}
+                        </div>
+                        <div>
+                          <p className="text-sm font-black text-gray-900">Mark as Paid</p>
+                          <p className="text-[10px] text-gray-500 font-medium">{formData.isPaid ? 'This will affect your balance' : 'This will not affect balance (Unpaid)'}</p>
+                        </div>
                       </div>
-                      <div>
-                        <p className="text-sm font-black text-gray-900">Mark as Paid</p>
-                        <p className="text-[10px] text-gray-500 font-medium">{formData.isPaid ? 'This will affect your balance' : 'This will not affect balance (Unpaid)'}</p>
-                      </div>
-                    </div>
+                    )}
                     <Button type="submit" className="w-full py-4 text-lg font-bold mt-4">
                       {editingTransaction ? 'Update Record' : 'Save Transaction'}
                     </Button>
