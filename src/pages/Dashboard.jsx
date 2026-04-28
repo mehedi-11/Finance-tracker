@@ -16,7 +16,8 @@ import {
   PieChart as PieChartIcon,
   BarChart3,
   TrendingUp,
-  TrendingDown
+  TrendingDown,
+  Calendar
 } from 'lucide-react';
 import { 
   BarChart, 
@@ -214,11 +215,20 @@ const Dashboard = () => {
           <div className="max-w-[1400px] mx-auto flex flex-col md:flex-row md:items-center justify-between gap-10 md:gap-4 flex-wrap">
             <div className="text-center md:text-left w-full md:w-auto">
               <div className="flex flex-col md:flex-row items-center gap-2 md:gap-4 mb-4 md:mb-2">
-                <div className="px-3 py-1 bg-white/10 border border-white/10 rounded-lg backdrop-blur-md text-white text-[10px] md:text-xs font-black uppercase tracking-widest transition-all">
-                  {dateTime.toLocaleDateString('en-US', { weekday: 'short', day: 'numeric', month: 'short' })}
-                </div>
-                <div className="px-3 py-1 bg-primary-500/20 border border-primary-500/20 rounded-lg backdrop-blur-md text-primary-300 text-[10px] md:text-xs font-black uppercase tracking-widest transition-all">
-                  Cycle: {cycleRangeText}
+                <div className="px-6 py-2 bg-white/5 border border-white/10 rounded-full backdrop-blur-xl text-white text-[10px] md:text-xs flex items-center gap-4 shadow-2xl shadow-black/20 ring-1 ring-white/5">
+                  <div className="flex items-center gap-2">
+                    <Calendar size={14} className="text-primary-400" />
+                    <span className="font-bold opacity-80 uppercase tracking-widest">
+                      {dateTime.toLocaleDateString('en-US', { weekday: 'short', day: 'numeric', month: 'short' })}
+                    </span>
+                  </div>
+                  <div className="w-[1px] h-3 bg-white/20"></div>
+                  <div className="flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.8)]"></span>
+                    <span className="font-black tracking-widest">
+                      {dateTime.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true })}
+                    </span>
+                  </div>
                 </div>
               </div>
               <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black text-white leading-tight tracking-tight">
