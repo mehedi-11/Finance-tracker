@@ -31,7 +31,7 @@ const verifyUser = async (req, res) => {
     user.isVerified = true;
     user.verificationCode = undefined;
     await user.save();
-    res.json({ _id: user._id, name: user.name, email: user.email, phone: user.phone, dob: user.dob, address: user.address, currency: user.currency, token: generateToken(user._id) });
+    res.json({ _id: user._id, name: user.name, email: user.email, phone: user.phone, dob: user.dob, address: user.address, currency: user.currency, monthStartDay: user.monthStartDay, token: generateToken(user._id) });
   } else {
     res.status(400).json({ message: 'Invalid code' });
   }
@@ -53,7 +53,7 @@ const loginUser = async (req, res) => {
       user.twoFactorCode = undefined;
       await user.save();
     }
-    res.json({ _id: user._id, name: user.name, email: user.email, phone: user.phone, dob: user.dob, address: user.address, currency: user.currency, twoFactorEnabled: user.twoFactorEnabled, token: generateToken(user._id) });
+    res.json({ _id: user._id, name: user.name, email: user.email, phone: user.phone, dob: user.dob, address: user.address, currency: user.currency, monthStartDay: user.monthStartDay, twoFactorEnabled: user.twoFactorEnabled, token: generateToken(user._id) });
   } else {
     res.status(401).json({ message: 'Invalid credentials' });
   }
@@ -79,8 +79,9 @@ const updateProfile = async (req, res) => {
     user.dob = req.body.dob || user.dob;
     user.address = req.body.address || user.address;
     user.currency = req.body.currency || user.currency;
+    user.monthStartDay = req.body.monthStartDay !== undefined ? req.body.monthStartDay : user.monthStartDay;
     const updated = await user.save();
-    res.json({ _id: updated._id, name: updated.name, email: updated.email, phone: updated.phone, dob: updated.dob, address: updated.address, currency: updated.currency });
+    res.json({ _id: updated._id, name: updated.name, email: updated.email, phone: updated.phone, dob: updated.dob, address: updated.address, currency: updated.currency, monthStartDay: updated.monthStartDay });
   } else {
     res.status(404).json({ message: 'Not found' });
   }

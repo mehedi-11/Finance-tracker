@@ -9,6 +9,7 @@ const userSchema = mongoose.Schema({
   address: { type: String },
   password: { type: String, required: true },
   currency: { type: String, default: 'BDT' }, // New field
+  monthStartDay: { type: Number, default: 1 },
   isVerified: { type: Boolean, default: false },
   verificationCode: { type: String },
   twoFactorEnabled: { type: Boolean, default: false },
