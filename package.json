@@ -14,8 +14,10 @@
     "@emailjs/browser": "^4.4.1",
     "clsx": "^2.1.1",
     "framer-motion": "^12.38.0",
+    "html2canvas": "^1.4.1",
     "i18next": "^26.0.8",
     "i18next-browser-languagedetector": "^8.2.1",
+    "jspdf": "^4.2.1",
     "lucide-react": "^1.11.0",
     "react": "^19.2.5",
     "react-dom": "^19.2.5",
@@ -23,9 +25,7 @@
     "react-i18next": "^17.0.4",
     "react-router-dom": "^7.14.2",
     "recharts": "^3.8.1",
-    "tailwind-merge": "^3.5.0",
-    "jspdf": "^2.5.1",
-    "html2canvas": "^1.4.1"
+    "tailwind-merge": "^3.5.0"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
