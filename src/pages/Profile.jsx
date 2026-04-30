@@ -21,7 +21,7 @@ const Profile = () => {
   
   const [formData, setFormData] = useState({
     name: user?.name || '',
-    phone: user?.phone || '',
+    phone: user?.phone?.replace('+880', '') || '',
     dob: user?.dob ? user.dob.split('T')[0] : '',
     address: user?.address || '',
     currency: user?.currency || 'BDT',
@@ -47,6 +47,7 @@ const Profile = () => {
     try {
       const updateData = {
         ...formData,
+        phone: formData.phone ? `+880${formData.phone}` : '',
         monthStartDay: parseInt(formData.monthStartDay) || 1
       };
       await updateProfile(updateData);
@@ -146,7 +147,15 @@ const Profile = () => {
             <form onSubmit={handleUpdate} className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <Input label={t('profile.name')} value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} />
-                <Input label="Phone" value={formData.phone} onChange={(e) => setFormData({...formData, phone: e.target.value})} />
+                <Input 
+                  label="Phone" 
+                  value={formData.phone} 
+                  onChange={(e) => {
+                    const val = e.target.value.replace(/\D/g, '').slice(0, 10);
+                    setFormData({ ...formData, phone: val });
+                  }} 
+                  prefix="+880"
+                />
                 <div className="space-y-2">
                   <label className="text-sm font-bold text-gray-700 ml-1">{t('profile.currency')}</label>
                   <select 

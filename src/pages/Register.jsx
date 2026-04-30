@@ -34,7 +34,11 @@ const Register = () => {
 
     setLoading(true);
     try {
-      await register(formData);
+      const submissionData = {
+        ...formData,
+        phone: formData.phone ? `+880${formData.phone}` : ''
+      };
+      await register(submissionData);
       navigate('/verify', { state: { email: formData.email } });
     } catch (err) {
       toast.error(err.message);
@@ -66,7 +70,18 @@ const Register = () => {
           <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <Input label="Full Name" name="name" placeholder="John Doe" value={formData.name} onChange={handleChange} required />
             <Input label="Email Address" name="email" type="email" placeholder="john@example.com" value={formData.email} onChange={handleChange} required />
-            <Input label="Phone Number" name="phone" type="tel" placeholder="+1 234 567 890" value={formData.phone} onChange={handleChange} />
+            <Input 
+              label="Phone Number" 
+              name="phone" 
+              type="tel" 
+              placeholder="1XXXXXXXXX" 
+              value={formData.phone} 
+              onChange={(e) => {
+                const val = e.target.value.replace(/\D/g, '').slice(0, 10);
+                setFormData({ ...formData, phone: val });
+              }} 
+              prefix="+880"
+            />
             <div className="space-y-2">
               <label className="text-sm font-bold text-gray-700 ml-1">Preferred Currency</label>
               <select 

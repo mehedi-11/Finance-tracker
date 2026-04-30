@@ -16,17 +16,22 @@ export const Button = ({ children, variant = 'primary', className = '', ...props
   );
 };
 
-export const Input = ({ label, type = 'text', className = '', ...props }) => {
+export const Input = ({ label, type = 'text', className = '', prefix, ...props }) => {
   const [showPassword, setShowPassword] = useState(false);
   const isPassword = type === 'password';
 
   return (
     <div className="space-y-2 w-full">
       {label && <label className="text-sm font-bold text-gray-700 ml-1">{label}</label>}
-      <div className="relative">
+      <div className="relative flex items-center">
+        {prefix && (
+          <div className="absolute left-5 z-10 select-none">
+            <span className="text-gray-400 font-bold text-sm">{prefix}</span>
+          </div>
+        )}
         <input 
           type={isPassword ? (showPassword ? 'text' : 'password') : type}
-          className={`input-premium ${className} ${isPassword ? 'pr-12' : ''}`} 
+          className={`input-premium ${className} ${isPassword ? 'pr-12' : ''} ${prefix ? 'pl-16' : ''}`} 
           {...props} 
         />
         {isPassword && (
