@@ -38,7 +38,7 @@ const Landing = () => {
           className="text-5xl md:text-7xl font-black mb-6 leading-tight text-gray-900"
         >
           Master Your Money with <br />
-          <span className="bg-gradient-to-r from-primary-600 to-emerald-500 bg-clip-text text-transparent">
+          <span className="text-primary-600">
             Intelligence & Style
           </span>
         </motion.h1>

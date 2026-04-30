@@ -51,9 +51,7 @@ export default {
           '100%': { transform: 'translateY(0)', opacity: '1' },
         },
       },
-      backgroundImage: {
-        'glass-gradient': 'linear-gradient(to bottom right, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05))',
-      },
+      backgroundImage: {},
     },
   },
   plugins: [],

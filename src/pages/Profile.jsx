@@ -116,7 +116,7 @@ const Profile = () => {
     <div className="max-w-4xl mx-auto space-y-8 animate-fade-in pb-20">
       <div className="flex flex-col md:flex-row items-center gap-8">
         <div className="relative group">
-          <div className="w-32 h-32 rounded-xl bg-gradient-to-tr from-primary-600 to-emerald-500 p-1">
+          <div className="w-32 h-32 rounded-xl bg-primary-600 p-1">
             <div className="w-full h-full rounded-xl bg-white flex items-center justify-center overflow-hidden">
               <span className="text-4xl font-bold text-primary-600 uppercase">{user?.name?.[0]}</span>
             </div>
