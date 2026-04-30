@@ -481,13 +481,18 @@ const StatCard = ({ icon: Icon, color, label, value, onClick, badgeText, badgeCo
       className={`relative overflow-hidden group bg-white border-none shadow-sm hover:shadow-md transition-all ${onClick ? 'cursor-pointer hover:-translate-y-1' : ''}`}
     >
       {onClick && (
-        <div className="absolute bottom-2 right-2 z-20">
-          <div className="px-2 py-0.5 bg-yellow-400/20 backdrop-blur-md border border-yellow-400/20 rounded-lg">
-            <span className="text-[8px] font-black uppercase tracking-tighter text-yellow-700">Click Me</span>
-          </div>
+        <div className="absolute bottom-3 right-3 z-20">
+          <motion.div 
+            animate={{ scale: [1, 1.05, 1] }}
+            transition={{ repeat: Infinity, duration: 2 }}
+            className={`px-2 py-1 bg-${color}-600 text-white rounded-lg shadow-lg shadow-${color}-600/30 flex items-center gap-1.5`}
+          >
+            <div className="w-1.5 h-1.5 bg-white rounded-full animate-pulse"></div>
+            <span className="text-[8px] font-black uppercase tracking-widest leading-none">Details</span>
+          </motion.div>
         </div>
       )}
-      <div className={`absolute top-0 right-0 w-32 h-32 bg-${color}-50 rounded-full -mr-16 -mt-16 group-hover:scale-110 transition-transform`}></div>
+      <div className={`absolute top-0 right-0 w-32 h-32 bg-${color}-50 rounded-full -mr-16 -mt-16 group-hover:scale-110 transition-transform opacity-60`}></div>
       <div className="flex flex-col items-center text-center md:flex-row md:items-start md:justify-between md:text-left relative z-10 gap-4">
         <div className="order-2 md:order-1">
           <div className="flex flex-col items-center md:items-start gap-1 mb-1">
@@ -504,7 +509,7 @@ const StatCard = ({ icon: Icon, color, label, value, onClick, badgeText, badgeCo
             {formatCurrency(value || 0, user?.currency)}
           </h2>
         </div>
-        <div className={`w-14 h-14 bg-${color}-100 rounded-full flex items-center justify-center order-1 md:order-2 transition-transform group-hover:scale-110 shadow-sm shadow-${color}-600/5`}>
+        <div className={`w-14 h-14 bg-${color}-600/10 rounded-full flex items-center justify-center order-1 md:order-2 transition-all group-hover:scale-110 shadow-sm shadow-${color}-600/5`}>
           <Icon className={`text-${color}-600`} size={28} />
         </div>
       </div>
