@@ -473,8 +473,23 @@ const Dashboard = () => {
   );
 };
 
-const StatCard = ({ icon: Icon, color, label, value, onClick, badgeText, badgeColor }) => {
+const StatCard = ({ icon: Icon, label, value, color = 'primary', onClick, badgeText, badgeColor }) => {
   const { user } = useAuth();
+  const { t } = useTranslation();
+
+  const colorMap = {
+    primary: { bg: 'bg-primary-600', text: 'text-primary-600', light: 'bg-primary-50', iconBg: 'bg-primary-600/10', shadow: 'shadow-primary-600/30' },
+    secondary: { bg: 'bg-secondary-600', text: 'text-secondary-600', light: 'bg-secondary-50', iconBg: 'bg-secondary-600/10', shadow: 'shadow-secondary-600/30' },
+    success: { bg: 'bg-success-600', text: 'text-success-600', light: 'bg-success-50', iconBg: 'bg-success-600/10', shadow: 'shadow-success-600/30' },
+    purple: { bg: 'bg-primary-600', text: 'text-primary-600', light: 'bg-primary-50', iconBg: 'bg-primary-600/10', shadow: 'shadow-primary-600/30' },
+    amber: { bg: 'bg-secondary-600', text: 'text-secondary-600', light: 'bg-secondary-50', iconBg: 'bg-secondary-600/10', shadow: 'shadow-secondary-600/30' },
+    rose: { bg: 'bg-secondary-600', text: 'text-secondary-600', light: 'bg-secondary-50', iconBg: 'bg-secondary-600/10', shadow: 'shadow-secondary-600/30' },
+    emerald: { bg: 'bg-success-600', text: 'text-success-600', light: 'bg-success-50', iconBg: 'bg-success-600/10', shadow: 'shadow-success-600/30' },
+    red: { bg: 'bg-secondary-600', text: 'text-secondary-600', light: 'bg-secondary-50', iconBg: 'bg-secondary-600/10', shadow: 'shadow-secondary-600/30' }
+  };
+
+  const style = colorMap[color] || colorMap.primary;
+
   return (
     <Card 
       onClick={onClick}
@@ -482,17 +497,13 @@ const StatCard = ({ icon: Icon, color, label, value, onClick, badgeText, badgeCo
     >
       {onClick && (
         <div className="absolute bottom-3 right-3 z-20">
-          <motion.div 
-            animate={{ scale: [1, 1.05, 1] }}
-            transition={{ repeat: Infinity, duration: 2 }}
-            className={`px-2 py-1 bg-${color}-600 text-white rounded-lg shadow-lg shadow-${color}-600/30 flex items-center gap-1.5`}
-          >
-            <div className="w-1.5 h-1.5 bg-white rounded-full animate-pulse"></div>
+          <div className={`px-2 py-1 ${style.bg} text-white rounded-lg shadow-lg ${style.shadow} flex items-center gap-1.5`}>
+            <div className="w-1.5 h-1.5 bg-white rounded-full"></div>
             <span className="text-[8px] font-black uppercase tracking-widest leading-none">Details</span>
-          </motion.div>
+          </div>
         </div>
       )}
-      <div className={`absolute top-0 right-0 w-32 h-32 bg-${color}-50 rounded-full -mr-16 -mt-16 group-hover:scale-110 transition-transform opacity-60`}></div>
+      <div className={`absolute top-0 right-0 w-32 h-32 ${style.light} rounded-full -mr-16 -mt-16 group-hover:scale-110 transition-transform opacity-60`}></div>
       <div className="flex flex-col items-center text-center md:flex-row md:items-start md:justify-between md:text-left relative z-10 gap-4">
         <div className="order-2 md:order-1">
           <div className="flex flex-col items-center md:items-start gap-1 mb-1">
@@ -505,12 +516,12 @@ const StatCard = ({ icon: Icon, color, label, value, onClick, badgeText, badgeCo
               )}
             </div>
           </div>
-          <h2 className={`text-2xl font-black ${color === 'emerald' ? 'text-emerald-600' : color === 'red' ? 'text-red-600' : color === 'purple' ? 'text-purple-600' : color === 'amber' ? 'text-amber-600' : color === 'rose' ? 'text-rose-600' : 'text-gray-900'}`}>
+          <h2 className={`text-2xl font-black ${style.text}`}>
             {formatCurrency(value || 0, user?.currency)}
           </h2>
         </div>
-        <div className={`w-14 h-14 bg-${color}-600/10 rounded-full flex items-center justify-center order-1 md:order-2 transition-all group-hover:scale-110 shadow-sm shadow-${color}-600/5`}>
-          <Icon className={`text-${color}-600`} size={28} />
+        <div className={`w-14 h-14 ${style.iconBg} rounded-full flex items-center justify-center order-1 md:order-2 transition-all group-hover:scale-110 shadow-sm shadow-black/5`}>
+          <Icon className={style.text} size={28} />
         </div>
       </div>
     </Card>
