@@ -21,7 +21,7 @@ import { useTranslation } from 'react-i18next';
 
 const Transactions = () => {
   const { t } = useTranslation();
-  const { transactions, addTransaction, deleteTransaction, updateTransaction, loans, getCurrentCycleRange } = useFinance();
+  const { transactions, addTransaction, deleteTransaction, updateTransaction, loans, getCurrentCycleRange, totals } = useFinance();
   const { user } = useAuth();
 
   // Combine default categories with active loans for expense type
@@ -34,6 +34,7 @@ const Transactions = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showMobileFilters, setShowMobileFilters] = useState(false);
   const [editingTransaction, setEditingTransaction] = useState(null);
+  const [warningModal, setWarningModal] = useState({ isOpen: false, message: '' });
 
   // Delete confirmation state
   const [deleteConfirm, setDeleteConfirm] = useState(null);
@@ -44,7 +45,8 @@ const Transactions = () => {
     type: 'expense',
     category: 'Food',
     date: new Date().toISOString().split('T')[0],
-    isPaid: true
+    isPaid: true,
+    expectedPayDate: new Date().toISOString().split('T')[0]
   });
 
   const { start: cycleStart, end: cycleEnd } = getCurrentCycleRange();
@@ -68,7 +70,8 @@ const Transactions = () => {
         type: transaction.type,
         category: transaction.category,
         date: transaction.date ? transaction.date.split('T')[0] : new Date().toISOString().split('T')[0],
-        isPaid: transaction.isPaid ?? true
+        isPaid: transaction.isPaid ?? true,
+        expectedPayDate: transaction.expectedPayDate ? transaction.expectedPayDate.split('T')[0] : new Date().toISOString().split('T')[0]
       });
     } else {
       setEditingTransaction(null);
@@ -78,7 +81,8 @@ const Transactions = () => {
         type: 'expense',
         category: 'Food',
         date: new Date().toISOString().split('T')[0],
-        isPaid: true
+        isPaid: true,
+        expectedPayDate: new Date().toISOString().split('T')[0]
       });
     }
     setIsModalOpen(true);
@@ -92,6 +96,20 @@ const Transactions = () => {
     };
 
     try {
+      if (data.type === 'expense' && data.isPaid === true) {
+        let diff = data.amount;
+        if (editingTransaction && editingTransaction.type === 'expense' && editingTransaction.isPaid === true) {
+          diff = data.amount - editingTransaction.amount;
+        } else if (editingTransaction && editingTransaction.type === 'income') {
+          diff = data.amount; // full amount will be deducted
+        }
+        
+        if (diff > totals.balance) {
+          setWarningModal({ isOpen: true, message: `You cannot spend more than your current total balance (${formatCurrency(totals.balance, user?.currency)}).` });
+          return;
+        }
+      }
+
       if (editingTransaction) {
         await updateTransaction(editingTransaction._id, data);
         toast.success('Transaction updated!');
@@ -300,19 +318,31 @@ const Transactions = () => {
                     <Input label="Date" type="date" value={formData.date} onChange={(e) => setFormData({ ...formData, date: e.target.value })} required />
 
                     {formData.type === 'expense' && (
-                      <div className="space-y-1.5">
-                        <label className="text-sm font-bold text-gray-700 ml-1">Payment Status</label>
-                        <select
-                          className="input-premium"
-                          value={formData.isPaid ? 'true' : 'false'}
-                          onChange={(e) => setFormData(prev => ({ ...prev, isPaid: e.target.value === 'true' }))}
-                        >
-                          <option value="true">Paid</option>
-                          <option value="false">Unpaid</option>
-                        </select>
-                        <p className="text-[10px] text-gray-500 italic ml-1">
-                          {formData.isPaid ? 'This will deduct from your balance.' : 'This will be ignored (No balance/expense change).'}
-                        </p>
+                      <div className="space-y-4">
+                        <div className="space-y-1.5">
+                          <label className="text-sm font-bold text-gray-700 ml-1">Payment Status</label>
+                          <select
+                            className="input-premium"
+                            value={formData.isPaid ? 'true' : 'false'}
+                            onChange={(e) => setFormData(prev => ({ ...prev, isPaid: e.target.value === 'true' }))}
+                          >
+                            <option value="true">Paid</option>
+                            <option value="false">Unpaid</option>
+                          </select>
+                          <p className="text-[10px] text-gray-500 italic ml-1">
+                            {formData.isPaid ? 'This will deduct from your balance.' : 'This will be ignored (No balance/expense change).'}
+                          </p>
+                        </div>
+                        
+                        {!formData.isPaid && (
+                          <Input 
+                            label="Expected Payment Date" 
+                            type="date" 
+                            value={formData.expectedPayDate} 
+                            onChange={(e) => setFormData({ ...formData, expectedPayDate: e.target.value })} 
+                            required 
+                          />
+                        )}
                       </div>
                     )}
                     <Button type="submit" className="w-full py-4 text-lg font-bold mt-4">
@@ -320,6 +350,31 @@ const Transactions = () => {
                     </Button>
                   </form>
                 </div>
+              </motion.div>
+            </div>
+          )}
+        </AnimatePresence>,
+        document.body
+      )}
+
+      {/* Warning Modal */}
+      {createPortal(
+        <AnimatePresence>
+          {warningModal.isOpen && (
+            <div className="fixed inset-0 z-[10000] flex items-center justify-center p-4">
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setWarningModal({ isOpen: false, message: '' })} className="absolute inset-0 bg-gray-900/60 backdrop-blur-md" />
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.9 }}
+                className="relative w-full max-w-sm bg-white rounded-xl p-8 text-center shadow-2xl"
+              >
+                <div className="w-20 h-20 bg-amber-50 rounded-xl flex items-center justify-center mx-auto mb-6">
+                  <AlertTriangle className="text-amber-500" size={40} />
+                </div>
+                <h3 className="text-xl font-black text-gray-900 mb-2">Insufficient Balance</h3>
+                <p className="text-gray-500 text-sm font-medium mb-8">{warningModal.message}</p>
+                <Button onClick={() => setWarningModal({ isOpen: false, message: '' })} className="w-full bg-amber-600 hover:bg-amber-700 text-white border-none">I Understand</Button>
               </motion.div>
             </div>
           )}

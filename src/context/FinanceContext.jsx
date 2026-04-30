@@ -316,19 +316,29 @@ export const FinanceProvider = ({ children }) => {
     return d >= cycleStart && d <= cycleEnd;
   });
 
+  const currentIncomeTransactions = currentCycleTransactions.filter(t => t.type === 'income' && t.isPaid !== false);
+  const regularIncome = currentIncomeTransactions.filter(t => t.category !== 'Saving').reduce((sum, t) => sum + Number(t.amount), 0);
+  const savingsUsed = currentIncomeTransactions.filter(t => t.category === 'Saving').reduce((sum, t) => sum + Number(t.amount), 0);
+
   const totals = {
-    income: currentCycleTransactions.filter(t => t.type === 'income' && t.isPaid !== false).reduce((sum, t) => sum + Number(t.amount), 0),
+    income: regularIncome,
     expenses: currentCycleTransactions.filter(t => t.type === 'expense' && t.isPaid !== false).reduce((sum, t) => sum + Number(t.amount), 0),
+    savingsUsed: savingsUsed,
     balance: 0
   };
-  totals.balance = totals.income - totals.expenses;
+  totals.balance = totals.income + totals.savingsUsed - totals.expenses;
+
+  const globalIncomeTransactions = transactions.filter(t => t.type === 'income' && t.isPaid !== false);
+  const globalRegularIncome = globalIncomeTransactions.filter(t => t.category !== 'Saving').reduce((sum, t) => sum + Number(t.amount), 0);
+  const globalSavingsUsed = globalIncomeTransactions.filter(t => t.category === 'Saving').reduce((sum, t) => sum + Number(t.amount), 0);
 
   const globalTotals = {
-    income: transactions.filter(t => t.type === 'income' && t.isPaid !== false).reduce((sum, t) => sum + Number(t.amount), 0),
+    income: globalRegularIncome,
     expenses: transactions.filter(t => t.type === 'expense' && t.isPaid !== false).reduce((sum, t) => sum + Number(t.amount), 0),
+    savingsUsed: globalSavingsUsed,
     balance: 0
   };
-  globalTotals.balance = globalTotals.income - globalTotals.expenses;
+  globalTotals.balance = globalTotals.income + globalTotals.savingsUsed - globalTotals.expenses;
 
   const categoryTotals = currentCycleTransactions
     .filter(t => t.type === 'expense' && t.isPaid !== false)

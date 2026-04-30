@@ -32,6 +32,10 @@ const transactionSchema = mongoose.Schema({
     type: Boolean,
     default: true,
   },
+  expectedPayDate: {
+    type: Date,
+    required: function() { return this.isPaid === false; }
+  },
 }, {
   timestamps: true,
 });

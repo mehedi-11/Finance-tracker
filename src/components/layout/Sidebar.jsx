@@ -59,7 +59,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
               <div className="w-10 h-10 bg-primary-600 rounded-xl flex items-center justify-center shadow-lg shadow-primary-600/20">
                 <Wallet className="text-white" size={24} />
               </div>
-              <span className="text-xl font-black tracking-tight text-gray-900">FinanceFlow</span>
+              <span className="text-xl font-black tracking-tight text-gray-900">Money Tracker</span>
             </Link>
             <button 
               onClick={() => setIsOpen(false)}

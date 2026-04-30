@@ -76,7 +76,7 @@ export const AuthProvider = ({ children }) => {
       await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
         to_email: userData.email,
         verification_code: data.verificationCode,
-        app_name: 'FinanceFlow'
+        app_name: 'Money Tracker'
       });
       toast.success('Verification code sent!');
     } catch (error) {
@@ -173,7 +173,7 @@ export const AuthProvider = ({ children }) => {
       await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
         to_email: email,
         verification_code: data.resetToken,
-        app_name: 'FinanceFlow'
+        app_name: 'Money Tracker'
       });
       toast.success('Reset code sent to your email!');
     } catch (error) {

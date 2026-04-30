@@ -3,7 +3,6 @@ import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Eye,
-  Trash2,
   Download,
   X,
   AlertTriangle,
@@ -21,12 +20,11 @@ import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
 
 const Reports = () => {
-  const { getMonthlyReports, transactions, loans, budgets, deleteMonthData, addTransaction } = useFinance();
+  const { getMonthlyReports, transactions, loans, budgets, addTransaction } = useFinance();
   const { user } = useAuth();
   const { t } = useTranslation();
   
   const [viewingReport, setViewingReport] = useState(null);
-  const [deleteConfirm, setDeleteConfirm] = useState(null);
   const [isDownloading, setIsDownloading] = useState(false);
   const [isImporting, setIsImporting] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -154,7 +152,7 @@ const Reports = () => {
         <!-- Header -->
         <div style="display: flex; justify-content: space-between; align-items: flex-end; border-bottom: 4px solid #4f46e5; padding-bottom: 20px; margin-bottom: 40px;">
           <div>
-            <h1 style="margin:0; color:#4f46e5; font-size: 32px; font-weight: 900; letter-spacing: -1px;">FinanceFlow</h1>
+            <h1 style="margin:0; color:#4f46e5; font-size: 32px; font-weight: 900; letter-spacing: -1px;">Money Tracker</h1>
             <p style="margin:5px 0 0; color:#64748b; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px;">Monthly Financial Statement</p>
           </div>
           <div style="text-align: right;">
@@ -281,7 +279,7 @@ const Reports = () => {
         </table>
 
         <div style="margin-top: 50px; padding-top: 20px; border-top: 1px solid #e2e8f0; text-align: center; color: #94a3b8; font-size: 10px; text-transform: uppercase; letter-spacing: 2px; font-weight: 700;">
-          Confidential Document • FinanceFlow Pro Statement • Generated on ${new Date().toLocaleDateString()}
+          Confidential Document • Money Tracker Pro Statement • Generated on ${new Date().toLocaleDateString()}
         </div>
       </div>
     `;
@@ -321,19 +319,10 @@ const Reports = () => {
       heightLeft -= contentHeight;
     }
 
-    pdf.save(`FinanceFlow-Premium-Report-${report.month}.pdf`);
+    pdf.save(`Money Tracker-Premium-Report-${report.month}.pdf`);
     document.body.removeChild(element);
     setIsDownloading(false);
     toast.success('Professional Report Downloaded!');
-  };
-
-  const handleDelete = async () => {
-    if (!deleteConfirm) return;
-    toast.loading('Deleting month records...');
-    await deleteMonthData(deleteConfirm);
-    setDeleteConfirm(null);
-    toast.dismiss();
-    toast.success('Month records deleted!');
   };
 
   return (
@@ -407,13 +396,6 @@ const Reports = () => {
                               title="Download PDF"
                             >
                               <Download size={18} />
-                            </button>
-                            <button 
-                              onClick={() => setDeleteConfirm(report.month)}
-                              className="p-2 bg-gray-50 text-gray-500 hover:text-red-600 rounded-xl transition-all"
-                              title="Delete Month Data"
-                            >
-                              <Trash2 size={18} />
                             </button>
                           </div>
                         </td>
@@ -513,34 +495,6 @@ const Reports = () => {
                       </table>
                     </div>
                   </div>
-                </div>
-              </motion.div>
-            </div>
-          )}
-        </AnimatePresence>,
-        document.body
-      )}
-
-      {/* Delete Confirmation */}
-      {createPortal(
-        <AnimatePresence>
-          {deleteConfirm && (
-            <div className="fixed inset-0 z-[10000] flex items-center justify-center p-4">
-              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setDeleteConfirm(null)} className="absolute inset-0 bg-gray-900/60 backdrop-blur-md" />
-              <motion.div 
-                initial={{ opacity: 0, scale: 0.9 }} 
-                animate={{ opacity: 1, scale: 1 }} 
-                exit={{ opacity: 0, scale: 0.9 }}
-                className="relative w-full max-w-sm bg-white rounded-xl p-8 text-center shadow-2xl"
-              >
-                <div className="w-20 h-20 bg-red-50 rounded-xl flex items-center justify-center mx-auto mb-6">
-                  <AlertTriangle className="text-red-500" size={40} />
-                </div>
-                <h3 className="text-xl font-black text-gray-900 mb-2">Delete Month Data?</h3>
-                <p className="text-gray-500 text-sm font-medium mb-8">All transactions and loans for this month will be permanently removed.</p>
-                <div className="grid grid-cols-2 gap-4">
-                  <Button variant="secondary" onClick={() => setDeleteConfirm(null)} className="bg-gray-100 border-none text-gray-600">Cancel</Button>
-                  <Button onClick={handleDelete} className="bg-red-600 hover:bg-red-700 text-white border-none">Yes, Delete</Button>
                 </div>
               </motion.div>
             </div>

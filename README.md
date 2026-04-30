@@ -1,8 +1,8 @@
-# 💎 FinanceFlow - Premium Personal Finance Tracker
+# 💎 Money Tracker - Premium Personal Money Tracker
 
-FinanceFlow is a high-performance, aesthetically pleasing personal finance management application built with the MERN stack (MongoDB, Express, React, Node.js). It offers a seamless experience for tracking expenses, managing budgets, and planning future costs with intelligent insights and micro-animations.
+Money Tracker is a high-performance, aesthetically pleasing personal finance management application built with the MERN stack (MongoDB, Express, React, Node.js). It offers a seamless experience for tracking expenses, managing budgets, and planning future costs with intelligent insights and micro-animations.
 
-![FinanceFlow Banner](https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&q=80&w=1200)
+![Money Tracker Banner](https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&q=80&w=1200)
 
 ## ✨ Features
 

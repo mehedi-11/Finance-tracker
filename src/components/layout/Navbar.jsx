@@ -162,7 +162,7 @@ const Navbar = ({ setIsSidebarOpen }) => {
           </AnimatePresence>
         </div>
 
-        <span className="text-xl font-black text-gray-900 lg:hidden tracking-tighter">FinanceFlow</span>
+        <span className="text-xl font-black text-gray-900 lg:hidden tracking-tighter">Money Tracker</span>
       </div>
 
 

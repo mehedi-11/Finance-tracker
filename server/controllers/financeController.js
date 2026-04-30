@@ -11,7 +11,7 @@ const getTransactions = async (req, res) => {
 // @desc    Add a transaction
 // @route   POST /api/finance/transactions
 const addTransaction = async (req, res) => {
-  const { description, amount, type, category, date, isPaid } = req.body;
+  const { description, amount, type, category, date, isPaid, expectedPayDate } = req.body;
 
   const transaction = new Transaction({
     user: req.user._id,
@@ -21,6 +21,7 @@ const addTransaction = async (req, res) => {
     category,
     date: date || Date.now(),
     isPaid: isPaid !== undefined ? isPaid : true,
+    expectedPayDate: isPaid === false ? expectedPayDate : undefined,
   });
 
   const createdTransaction = await transaction.save();
@@ -43,6 +44,12 @@ const updateTransaction = async (req, res) => {
     transaction.category = req.body.category || transaction.category;
     transaction.date = req.body.date || transaction.date;
     transaction.isPaid = req.body.isPaid !== undefined ? req.body.isPaid : transaction.isPaid;
+    
+    if (transaction.isPaid === false && req.body.expectedPayDate) {
+      transaction.expectedPayDate = req.body.expectedPayDate;
+    } else if (transaction.isPaid === true) {
+      transaction.expectedPayDate = undefined;
+    }
 
     const updatedTransaction = await transaction.save();
     res.json(updatedTransaction);

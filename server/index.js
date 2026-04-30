@@ -28,7 +28,7 @@ app.use('/api/notifications', notificationRoutes);
 app.use('/api/loans', loanRoutes);
 
 app.get('/', (req, res) => {
-  res.send('Finance Tracker API is running...');
+  res.send('Money Tracker API is running...');
 });
 
 const PORT = process.env.PORT || 5000;

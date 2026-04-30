@@ -154,7 +154,14 @@ const Dashboard = () => {
 
         {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <StatCard icon={Banknote} color="primary" label="Current Month Balance" value={monthTotals.balance} />
+          <StatCard 
+            icon={Banknote} 
+            color="primary" 
+            label="Total Balance" 
+            value={monthTotals.balance} 
+            badgeText={monthTotals.savingsUsed > 0 ? `saving: +${monthTotals.savingsUsed}` : null}
+            badgeColor="bg-emerald-100 text-emerald-700"
+          />
           <StatCard icon={ArrowUpCircle} color="emerald" label={t('common.total_income')} value={monthTotals.income} />
           <StatCard icon={ArrowDownCircle} color="red" label={t('common.total_expenses')} value={monthTotals.expenses} />
           
@@ -466,7 +473,7 @@ const Dashboard = () => {
   );
 };
 
-const StatCard = ({ icon: Icon, color, label, value, onClick }) => {
+const StatCard = ({ icon: Icon, color, label, value, onClick, badgeText, badgeColor }) => {
   const { user } = useAuth();
   return (
     <Card 
@@ -483,7 +490,14 @@ const StatCard = ({ icon: Icon, color, label, value, onClick }) => {
       <div className={`absolute top-0 right-0 w-32 h-32 bg-${color}-50 rounded-full -mr-16 -mt-16 group-hover:scale-110 transition-transform`}></div>
       <div className="flex items-start justify-between relative z-10">
         <div>
-          <p className="text-gray-600 text-xs font-black uppercase tracking-wider mb-1">{label}</p>
+          <div className="flex items-center gap-2 mb-1">
+            <p className="text-gray-600 text-xs font-black uppercase tracking-wider">{label}</p>
+            {badgeText && (
+              <span className={`text-[10px] px-1.5 py-0.5 rounded-md font-bold uppercase ${badgeColor || 'bg-gray-100 text-gray-600'}`}>
+                {badgeText}
+              </span>
+            )}
+          </div>
           <h2 className={`text-2xl font-black ${color === 'emerald' ? 'text-emerald-600' : color === 'red' ? 'text-red-600' : color === 'purple' ? 'text-purple-600' : color === 'amber' ? 'text-amber-600' : color === 'rose' ? 'text-rose-600' : 'text-gray-900'}`}>
             {formatCurrency(value || 0, user?.currency)}
           </h2>
