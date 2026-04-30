@@ -28,6 +28,20 @@ const Profile = () => {
     monthStartDay: user?.monthStartDay || 1
   });
 
+  // Sync formData when user changes
+  useEffect(() => {
+    if (user) {
+      setFormData({
+        name: user.name || '',
+        phone: user.phone?.replace('+880', '') || '',
+        dob: user.dob ? user.dob.split('T')[0] : '',
+        address: user.address || '',
+        currency: user.currency || 'BDT',
+        monthStartDay: user.monthStartDay || 1
+      });
+    }
+  }, [user]);
+
   const [passwordData, setPasswordData] = useState({
     currentPassword: '',
     newPassword: '',
