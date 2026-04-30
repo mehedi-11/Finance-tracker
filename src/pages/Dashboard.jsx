@@ -8,6 +8,7 @@ import {
   Banknote,
   ArrowUpCircle,
   ArrowDownCircle,
+  ArrowRight,
   PieChart as PieChartIcon,
   BarChart3,
   TrendingUp,
@@ -496,10 +497,10 @@ const StatCard = ({ icon: Icon, label, value, color = 'primary', onClick, badgeT
       className={`relative overflow-hidden group bg-white border-none shadow-sm hover:shadow-md transition-all ${onClick ? 'cursor-pointer hover:-translate-y-1' : ''}`}
     >
       {onClick && (
-        <div className="absolute bottom-3 right-3 z-20">
-          <div className={`px-2 py-1 ${style.bg} text-white rounded-lg shadow-lg ${style.shadow} flex items-center gap-1.5`}>
-            <div className="w-1.5 h-1.5 bg-white rounded-full"></div>
-            <span className="text-[8px] font-black uppercase tracking-widest leading-none">Details</span>
+        <div className="absolute bottom-4 right-4 z-20">
+          <div className={`w-8 h-8 ${style.bg} text-white rounded-full flex items-center justify-center shadow-lg ${style.shadow} group-hover:translate-x-1 transition-all duration-300`}>
+
+            <ArrowRight size={14} strokeWidth={3} />
           </div>
         </div>
       )}
