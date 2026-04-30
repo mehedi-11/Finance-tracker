@@ -253,7 +253,7 @@ const Transactions = () => {
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="5" className="px-6 py-20 text-center">
+                    <td colSpan="4" className="px-6 py-20 text-center">
                       <div className="flex flex-col items-center gap-4">
                         <div className="w-20 h-20 bg-gray-50 rounded-xl flex items-center justify-center">
                           <Search size={40} className="text-gray-300" />

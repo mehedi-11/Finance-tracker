@@ -19,15 +19,15 @@ import { formatCurrency, categories } from '../utils/helpers';
 import toast from 'react-hot-toast';
 
 const Budget = () => {
-  const { budgets, setBudget, deleteBudget, transactions } = useFinance();
+  const { budgets, setBudget, deleteBudget, transactions, getCurrentCycleRange } = useFinance();
   const { user } = useAuth();
   const { t } = useTranslation();
   
-  const currentMonth = new Date().toISOString().slice(0, 7);
+  const { start: cycleStart, end: cycleEnd } = getCurrentCycleRange();
   const monthCategoryTotals = transactions
     .filter(t => {
       const d = new Date(t.date);
-      return t.type === 'expense' && `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}` === currentMonth;
+      return t.type === 'expense' && t.isPaid !== false && d >= cycleStart && d <= cycleEnd;
     })
     .reduce((acc, t) => {
       acc[t.category] = (acc[t.category] || 0) + Number(t.amount);

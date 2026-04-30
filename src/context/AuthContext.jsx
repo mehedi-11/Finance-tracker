@@ -1,12 +1,11 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import { API_ENDPOINTS } from '../config';
+import { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import emailjs from '@emailjs/browser';
 import toast from 'react-hot-toast';
 
 const AuthContext = createContext();
 
 export const useAuth = () => useContext(AuthContext);
-
-import { API_ENDPOINTS } from '../config';
 
 const API_URL = API_ENDPOINTS.AUTH;
 
@@ -43,6 +42,13 @@ export const AuthProvider = ({ children }) => {
   });
   const [loading, setLoading] = useState(false);
 
+  // Fix: define logout with useCallback to avoid stale closure in useEffect
+  const logout = useCallback(() => {
+    setUser(null);
+    localStorage.removeItem('finance_app_user');
+    localStorage.removeItem('finance_login_time');
+  }, []);
+
   // Check for auto-logout every minute
   useEffect(() => {
     if (!user) return;
@@ -60,7 +66,7 @@ export const AuthProvider = ({ children }) => {
     }, 60000); // Check every minute
 
     return () => clearInterval(interval);
-  }, [user]);
+  }, [user, logout]); // Fix: logout is now in dependency array
 
   const register = async (userData) => {
     const response = await fetch(`${API_URL}/register`, {
@@ -193,12 +199,6 @@ export const AuthProvider = ({ children }) => {
     if (!response.ok) throw new Error(data.message || 'Reset failed');
     toast.success('Password reset successfully! Please login.');
   };
-
-  function logout() {
-    setUser(null);
-    localStorage.removeItem('finance_app_user');
-    localStorage.removeItem('finance_login_time');
-  }
 
   return (
     <AuthContext.Provider value={{ user, loading, register, verify, login, updateProfile, changePassword, forgotPassword, resetPassword, logout }}>

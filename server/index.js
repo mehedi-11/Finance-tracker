@@ -13,10 +13,9 @@ connectDB();
 
 const app = express();
 
-// Updated CORS to be more flexible for production
+// Fix: CORS — remove credentials:true when using wildcard origin
 app.use(cors({
-  origin: '*', // Allows all origins for now to ensure your deployment works
-  credentials: true,
+  origin: '*',
 }));
 
 app.use(express.json());
@@ -31,22 +30,22 @@ app.get('/', (req, res) => {
   res.send('Money Tracker API is running...');
 });
 
-const PORT = process.env.PORT || 5000;
-
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
-
-// 404 Handler
+// Fix: 404 Handler must be BEFORE app.listen()
 app.use((req, res) => {
   res.status(404).json({ message: `Route not found - ${req.originalUrl}` });
 });
 
-// Global Error Handler
+// Fix: Global Error Handler must be BEFORE app.listen()
 app.use((err, req, res, next) => {
   const statusCode = res.statusCode === 200 ? 500 : res.statusCode;
   res.status(statusCode).json({
     message: err.message,
     stack: process.env.NODE_ENV === 'production' ? null : err.stack,
   });
+});
+
+const PORT = process.env.PORT || 5000;
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });

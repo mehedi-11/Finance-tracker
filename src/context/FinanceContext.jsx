@@ -1,11 +1,10 @@
-import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import { API_ENDPOINTS } from '../config';
+import { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { useAuth } from './AuthContext';
 
 const FinanceContext = createContext();
 
 export const useFinance = () => useContext(FinanceContext);
-
-import { API_ENDPOINTS } from '../config';
 
 const API_URL = API_ENDPOINTS.FINANCE;
 
@@ -171,7 +170,11 @@ export const FinanceProvider = ({ children }) => {
       headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${user.token}` },
       body: JSON.stringify(loanData),
     });
-    if (response.ok) fetchFinanceData();
+    if (response.ok) {
+      const newLoan = await response.json();
+      fetchFinanceData();
+      return newLoan;
+    }
   };
 
   const deleteLoan = async (id) => {
@@ -347,11 +350,11 @@ export const FinanceProvider = ({ children }) => {
       return acc;
     }, {});
 
-  const pureGlobalIncome = transactions
-    .filter(t => t.type === 'income' && t.isPaid !== false && t.category !== 'Saving')
-    .reduce((sum, t) => sum + Number(t.amount), 0);
-
-  const totalSavings = pureGlobalIncome - globalTotals.expenses - totals.balance;
+  // Fix: totalSavings = sum of past months' (income - expense) excluding current cycle
+  const pastMonthsReports = getMonthlyReports().filter(report => {
+    return new Date(report.startDate) < cycleStart;
+  });
+  const totalSavings = Math.max(0, pastMonthsReports.reduce((sum, r) => sum + r.savings, 0) - globalSavingsUsed);
 
   const unpaidTransactions = currentCycleTransactions.filter(t => t.type === 'expense' && t.isPaid === false);
   const activeLoans = loans.filter(l => !l.isPaid).reduce((sum, l) => sum + Number(l.amount), 0);
