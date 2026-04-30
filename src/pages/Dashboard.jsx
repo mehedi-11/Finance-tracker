@@ -481,7 +481,7 @@ const StatCard = ({ icon: Icon, color, label, value, onClick, badgeText, badgeCo
       className={`relative overflow-hidden group bg-white border-none shadow-sm hover:shadow-md transition-all ${onClick ? 'cursor-pointer hover:-translate-y-1' : ''}`}
     >
       {onClick && (
-        <div className="absolute top-2 right-2 z-20">
+        <div className="absolute bottom-2 right-2 z-20">
           <div className="px-2 py-0.5 bg-yellow-400/20 backdrop-blur-md border border-yellow-400/20 rounded-lg">
             <span className="text-[8px] font-black uppercase tracking-tighter text-yellow-700">Click Me</span>
           </div>
