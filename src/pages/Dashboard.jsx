@@ -121,7 +121,7 @@ const Dashboard = () => {
                   {t('dashboard.hello')}, <br />
                   <span className="text-primary-600">{user?.name || 'User'}!</span>
                 </h1>
-                <p className="text-gray-500 text-sm md:text-lg font-medium max-w-md">
+                <p className="text-gray-500 text-sm md:text-lg font-medium max-w-md mx-auto md:mx-0">
                   {t('dashboard.welcome_msg')}
                 </p>
               </div>
@@ -488,21 +488,23 @@ const StatCard = ({ icon: Icon, color, label, value, onClick, badgeText, badgeCo
         </div>
       )}
       <div className={`absolute top-0 right-0 w-32 h-32 bg-${color}-50 rounded-full -mr-16 -mt-16 group-hover:scale-110 transition-transform`}></div>
-      <div className="flex items-start justify-between relative z-10">
-        <div>
-          <div className="flex items-center gap-2 mb-1">
-            <p className="text-gray-600 text-xs font-black uppercase tracking-wider">{label}</p>
-            {badgeText && (
-              <span className={`text-[10px] px-1.5 py-0.5 rounded-md font-bold uppercase ${badgeColor || 'bg-gray-100 text-gray-600'}`}>
-                {badgeText}
-              </span>
-            )}
+      <div className="flex flex-col items-center text-center md:flex-row md:items-start md:justify-between md:text-left relative z-10 gap-4">
+        <div className="order-2 md:order-1">
+          <div className="flex flex-col items-center md:items-start gap-1 mb-1">
+            <div className="flex items-center gap-2">
+              <p className="text-gray-600 text-xs font-black uppercase tracking-wider">{label}</p>
+              {badgeText && (
+                <span className={`text-[10px] px-1.5 py-0.5 rounded-md font-bold uppercase ${badgeColor || 'bg-gray-100 text-gray-600'}`}>
+                  {badgeText}
+                </span>
+              )}
+            </div>
           </div>
           <h2 className={`text-2xl font-black ${color === 'emerald' ? 'text-emerald-600' : color === 'red' ? 'text-red-600' : color === 'purple' ? 'text-purple-600' : color === 'amber' ? 'text-amber-600' : color === 'rose' ? 'text-rose-600' : 'text-gray-900'}`}>
             {formatCurrency(value || 0, user?.currency)}
           </h2>
         </div>
-        <div className={`w-12 h-12 bg-${color}-100 rounded-full flex items-center justify-center`}>
+        <div className={`w-12 h-12 bg-${color}-100 rounded-full flex items-center justify-center order-1 md:order-2`}>
           <Icon className={`text-${color}-600`} size={24} />
         </div>
       </div>

@@ -226,7 +226,7 @@ const Navbar = ({ setIsSidebarOpen }) => {
             <p className="text-sm font-black text-gray-900 leading-none whitespace-nowrap">{user?.name || 'User'}</p>
             <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest mt-1">Premium</p>
           </div>
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-primary-600 to-emerald-500 flex items-center justify-center font-bold text-white shadow-lg ring-2 ring-primary-50/50 shrink-0">
+          <div className="w-10 h-10 rounded-xl bg-primary-600 flex items-center justify-center font-bold text-white shadow-lg ring-2 ring-primary-50/50 shrink-0">
             {user?.name?.[0].toUpperCase() || user?.email?.[0].toUpperCase() || 'U'}
           </div>
         </Link>
