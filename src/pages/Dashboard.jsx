@@ -504,8 +504,8 @@ const StatCard = ({ icon: Icon, color, label, value, onClick, badgeText, badgeCo
             {formatCurrency(value || 0, user?.currency)}
           </h2>
         </div>
-        <div className={`w-12 h-12 bg-${color}-100 rounded-full flex items-center justify-center order-1 md:order-2`}>
-          <Icon className={`text-${color}-600`} size={24} />
+        <div className={`w-14 h-14 bg-${color}-100 rounded-full flex items-center justify-center order-1 md:order-2 transition-transform group-hover:scale-110 shadow-sm shadow-${color}-600/5`}>
+          <Icon className={`text-${color}-600`} size={28} />
         </div>
       </div>
     </Card>
