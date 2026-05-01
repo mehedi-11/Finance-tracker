@@ -356,7 +356,7 @@ export const FinanceProvider = ({ children }) => {
   });
   const totalSavings = Math.max(0, pastMonthsReports.reduce((sum, r) => sum + r.savings, 0) - globalSavingsUsed);
 
-  const unpaidTransactions = currentCycleTransactions.filter(t => t.type === 'expense' && t.isPaid === false);
+  const unpaidTransactions = transactions.filter(t => t.type === 'expense' && t.isPaid === false);
   const activeLoans = loans.filter(l => !l.isPaid).reduce((sum, l) => sum + Number(l.amount), 0);
 
   return (

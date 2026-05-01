@@ -18,8 +18,11 @@ import {
   StickyNote,
   PiggyBank,
   AlertCircle,
+  AlertTriangle,
+  Check,
   X
 } from 'lucide-react';
+import toast from 'react-hot-toast';
 import { 
   BarChart, 
   Bar, 
@@ -48,7 +51,8 @@ const Dashboard = () => {
     getCurrentCycleRange,
     totalSavings,
     unpaidTransactions,
-    activeLoans
+    activeLoans,
+    updateTransaction
   } = useFinance();
   const { user } = useAuth();
   const { t } = useTranslation();
@@ -59,6 +63,29 @@ const Dashboard = () => {
   const [isUnpaidModalOpen, setIsUnpaidModalOpen] = useState(false);
   const [isSavingsModalOpen, setIsSavingsModalOpen] = useState(false);
   const [isLoansModalOpen, setIsLoansModalOpen] = useState(false);
+  const [warningModal, setWarningModal] = useState({ isOpen: false, message: '' });
+
+  const handlePayTransaction = async (transaction) => {
+    if (transaction.amount > totals.balance) {
+      setWarningModal({
+        isOpen: true,
+        message: `You cannot pay this expense because it exceeds your current month's balance (${formatCurrency(totals.balance, user?.currency)}).`
+      });
+      return;
+    }
+
+    try {
+      await updateTransaction(transaction._id, {
+        ...transaction,
+        isPaid: true,
+        date: new Date().toISOString() // Move to current month as per user request
+      });
+      toast.success('Expense paid successfully!');
+    } catch (error) {
+      toast.error('Failed to pay expense');
+      console.error(error);
+    }
+  };
 
   const { getMonthlyReports, loans: allLoansData } = useFinance();
   const allReports = getMonthlyReports();
@@ -344,7 +371,15 @@ const Dashboard = () => {
                             <h4 className="font-bold text-gray-900">{t.description}</h4>
                             <p className="text-xs text-gray-500 font-medium">{t.category} • {new Date(t.date).toLocaleDateString()}</p>
                           </div>
-                          <span className="font-black text-rose-600">{formatCurrency(t.amount, user?.currency)}</span>
+                          <div className="flex items-center gap-4">
+                            <span className="font-black text-rose-600">{formatCurrency(t.amount, user?.currency)}</span>
+                            <button
+                              onClick={() => handlePayTransaction(t)}
+                              className="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-[10px] font-black uppercase rounded-lg flex items-center gap-1.5 transition-all shadow-sm shadow-emerald-600/20"
+                            >
+                              <Check size={12} strokeWidth={4} /> Pay Now
+                            </button>
+                          </div>
                         </div>
                       ))}
                     </div>
@@ -464,6 +499,31 @@ const Dashboard = () => {
                     </div>
                   )}
                 </div>
+              </motion.div>
+            </div>
+          )}
+        </AnimatePresence>,
+        document.body
+      )}
+
+      {/* Warning Modal */}
+      {createPortal(
+        <AnimatePresence>
+          {warningModal.isOpen && (
+            <div className="fixed inset-0 z-[20000] flex items-center justify-center p-4">
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setWarningModal({ isOpen: false, message: '' })} className="absolute inset-0 bg-gray-900/60 backdrop-blur-md" />
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.9 }}
+                className="relative w-full max-w-sm bg-white rounded-2xl p-8 text-center shadow-2xl"
+              >
+                <div className="w-20 h-20 bg-amber-50 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                  <AlertTriangle className="text-amber-500" size={40} />
+                </div>
+                <h3 className="text-xl font-black text-gray-900 mb-2">Insufficient Balance</h3>
+                <p className="text-gray-500 text-sm font-medium mb-8 leading-relaxed">{warningModal.message}</p>
+                <Button onClick={() => setWarningModal({ isOpen: false, message: '' })} className="w-full bg-amber-600 hover:bg-amber-700 text-white border-none py-4 font-black rounded-xl">I Understand</Button>
               </motion.div>
             </div>
           )}

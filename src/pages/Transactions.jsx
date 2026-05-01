@@ -10,7 +10,8 @@ import {
   ArrowDownRight,
   X,
   Filter,
-  AlertTriangle
+  AlertTriangle,
+  Check
 } from 'lucide-react';
 import { useFinance } from '../context/FinanceContext';
 import { useAuth } from '../context/AuthContext';
@@ -21,7 +22,16 @@ import { useTranslation } from 'react-i18next';
 
 const Transactions = () => {
   const { t } = useTranslation();
-  const { transactions, addTransaction, deleteTransaction, updateTransaction, loans, getCurrentCycleRange, totals } = useFinance();
+  const { 
+    transactions, 
+    addTransaction, 
+    deleteTransaction, 
+    updateTransaction, 
+    loans, 
+    getCurrentCycleRange, 
+    totals,
+    totalSavings
+  } = useFinance();
   const { user } = useAuth();
 
   // Combine default categories with active loans for expense type
@@ -53,7 +63,8 @@ const Transactions = () => {
 
   const filteredTransactions = transactions.filter(t => {
     const d = new Date(t.date);
-    const cycleMatch = d >= cycleStart && d <= cycleEnd;
+    const isUnpaidExpense = t.type === 'expense' && t.isPaid === false;
+    const cycleMatch = isUnpaidExpense || (d >= cycleStart && d <= cycleEnd);
     const searchMatch = t.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
       t.category.toLowerCase().includes(searchTerm.toLowerCase());
     const typeMatch = filterType === 'all' || t.type === filterType;
@@ -110,6 +121,22 @@ const Transactions = () => {
         }
       }
 
+      // Savings Availability Check
+      if (data.type === 'income' && data.category === 'Saving') {
+        let diff = data.amount;
+        if (editingTransaction && editingTransaction.type === 'income' && editingTransaction.category === 'Saving') {
+          diff = data.amount - editingTransaction.amount;
+        }
+        
+        if (diff > totalSavings) {
+          setWarningModal({ 
+            isOpen: true, 
+            message: `You don't have enough savings to use. Available savings: ${formatCurrency(totalSavings, user?.currency)}` 
+          });
+          return;
+        }
+      }
+
       if (editingTransaction) {
         await updateTransaction(editingTransaction._id, data);
         toast.success('Transaction updated!');
@@ -138,6 +165,28 @@ const Transactions = () => {
   };
 
 
+
+  const handlePayNow = async (transaction) => {
+    if (transaction.amount > totals.balance) {
+      setWarningModal({ 
+        isOpen: true, 
+        message: `You cannot pay this expense because it exceeds your current month's balance (${formatCurrency(totals.balance, user?.currency)}).` 
+      });
+      return;
+    }
+
+    try {
+      await updateTransaction(transaction._id, {
+        ...transaction,
+        isPaid: true,
+        date: new Date().toISOString() // Move to current month
+      });
+      toast.success('Expense paid successfully!');
+    } catch (error) {
+      toast.error('Failed to pay expense');
+      console.error(error);
+    }
+  };
 
   return (
     <>
@@ -235,6 +284,15 @@ const Transactions = () => {
                       </td>
                       <td className="px-4 md:px-6 py-4 text-right">
                         <div className="flex items-center justify-end gap-1 md:gap-2">
+                          {t.type === 'expense' && t.isPaid === false && (
+                            <button
+                              onClick={() => handlePayNow(t)}
+                              className="p-2 hover:bg-emerald-50 rounded-xl text-emerald-600 transition-colors"
+                              title="Pay Now"
+                            >
+                              <Check size={18} strokeWidth={3} />
+                            </button>
+                          )}
                           <button
                             onClick={() => handleOpenModal(t)}
                             className="p-2 hover:bg-primary-50 rounded-xl text-gray-400 hover:text-primary-600 transition-colors"
