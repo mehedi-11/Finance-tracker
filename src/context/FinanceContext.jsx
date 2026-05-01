@@ -351,6 +351,9 @@ export const FinanceProvider = ({ children }) => {
 
   const categoryTotals = currentCycleTransactions
     .filter(t => t.type === 'expense' && t.isPaid !== false)
+    .reduce((acc, t) => {
+      acc[t.category] = (acc[t.category] || 0) + Number(t.amount);
+      return acc;
     }, {});
   
   // Advanced Insights Logic
