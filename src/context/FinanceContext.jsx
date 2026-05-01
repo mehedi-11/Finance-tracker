@@ -152,6 +152,17 @@ export const FinanceProvider = ({ children }) => {
     }
   };
 
+  const clearTransactions = async () => {
+    const response = await fetch(`${API_URL}/transactions`, {
+      method: 'DELETE',
+      headers: { 'Authorization': `Bearer ${user.token}` }
+    });
+    if (response.ok) {
+      setTransactions([]);
+      localStorage.removeItem('finance_transactions');
+    }
+  };
+
 
 
   // Loans CRUD
@@ -185,6 +196,17 @@ export const FinanceProvider = ({ children }) => {
     if (response.ok) fetchFinanceData();
   };
 
+  const clearLoans = async () => {
+    const response = await fetch(API_ENDPOINTS.LOANS, {
+      method: 'DELETE',
+      headers: { 'Authorization': `Bearer ${user.token}` }
+    });
+    if (response.ok) {
+      setLoans([]);
+      localStorage.removeItem('finance_loans');
+    }
+  };
+
 
 
   const setBudget = async (category, amount) => {
@@ -209,6 +231,17 @@ export const FinanceProvider = ({ children }) => {
       headers: { 'Authorization': `Bearer ${user.token}` }
     });
     if (response.ok) setBudgets(prev => prev.filter(b => b._id !== id));
+  };
+
+  const clearBudgets = async () => {
+    const response = await fetch(`${API_URL}/budgets`, {
+      headers: { 'Authorization': `Bearer ${user.token}` },
+      method: 'DELETE'
+    });
+    if (response.ok) {
+      setBudgets([]);
+      localStorage.removeItem('finance_budgets');
+    }
   };
 
 
@@ -318,10 +351,72 @@ export const FinanceProvider = ({ children }) => {
 
   const categoryTotals = currentCycleTransactions
     .filter(t => t.type === 'expense' && t.isPaid !== false)
-    .reduce((acc, t) => {
-      acc[t.category] = (acc[t.category] || 0) + Number(t.amount);
-      return acc;
     }, {});
+  
+  // Advanced Insights Logic
+  const getSpendingForecast = () => {
+    const monthlyReports = getMonthlyReports();
+    if (monthlyReports.length < 2) return totals.expenses; // Not enough data
+    
+    // Simple moving average for forecast
+    const pastExpenses = monthlyReports.slice(0, 3).map(r => r.expense);
+    const averageExpense = pastExpenses.reduce((a, b) => a + b, 0) / pastExpenses.length;
+    
+    // Add 5% buffer for inflation/variation
+    return Math.round(averageExpense * 1.05);
+  };
+
+  const getAIAdvice = () => {
+    const advice = [];
+    const forecast = getSpendingForecast();
+    
+    // 1. Budget Overrun Check
+    budgets.forEach(b => {
+      const spent = categoryTotals[b.category] || 0;
+      if (spent > b.amount) {
+        advice.push({
+          type: 'danger',
+          text: `You've exceeded your ${b.category} budget by ${Math.round((spent/b.amount - 1) * 100)}%. Consider cutting back immediately.`
+        });
+      } else if (spent > b.amount * 0.8) {
+        advice.push({
+          type: 'warning',
+          text: `Alert: You've used ${Math.round((spent/b.amount) * 100)}% of your ${b.category} budget.`
+        });
+      }
+    });
+
+    // 2. Spending Trend Advice
+    if (totals.expenses > forecast * 0.9) {
+      advice.push({
+        type: 'warning',
+        text: "Your spending this month is nearing your predicted limit. Try to defer non-essential purchases."
+      });
+    }
+
+    // 3. Savings Advice
+    const savingsRate = totals.income > 0 ? (totals.balance / (totals.income + totals.savingsUsed)) * 100 : 0;
+    if (savingsRate < 10 && totals.income > 0) {
+      advice.push({
+        type: 'info',
+        text: "Tip: Your saving rate is below 10%. Try setting aside a small fixed amount at the start of next month."
+      });
+    } else if (savingsRate > 30) {
+      advice.push({
+        type: 'success',
+        text: "Excellent work! You are saving over 30% of your income. Consider investing the surplus."
+      });
+    }
+
+    if (advice.length === 0) {
+      advice.push({
+        type: 'success',
+        text: "Your finances look healthy! Keep tracking to stay on top of your goals."
+      });
+    }
+
+    return advice;
+  };
 
   // Fix: totalSavings = sum of past months' (income - expense) excluding current cycle
   const pastMonthsReports = getMonthlyReports().filter(report => {
@@ -344,10 +439,14 @@ export const FinanceProvider = ({ children }) => {
       addLoan,
       deleteLoan,
       updateLoan,
+      clearTransactions,
+      clearLoans,
+      clearBudgets,
       setBudget,
       deleteBudget,
-
       getMonthlyReports,
+      getSpendingForecast,
+      getAIAdvice,
       totals,
       globalTotals,
       categoryTotals,

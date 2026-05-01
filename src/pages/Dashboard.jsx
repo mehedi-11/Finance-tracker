@@ -52,7 +52,9 @@ const Dashboard = () => {
     totalSavings,
     unpaidTransactions,
     activeLoans,
-    updateTransaction
+    updateTransaction,
+    getSpendingForecast,
+    getAIAdvice
   } = useFinance();
   const { user } = useAuth();
   const { t } = useTranslation();
@@ -116,8 +118,12 @@ const Dashboard = () => {
 
   const barData = [
     { name: t('common.income'), amount: monthTotals.income, fill: '#10b981' },
-    { name: t('common.expense'), amount: monthTotals.expenses, fill: '#ef4444' }
+    { name: t('common.expense'), amount: monthTotals.expenses, fill: '#ef4444' },
+    { name: 'Forecast', amount: getSpendingForecast(), fill: '#6366f1' }
   ];
+
+  const aiAdvice = getAIAdvice();
+  const forecastAmount = getSpendingForecast();
 
 
   return (
@@ -216,6 +222,65 @@ const Dashboard = () => {
             value={unpaidTransactions.reduce((sum, t) => sum + Number(t.amount), 0)} 
             onClick={() => setIsUnpaidModalOpen(true)}
           />
+
+          <StatCard 
+            icon={TrendingUp} 
+            color="indigo" 
+            label="Spending Forecast" 
+            value={forecastAmount} 
+            badgeText="Next Month"
+            badgeColor="bg-indigo-100 text-indigo-700"
+          />
+        </div>
+
+        {/* AI Financial Advisor Section */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <Card className="lg:col-span-2 bg-gradient-to-br from-white to-primary-50/30 border-none shadow-sm p-8">
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-xl font-bold flex items-center gap-3 text-gray-900">
+                <div className="w-10 h-10 bg-primary-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-primary-600/20">
+                  <BarChart3 size={20} />
+                </div>
+                AI Financial Insights
+              </h3>
+              <span className="text-[10px] font-black uppercase tracking-widest text-primary-600 bg-primary-50 px-3 py-1 rounded-full">Alpha Feature</span>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {aiAdvice.map((advice, idx) => (
+                <motion.div 
+                  key={idx}
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: idx * 0.1 }}
+                  className={`p-4 rounded-2xl border flex gap-4 ${
+                    advice.type === 'danger' ? 'bg-rose-50 border-rose-100 text-rose-800' :
+                    advice.type === 'warning' ? 'bg-amber-50 border-amber-100 text-amber-800' :
+                    advice.type === 'success' ? 'bg-emerald-50 border-emerald-100 text-emerald-800' :
+                    'bg-blue-50 border-blue-100 text-blue-800'
+                  }`}
+                >
+                  <div className="shrink-0 pt-0.5">
+                    {advice.type === 'danger' || advice.type === 'warning' ? <AlertCircle size={18} /> : <Check size={18} />}
+                  </div>
+                  <p className="text-xs font-bold leading-relaxed">{advice.text}</p>
+                </motion.div>
+              ))}
+            </div>
+          </Card>
+
+          <Card className="bg-white border-none shadow-sm flex flex-col justify-center p-8 text-center relative overflow-hidden group">
+            <div className="absolute -bottom-4 -right-4 text-primary-600/5 group-hover:scale-110 transition-transform duration-700">
+              <TrendingUp size={120} />
+            </div>
+            <p className="text-[10px] uppercase font-black text-gray-400 tracking-widest mb-4">Savings Potential</p>
+            <h4 className="text-3xl font-black text-gray-900 mb-2">
+              {formatCurrency(Math.max(0, totals.income - forecastAmount), user?.currency)}
+            </h4>
+            <p className="text-xs text-gray-500 font-medium leading-relaxed">
+              Based on your current habits, you could potentially save this amount next month.
+            </p>
+          </Card>
         </div>
 
         {/* Extra Insights */}
