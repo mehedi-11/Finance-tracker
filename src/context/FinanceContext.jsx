@@ -152,16 +152,7 @@ export const FinanceProvider = ({ children }) => {
     }
   };
 
-  const clearTransactions = async () => {
-    const response = await fetch(`${API_URL}/transactions`, {
-      method: 'DELETE',
-      headers: { 'Authorization': `Bearer ${user.token}` }
-    });
-    if (response.ok) {
-      setTransactions([]);
-      localStorage.removeItem('finance_transactions');
-    }
-  };
+
 
   // Loans CRUD
   const addLoan = async (loanData) => {
@@ -194,16 +185,7 @@ export const FinanceProvider = ({ children }) => {
     if (response.ok) fetchFinanceData();
   };
 
-  const clearLoans = async () => {
-    const response = await fetch(API_ENDPOINTS.LOANS, {
-      method: 'DELETE',
-      headers: { 'Authorization': `Bearer ${user.token}` }
-    });
-    if (response.ok) {
-      setLoans([]);
-      localStorage.removeItem('finance_loans');
-    }
-  };
+
 
   const setBudget = async (category, amount) => {
     const response = await fetch(`${API_URL}/budgets`, {
@@ -229,16 +211,7 @@ export const FinanceProvider = ({ children }) => {
     if (response.ok) setBudgets(prev => prev.filter(b => b._id !== id));
   };
 
-  const clearBudgets = async () => {
-    const response = await fetch(`${API_URL}/budgets`, {
-      method: 'DELETE',
-      headers: { 'Authorization': `Bearer ${user.token}` }
-    });
-    if (response.ok) {
-      setBudgets([]);
-      localStorage.removeItem('finance_budgets');
-    }
-  };
+
 
   // Aggregations
   const getMonthlyReports = () => {
@@ -368,37 +341,12 @@ export const FinanceProvider = ({ children }) => {
       addTransaction, 
       deleteTransaction, 
       updateTransaction,
-      clearTransactions,
       addLoan,
       deleteLoan,
       updateLoan,
-      clearLoans,
       setBudget,
       deleteBudget,
-      clearBudgets,
-      deleteMonthData: async (monthKey) => {
-        // Delete Transactions
-        const transToDelete = transactions.filter(t => {
-          const d = new Date(t.date);
-          return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}` === monthKey;
-        });
-        
-        for (const t of transToDelete) {
-          await deleteTransaction(t._id);
-        }
 
-        // Delete Loans
-        const loansToDelete = loans.filter(l => {
-          const d = new Date(l.createdAt || l.expectedPayDate);
-          return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}` === monthKey;
-        });
-        
-        for (const l of loansToDelete) {
-          await deleteLoan(l._id);
-        }
-        
-        fetchFinanceData();
-      },
       getMonthlyReports,
       totals,
       globalTotals,
