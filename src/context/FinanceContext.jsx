@@ -326,9 +326,9 @@ export const FinanceProvider = ({ children }) => {
   });
 
   const currentIncomeTransactions = currentCycleTransactions.filter(t => t.type === 'income' && t.isPaid !== false);
-  const regularIncome = currentIncomeTransactions.filter(t => t.category !== 'Saving' && !t.category.includes('(Loan)')).reduce((sum, t) => sum + Number(t.amount), 0);
+  const regularIncome = currentIncomeTransactions.filter(t => t.category !== 'Saving' && !t.category.toLowerCase().includes('loan')).reduce((sum, t) => sum + Number(t.amount), 0);
   const savingsUsed = currentIncomeTransactions.filter(t => t.category === 'Saving').reduce((sum, t) => sum + Number(t.amount), 0);
-  const loansReceived = currentIncomeTransactions.filter(t => t.category.includes('(Loan)')).reduce((sum, t) => sum + Number(t.amount), 0);
+  const loansReceived = currentIncomeTransactions.filter(t => t.category.toLowerCase().includes('loan')).reduce((sum, t) => sum + Number(t.amount), 0);
 
   const totals = {
     income: regularIncome,
@@ -340,9 +340,9 @@ export const FinanceProvider = ({ children }) => {
   totals.balance = totals.income + totals.savingsUsed + totals.loansReceived - totals.expenses;
 
   const globalIncomeTransactions = transactions.filter(t => t.type === 'income' && t.isPaid !== false);
-  const globalRegularIncome = globalIncomeTransactions.filter(t => t.category !== 'Saving' && !t.category.includes('(Loan)')).reduce((sum, t) => sum + Number(t.amount), 0);
+  const globalRegularIncome = globalIncomeTransactions.filter(t => t.category !== 'Saving' && !t.category.toLowerCase().includes('loan')).reduce((sum, t) => sum + Number(t.amount), 0);
   const globalSavingsUsed = globalIncomeTransactions.filter(t => t.category === 'Saving').reduce((sum, t) => sum + Number(t.amount), 0);
-  const globalLoansReceived = globalIncomeTransactions.filter(t => t.category.includes('(Loan)')).reduce((sum, t) => sum + Number(t.amount), 0);
+  const globalLoansReceived = globalIncomeTransactions.filter(t => t.category.toLowerCase().includes('loan')).reduce((sum, t) => sum + Number(t.amount), 0);
 
   const globalTotals = {
     income: globalRegularIncome,
