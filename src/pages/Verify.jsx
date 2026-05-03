@@ -5,8 +5,10 @@ import { ShieldCheck, ArrowRight, RotateCw } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { Button, Input, Card } from '../components/ui';
 import toast from 'react-hot-toast';
+import { useTranslation } from 'react-i18next';
 
 const Verify = () => {
+  const { t } = useTranslation();
   const [code, setCode] = useState('');
   const [loading, setLoading] = useState(false);
   const [resending, setResending] = useState(false);
