@@ -13,7 +13,7 @@ import { useFinance } from '../context/FinanceContext';
 import { useAuth } from '../context/AuthContext';
 import { useTranslation } from 'react-i18next';
 import { Card, Button } from '../components/ui';
-import { formatCurrency } from '../utils/helpers';
+import { formatCurrency, currencies } from '../utils/helpers';
 import toast from 'react-hot-toast';
 
 import { jsPDF } from 'jspdf';
