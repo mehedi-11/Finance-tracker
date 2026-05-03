@@ -2,10 +2,19 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { TrendingUp, Shield, BarChart3, Zap, ArrowRight, Wallet } from 'lucide-react';
 import { Button } from '../components/ui';
+import { useTranslation } from 'react-i18next';
+import SEO from '../components/SEO';
 
 const Landing = () => {
+  const { t } = useTranslation();
   return (
     <div className="min-h-screen flex flex-col items-center bg-white">
+      <SEO 
+        title="Welcome" 
+        description="Master your personal finances with Money Tracker. Track expenses, manage budgets, and plan your savings with intelligence and style."
+        keywords="money tracker, finance tracker, expense manager, budget planner"
+      />
+
       {/* Navbar Placeholder for Brand */}
       <nav className="w-full max-w-7xl px-8 py-6 flex items-center justify-between">
         <div className="flex items-center gap-3">

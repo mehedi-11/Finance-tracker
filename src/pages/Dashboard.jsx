@@ -41,6 +41,7 @@ import { useAuth } from '../context/AuthContext';
 import { Button, Card, Badge } from '../components/ui';
 import { formatCurrency } from '../utils/helpers';
 import { useTranslation } from 'react-i18next';
+import SEO from '../components/SEO';
 
 const Dashboard = () => {
   const { 
@@ -132,6 +133,10 @@ const Dashboard = () => {
 
   return (
     <>
+      <SEO 
+        title="Dashboard" 
+        description="View your financial summary, recent activities, and AI-powered insights on your personal Money Tracker dashboard."
+      />
       <div className="space-y-8 animate-fade-in pb-20">
         {/* Clean White Hero Section */}
         <div className="relative mb-8">

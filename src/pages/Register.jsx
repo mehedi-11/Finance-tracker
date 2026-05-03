@@ -5,9 +5,12 @@ import { UserPlus, ArrowLeft } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { Button, Input, Card } from '../components/ui';
 import { currencies } from '../utils/helpers';
+import { useTranslation } from 'react-i18next';
+import SEO from '../components/SEO';
 import toast from 'react-hot-toast';
 
 const Register = () => {
+  const { t } = useTranslation();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -49,6 +52,10 @@ const Register = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 bg-gray-50 overflow-y-auto py-10">
+      <SEO 
+        title="Create Account" 
+        description="Join Money Tracker today and start your journey towards financial freedom with our smart management tools."
+      />
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}

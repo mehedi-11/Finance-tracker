@@ -4,11 +4,12 @@ import { motion } from 'framer-motion';
 import { KeyRound, ArrowLeft, Mail } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { Button, Input, Card } from '../components/ui';
+import { useTranslation } from 'react-i18next';
+import SEO from '../components/SEO';
 import toast from 'react-hot-toast';
 
-
-
 const ForgotPassword = () => {
+  const { t } = useTranslation();
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const [sent, setSent] = useState(false);
@@ -33,6 +34,10 @@ const ForgotPassword = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 bg-gray-50">
+      <SEO 
+        title="Forgot Password" 
+        description="Recover your Money Tracker account access safely and securely."
+      />
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}

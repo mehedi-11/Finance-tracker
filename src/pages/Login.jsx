@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { LogIn, ArrowLeft, ShieldCheck } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { Button, Input, Card } from '../components/ui';
+import SEO from '../components/SEO';
 import toast from 'react-hot-toast';
 
 const Login = () => {
@@ -35,6 +36,10 @@ const Login = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 bg-gray-50">
+      <SEO 
+        title="Login" 
+        description="Securely log in to your Money Tracker account and manage your financial freedom."
+      />
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
