@@ -38,7 +38,7 @@ import {
 } from 'recharts';
 import { useFinance } from '../context/FinanceContext';
 import { useAuth } from '../context/AuthContext';
-import { Button, Card } from '../components/ui';
+import { Button, Card, Badge } from '../components/ui';
 import { formatCurrency } from '../utils/helpers';
 import { useTranslation } from 'react-i18next';
 
