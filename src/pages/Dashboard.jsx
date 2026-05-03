@@ -382,7 +382,9 @@ const Dashboard = () => {
                       <TrendingUp size={32} />
                    </div>
                    <p className="text-sm font-bold text-gray-400">Set a savings goal to start tracking!</p>
-                   <Button variant="ghost" className="mt-4 text-primary-600 font-black text-xs uppercase tracking-widest">Create Goal Now</Button>
+                   <Link to="/savings">
+                     <Button variant="ghost" className="mt-4 text-primary-600 font-black text-xs uppercase tracking-widest">{t('savings.new_goal')}</Button>
+                   </Link>
                 </div>
               )}
             </div>
