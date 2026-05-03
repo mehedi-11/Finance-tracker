@@ -11,8 +11,10 @@ import { useAuth } from '../context/AuthContext';
 import { Card, Badge, Button } from '../components/ui';
 import { formatCurrency } from '../utils/helpers';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 
 const CalendarView = () => {
+  const { t } = useTranslation();
   const { transactions, loans } = useFinance();
   const { user } = useAuth();
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -50,9 +52,9 @@ const CalendarView = () => {
         <div>
           <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-3">
             <CalendarIcon className="text-primary-600" size={32} />
-            Bill Calendar
+            {t('calendar.title')}
           </h1>
-          <p className="text-gray-500 font-medium">Track your upcoming payments and dues.</p>
+          <p className="text-gray-500 font-medium">{t('calendar.subtitle')}</p>
         </div>
         <div className="flex items-center gap-2 bg-white p-1 rounded-2xl shadow-sm border border-gray-100">
            <button onClick={prevMonth} className="p-2 hover:bg-gray-50 rounded-xl text-gray-400 transition-colors"><ChevronLeft size={20} /></button>
@@ -105,7 +107,7 @@ const CalendarView = () => {
         <Card className="p-6 bg-white border-none shadow-sm">
            <h3 className="text-lg font-bold text-gray-900 mb-6 flex items-center gap-2">
              <AlertCircle className="text-rose-500" size={20} />
-             Upcoming Unpaid Dues
+             {t('calendar.upcoming_dues')}
            </h3>
            <div className="space-y-4">
               {transactions.filter(t => t.type === 'expense' && t.isPaid === false).slice(0, 5).map(t => (
@@ -118,7 +120,7 @@ const CalendarView = () => {
                 </div>
               ))}
               {transactions.filter(t => t.type === 'expense' && t.isPaid === false).length === 0 && (
-                <p className="text-center py-6 text-sm font-bold text-gray-400">All bills are paid! 🎉</p>
+                <p className="text-center py-6 text-sm font-bold text-gray-400">{t('calendar.all_paid')}</p>
               )}
            </div>
         </Card>

@@ -321,15 +321,15 @@ const Dashboard = () => {
                 </svg>
                 <div className="absolute inset-0 flex flex-col items-center justify-center">
                   <span className="text-3xl font-black text-gray-900">{health.score}</span>
-                  <span className="text-[8px] font-black uppercase text-gray-400 tracking-tighter">Points</span>
+                  <span className="text-[8px] font-black uppercase text-gray-400 tracking-tighter">{t('common.points')}</span>
                 </div>
               </div>
 
               <Badge variant={health.color} className="px-6 py-2 text-xs font-black uppercase tracking-widest mb-4">
-                {health.status}
+                {t(`health.${health.status.toLowerCase()}`)}
               </Badge>
               <p className="text-[10px] text-gray-500 font-bold leading-relaxed px-4">
-                Based on your savings rate, budget discipline, and debt management.
+                {t('health.subtitle')}
               </p>
             </div>
           </Card>
@@ -343,9 +343,11 @@ const Dashboard = () => {
                 <div className="w-10 h-10 bg-emerald-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-emerald-600/20">
                   <TrendingUp size={20} />
                 </div>
-                Active Savings Goals
+                {t('savings.active_goals')}
               </h3>
-              <Button variant="ghost" size="sm" className="text-primary-600 font-bold hover:bg-primary-50">View All Goals</Button>
+              <Link to="/savings">
+                <Button variant="ghost" size="sm" className="text-primary-600 font-bold hover:bg-primary-50">{t('dashboard.view_all')}</Button>
+              </Link>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

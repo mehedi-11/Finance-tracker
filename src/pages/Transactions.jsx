@@ -409,8 +409,8 @@ const Transactions = () => {
                       <div className="flex items-center gap-3">
                         <Repeat size={18} className="text-primary-600" />
                         <div>
-                          <p className="text-sm font-bold text-gray-900">Recurring</p>
-                          <p className="text-[10px] text-gray-500 font-medium leading-none">Repeat every month</p>
+                          <p className="text-sm font-bold text-gray-900">{t('recurring.label')}</p>
+                          <p className="text-[10px] text-gray-500 font-medium leading-none">{t('recurring.subtitle')}</p>
                         </div>
                       </div>
                       <button
@@ -423,7 +423,7 @@ const Transactions = () => {
                     </div>
 
                     <Button type="submit" className="w-full py-4 text-lg font-bold mt-4">
-                      {editingTransaction ? 'Update Record' : 'Save Transaction'}
+                      {editingTransaction ? t('common.edit') : t('common.save')}
                     </Button>
                   </form>
                 </div>

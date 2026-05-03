@@ -15,6 +15,7 @@
     "add_new": "Add New",
     "search": "Search",
     "save": "Save",
+    "points": "Points",
     "cancel": "Cancel",
     "edit": "Edit",
     "delete": "Delete",
@@ -98,5 +99,38 @@
     "faq_2_a": "Yes, you can export reports from the Reports page.",
     "email_support": "Email Support",
     "live_chat": "Live Chat"
+  },
+  "savings": {
+    "title": "My Savings",
+    "subtitle": "Manage your goals and track unspent money.",
+    "active_goals": "Active Goals",
+    "completed_goals": "Completed Goals",
+    "new_goal": "New Goal",
+    "goal_title": "Goal Title",
+    "target_amount": "Target Amount",
+    "deadline": "Deadline",
+    "history": "Savings History",
+    "available_savings": "Total Available Savings"
+  },
+  "health": {
+    "score": "Financial Health Score",
+    "excellent": "Excellent",
+    "good": "Good",
+    "fair": "Fair",
+    "poor": "Poor",
+    "savings_rate": "Savings Rate",
+    "budget_adherence": "Budget Adherence",
+    "debt_ratio": "Debt-to-Income Ratio",
+    "subtitle": "Based on your savings rate, budget discipline, and debt management."
+  },
+  "calendar": {
+    "title": "Bill Calendar",
+    "subtitle": "Track your upcoming payments and dues.",
+    "upcoming_dues": "Upcoming Unpaid Dues",
+    "all_paid": "All bills are paid!"
+  },
+  "recurring": {
+    "label": "Recurring",
+    "subtitle": "Repeat every month"
   }
 }

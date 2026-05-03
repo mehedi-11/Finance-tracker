@@ -66,10 +66,10 @@ const Savings = () => {
             <PiggyBank className="text-primary-600" size={32} />
             {t('savings.title') || 'My Savings'}
           </h1>
-          <p className="text-gray-500 font-medium">Manage your goals and track unspent money.</p>
+          <p className="text-gray-500 font-medium">{t('savings.subtitle')}</p>
         </div>
         <Button onClick={() => setIsModalOpen(true)} className="flex items-center gap-2">
-          <Plus size={20} /> New Goal
+          <Plus size={20} /> {t('savings.new_goal')}
         </Button>
       </div>
 
@@ -78,7 +78,7 @@ const Savings = () => {
           <div className="absolute top-0 right-0 w-64 h-64 bg-primary-50 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
           <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6 text-center md:text-left">
             <div className="flex flex-col items-center md:items-start">
-              <p className="text-gray-500 font-bold uppercase tracking-widest text-xs mb-2">Total Available Savings</p>
+              <p className="text-gray-500 font-bold uppercase tracking-widest text-xs mb-2">{t('savings.available_savings')}</p>
               <h2 className="text-4xl md:text-6xl font-black text-gray-900">{formatCurrency(totalSavings, user?.currency)}</h2>
             </div>
             <div className="text-center md:text-right">
@@ -90,9 +90,9 @@ const Savings = () => {
         </Card>
 
         <Card className="bg-gradient-to-br from-primary-600 to-primary-700 p-8 border-none shadow-lg shadow-primary-600/20 text-white flex flex-col justify-center text-center">
-            <p className="text-[10px] font-black uppercase tracking-widest text-primary-100 mb-4">Active Goals</p>
+            <p className="text-[10px] font-black uppercase tracking-widest text-primary-100 mb-4">{t('savings.active_goals')}</p>
             <h3 className="text-4xl font-black mb-2">{goals.length}</h3>
-            <p className="text-xs text-primary-50 font-medium">You have {goals.filter(g => g.currentAmount >= g.targetAmount).length} completed goals.</p>
+            <p className="text-xs text-primary-50 font-medium">{t('savings.completed_goals')}: {goals.filter(g => g.currentAmount >= g.targetAmount).length}</p>
         </Card>
       </div>
 
@@ -100,7 +100,7 @@ const Savings = () => {
       <div className="space-y-6">
         <h2 className="text-2xl font-black text-gray-900 flex items-center gap-3">
           <Target className="text-primary-600" />
-          Active Savings Goals
+          {t('savings.active_goals')}
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {goals.map(goal => {
@@ -128,7 +128,7 @@ const Savings = () => {
                 </div>
                 <h4 className="text-lg font-bold text-gray-900 mb-1">{goal.title}</h4>
                 <div className="flex justify-between items-center text-[10px] font-black text-gray-400 uppercase tracking-widest mb-4">
-                  <span>Progress</span>
+                  <span>{t('budget.progress')}</span>
                   <span>{formatCurrency(goal.currentAmount, user?.currency)} / {formatCurrency(goal.targetAmount, user?.currency)}</span>
                 </div>
                 <div className="h-3 w-full bg-gray-100 rounded-full overflow-hidden mb-2">
@@ -139,8 +139,8 @@ const Savings = () => {
                   ></motion.div>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-[10px] font-black text-primary-600 uppercase tracking-widest">{Math.round(progress)}% Complete</span>
-                  {goal.deadline && <span className="text-[10px] font-bold text-gray-400 uppercase">Till {new Date(goal.deadline).toLocaleDateString()}</span>}
+                  <span className="text-[10px] font-black text-primary-600 uppercase tracking-widest">{Math.round(progress)}% {t('budget.progress')}</span>
+                  {goal.deadline && <span className="text-[10px] font-bold text-gray-400 uppercase">{t('savings.deadline')}: {new Date(goal.deadline).toLocaleDateString()}</span>}
                 </div>
               </Card>
             );
@@ -157,13 +157,13 @@ const Savings = () => {
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <h2 className="text-2xl font-black text-gray-900 flex items-center gap-3">
              <TrendingUp className="text-emerald-600" />
-             Savings History
+             {t('savings.history')}
           </h2>
           <div className="relative group min-w-[300px]">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
             <input 
               type="text"
-              placeholder="Search history..."
+              placeholder={t('common.search')}
               className="w-full h-12 pl-12 pr-4 bg-white border-none shadow-sm rounded-xl text-sm font-bold focus:ring-2 focus:ring-primary-600/20"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
@@ -204,14 +204,14 @@ const Savings = () => {
               <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setIsModalOpen(false)} className="absolute inset-0 bg-gray-900/40 backdrop-blur-sm" />
               <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }} className="relative w-full max-w-md bg-white rounded-3xl p-8 shadow-2xl">
                 <div className="flex justify-between items-center mb-8">
-                  <h2 className="text-2xl font-black text-gray-900">New Savings Goal</h2>
+                  <h2 className="text-2xl font-black text-gray-900">{t('savings.new_goal')}</h2>
                   <button onClick={() => setIsModalOpen(false)} className="p-2 hover:bg-gray-100 rounded-xl text-gray-400"><X size={20} /></button>
                 </div>
                 <form onSubmit={handleAddGoal} className="space-y-6">
-                  <Input label="Goal Title" placeholder="e.g. New Laptop" value={newGoal.title} onChange={e => setNewGoal({...newGoal, title: e.target.value})} required />
-                  <Input label="Target Amount" type="number" placeholder="0.00" value={newGoal.targetAmount} onChange={e => setNewGoal({...newGoal, targetAmount: e.target.value})} required />
-                  <Input label="Deadline (Optional)" type="date" value={newGoal.deadline} onChange={e => setNewGoal({...newGoal, deadline: e.target.value})} />
-                  <Button type="submit" className="w-full py-4 font-black shadow-lg shadow-primary-600/20">Create Goal</Button>
+                  <Input label={t('savings.goal_title')} placeholder="e.g. New Laptop" value={newGoal.title} onChange={e => setNewGoal({...newGoal, title: e.target.value})} required />
+                  <Input label={t('savings.target_amount')} type="number" placeholder="0.00" value={newGoal.targetAmount} onChange={e => setNewGoal({...newGoal, targetAmount: e.target.value})} required />
+                  <Input label={t('savings.deadline')} type="date" value={newGoal.deadline} onChange={e => setNewGoal({...newGoal, deadline: e.target.value})} />
+                  <Button type="submit" className="w-full py-4 font-black shadow-lg shadow-primary-600/20">{t('common.save')}</Button>
                 </form>
               </motion.div>
             </div>
