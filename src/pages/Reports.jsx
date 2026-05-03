@@ -7,7 +7,8 @@ import {
   X,
   AlertTriangle,
   DownloadCloud,
-  Search
+  Search,
+  RefreshCw
 } from 'lucide-react';
 import { useFinance } from '../context/FinanceContext';
 import { useAuth } from '../context/AuthContext';
