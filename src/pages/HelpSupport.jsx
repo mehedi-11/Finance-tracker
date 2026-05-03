@@ -72,19 +72,19 @@ const HelpSupport = () => {
         </div>
       </div>
 
-      <Card className="bg-primary-900 rounded-[40px] p-10 md:p-16 text-center space-y-6 relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -mr-32 -mt-32"></div>
-        <div className="absolute bottom-0 left-0 w-64 h-64 bg-white/5 rounded-full -ml-32 -mb-32"></div>
+      <Card className="bg-gray-50 rounded-[40px] p-10 md:p-16 text-center space-y-6 relative overflow-hidden border-none shadow-none">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-primary-100 rounded-full -mr-32 -mt-32 opacity-40"></div>
+        <div className="absolute bottom-0 left-0 w-64 h-64 bg-primary-100 rounded-full -ml-32 -mb-32 opacity-40"></div>
         
         <div className="relative z-10 space-y-6">
-          <div className="w-16 h-16 bg-white/10 rounded-2xl flex items-center justify-center mx-auto mb-8">
+          <div className="w-16 h-16 bg-primary-600 rounded-2xl flex items-center justify-center mx-auto mb-8 shadow-lg shadow-primary-600/20">
             <ShieldCheck className="text-white" size={32} />
           </div>
-          <h2 className="text-3xl font-black text-white">Still have questions?</h2>
-          <p className="text-primary-100 max-w-lg mx-auto opacity-80">
+          <h2 className="text-3xl font-black text-gray-900">Still have questions?</h2>
+          <p className="text-gray-600 max-w-lg mx-auto font-medium">
             Our team is always ready to help you with any issues or feedback you might have.
           </p>
-          <Button className="bg-white text-primary-900 hover:bg-primary-50 border-none px-10 py-4 font-bold rounded-xl flex items-center gap-2 mx-auto">
+          <Button className="bg-primary-600 text-white hover:bg-primary-700 border-none px-10 py-4 font-bold rounded-xl flex items-center gap-2 mx-auto shadow-lg shadow-primary-600/20 active:scale-95">
             Get in Touch <ArrowRight size={20} />
           </Button>
         </div>
