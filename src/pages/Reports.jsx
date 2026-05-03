@@ -420,73 +420,174 @@ const Reports = () => {
         <AnimatePresence>
           {viewingReport && (
             <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
-              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setViewingReport(null)} className="absolute inset-0 bg-gray-900/40 backdrop-blur-sm" />
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setViewingReport(null)} className="absolute inset-0 bg-gray-900/60 backdrop-blur-md" />
               <motion.div 
                 initial={{ opacity: 0, scale: 0.95, y: 20 }} 
                 animate={{ opacity: 1, scale: 1, y: 0 }} 
                 exit={{ opacity: 0, scale: 0.95, y: 20 }} 
-                className="relative w-full max-w-3xl bg-white rounded-xl shadow-2xl flex flex-col max-h-[90vh]"
+                className="relative w-full max-w-4xl bg-white rounded-3xl shadow-2xl flex flex-col max-h-[90vh] overflow-hidden"
               >
-                <div className="flex items-center justify-between p-6 border-b">
+                {/* Modal Header */}
+                <div className="flex items-center justify-between p-8 border-b border-gray-50 bg-white sticky top-0 z-10">
                   <div>
-                    <h2 className="text-xl font-bold text-gray-900">Financial Overview</h2>
-                    <p className="text-sm text-gray-500">{viewingReport.month}</p>
+                    <h2 className="text-2xl font-black text-gray-900">Financial Insights</h2>
+                    <p className="text-sm text-gray-500 font-medium flex items-center gap-2 mt-1">
+                      <span className="w-2 h-2 bg-primary-600 rounded-full animate-pulse"></span>
+                      {viewingReport.month}
+                    </p>
                   </div>
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-4">
                     <Button 
                       onClick={() => handleDownload(viewingReport)} 
                       disabled={isDownloading}
-                      className="bg-emerald-600 hover:bg-emerald-700 text-white flex items-center gap-2 py-2 px-4 h-auto text-sm"
+                      className="bg-emerald-600 hover:bg-emerald-700 text-white flex items-center gap-2 py-3 px-6 h-auto text-sm font-black shadow-lg shadow-emerald-600/20"
                     >
-                      <Download size={16} /> Download
+                      <Download size={18} /> {isDownloading ? 'Processing...' : 'Download PDF'}
                     </Button>
-                    <button onClick={() => setViewingReport(null)} className="p-2 hover:bg-gray-100 rounded-lg text-gray-400">
-                      <X size={20} />
+                    <button 
+                      onClick={() => setViewingReport(null)} 
+                      className="p-3 hover:bg-gray-100 rounded-2xl text-gray-400 transition-colors"
+                    >
+                      <X size={24} />
                     </button>
                   </div>
                 </div>
 
-                <div className="flex-1 overflow-y-auto p-6 space-y-8">
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                    <div className="p-4 bg-emerald-50 rounded-xl">
-                      <p className="text-[10px] uppercase font-black text-emerald-600 mb-1">Income</p>
-                      <p className="text-lg font-bold text-emerald-700">{formatCurrency(viewingReport.income, user?.currency)}</p>
+                <div className="flex-1 overflow-y-auto p-8 space-y-10 custom-scrollbar">
+                  {/* Summary Cards */}
+                  <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+                    {[
+                      { label: 'Total Income', value: viewingReport.income, color: 'emerald', bg: 'bg-emerald-50' },
+                      { label: 'Total Expense', value: viewingReport.expense, color: 'rose', bg: 'bg-rose-50' },
+                      { label: 'Net Savings', value: viewingReport.savings, color: 'primary', bg: 'bg-primary-50' },
+                      { label: 'Loans Taken', value: viewingReport.loansTaken, color: 'amber', bg: 'bg-amber-50' }
+                    ].map((stat, i) => (
+                      <div key={i} className={`${stat.bg} p-6 rounded-3xl border border-white shadow-sm`}>
+                        <p className={`text-[10px] uppercase font-black text-${stat.color}-600 tracking-widest mb-2`}>{stat.label}</p>
+                        <p className={`text-2xl font-black text-${stat.color}-700`}>{formatCurrency(stat.value, user?.currency)}</p>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    {/* Category Breakdown */}
+                    <div className="space-y-6">
+                      <h3 className="text-lg font-black text-gray-900 flex items-center gap-3">
+                        <span className="w-1.5 h-6 bg-primary-600 rounded-full"></span>
+                        Top Spending Categories
+                      </h3>
+                      <div className="space-y-4">
+                        {Object.entries(
+                          transactions
+                            .filter(t => {
+                              const d = new Date(t.date);
+                              return d >= new Date(viewingReport.startDate) && d <= new Date(viewingReport.endDate) && t.type === 'expense';
+                            })
+                            .reduce((acc, t) => {
+                              acc[t.category] = (acc[t.category] || 0) + Number(t.amount);
+                              return acc;
+                            }, {})
+                        )
+                          .sort((a, b) => b[1] - a[1])
+                          .slice(0, 4)
+                          .map(([cat, amount], idx) => (
+                            <div key={cat} className="flex items-center justify-between p-4 bg-gray-50 rounded-2xl border border-gray-100">
+                              <div className="flex items-center gap-3">
+                                <span className="w-8 h-8 flex items-center justify-center bg-white rounded-xl text-xs font-black text-gray-400">0{idx + 1}</span>
+                                <span className="font-bold text-gray-900">{cat}</span>
+                              </div>
+                              <span className="font-black text-rose-600">{formatCurrency(amount, user?.currency)}</span>
+                            </div>
+                          ))}
+                      </div>
                     </div>
-                    <div className="p-4 bg-red-50 rounded-xl">
-                      <p className="text-[10px] uppercase font-black text-red-600 mb-1">Expense</p>
-                      <p className="text-lg font-bold text-red-700">{formatCurrency(viewingReport.expense, user?.currency)}</p>
-                    </div>
-                    <div className="p-4 bg-primary-50 rounded-xl">
-                      <p className="text-[10px] uppercase font-black text-primary-600 mb-1">Savings</p>
-                      <p className="text-lg font-bold text-primary-700">{formatCurrency(viewingReport.savings, user?.currency)}</p>
+
+                    {/* Budget Performance */}
+                    <div className="space-y-6">
+                      <h3 className="text-lg font-black text-gray-900 flex items-center gap-3">
+                        <span className="w-1.5 h-6 bg-emerald-600 rounded-full"></span>
+                        Budget Status
+                      </h3>
+                      <div className="space-y-5 p-6 bg-slate-50 rounded-3xl border border-gray-100">
+                        {budgets.slice(0, 4).map(b => {
+                          const spent = transactions
+                            .filter(t => {
+                              const d = new Date(t.date);
+                              return d >= new Date(viewingReport.startDate) && d <= new Date(viewingReport.endDate) && t.category === b.category;
+                            })
+                            .reduce((sum, t) => sum + Number(t.amount), 0);
+                          const progress = Math.min((spent / b.amount) * 100, 100);
+                          
+                          return (
+                            <div key={b._id} className="space-y-2">
+                              <div className="flex justify-between items-center text-xs font-bold">
+                                <span className="text-gray-600">{b.category}</span>
+                                <span className={spent > b.amount ? 'text-rose-600' : 'text-gray-900'}>
+                                  {formatCurrency(spent, user?.currency)} / {formatCurrency(b.amount, user?.currency)}
+                                </span>
+                              </div>
+                              <div className="h-2 w-full bg-white rounded-full overflow-hidden border border-gray-100">
+                                <div 
+                                  className={`h-full rounded-full transition-all duration-1000 ${spent > b.amount ? 'bg-rose-500' : 'bg-emerald-500'}`}
+                                  style={{ width: `${progress}%` }}
+                                ></div>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
                     </div>
                   </div>
 
-                  <div className="space-y-4">
-                    <h3 className="font-bold text-gray-900 border-l-4 border-primary-500 pl-3">Month's Transactions</h3>
-                    <div className="overflow-hidden rounded-xl border border-gray-100">
+                  {/* Transaction Table */}
+                  <div className="space-y-6">
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-lg font-black text-gray-900 flex items-center gap-3">
+                        <span className="w-1.5 h-6 bg-amber-500 rounded-full"></span>
+                        Cycle Transactions
+                      </h3>
+                      <span className="text-[10px] font-black uppercase text-gray-400 tracking-widest bg-gray-100 px-3 py-1 rounded-full">
+                        {transactions.filter(t => {
+                          const d = new Date(t.date);
+                          return d >= new Date(viewingReport.startDate) && d <= new Date(viewingReport.endDate);
+                        }).length} Records Found
+                      </span>
+                    </div>
+                    
+                    <div className="overflow-hidden rounded-3xl border border-gray-100 shadow-sm">
                       <table className="w-full text-left text-sm">
-                        <thead className="bg-gray-50 font-bold text-gray-400 uppercase text-[10px]">
+                        <thead className="bg-gray-50 font-black text-gray-400 uppercase text-[10px] tracking-widest">
                           <tr>
-                            <th className="px-4 py-3">Date</th>
-                            <th className="px-4 py-3">Category</th>
-                            <th className="px-4 py-3 text-right">Amount</th>
+                            <th className="px-6 py-4">Date</th>
+                            <th className="px-6 py-4">Description</th>
+                            <th className="px-6 py-4">Category</th>
+                            <th className="px-6 py-4 text-right">Amount</th>
                           </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-50">
                           {transactions
                             .filter(t => {
                               const d = new Date(t.date);
-                              return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}` === viewingReport.month;
+                              return d >= new Date(viewingReport.startDate) && d <= new Date(viewingReport.endDate);
                             })
+                            .sort((a, b) => new Date(b.date) - new Date(a.date))
                             .map((t) => (
-                              <tr key={t._id}>
-                                <td className="px-4 py-3 text-gray-500">{new Date(t.date).toLocaleDateString()}</td>
-                                <td className="px-4 py-3 font-medium text-gray-900">{t.category}</td>
-                                <td className={`px-4 py-3 text-right font-bold ${t.type === 'income' ? 'text-emerald-600' : 'text-red-600'}`}>
+                              <tr key={t._id} className="hover:bg-gray-50 transition-colors">
+                                <td className="px-6 py-4 text-gray-500 font-medium">{new Date(t.date).toLocaleDateString()}</td>
+                                <td className="px-6 py-4 font-bold text-gray-900">{t.description}</td>
+                                <td className="px-6 py-4">
+                                  <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-tighter ${
+                                    t.type === 'income' ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600'
+                                  }`}>
+                                    {t.category}
+                                  </span>
+                                </td>
+                                <td className={`px-6 py-4 text-right font-black ${t.type === 'income' ? 'text-emerald-600' : 'text-rose-600'}`}>
                                   <div className="flex flex-col items-end">
                                     <span>{t.type === 'income' ? '+' : '-'}{formatCurrency(t.amount, user?.currency)}</span>
-                                    {t.type === 'expense' && t.isPaid === false && <span className="text-[9px] text-amber-600 font-black uppercase tracking-tighter">Unpaid</span>}
+                                    {t.type === 'expense' && t.isPaid === false && (
+                                      <span className="text-[9px] text-amber-500 font-black uppercase tracking-widest mt-0.5 px-2 bg-amber-50 rounded-full">Unpaid</span>
+                                    )}
                                   </div>
                                 </td>
                               </tr>
@@ -495,6 +596,13 @@ const Reports = () => {
                       </table>
                     </div>
                   </div>
+                </div>
+                
+                {/* Modal Footer */}
+                <div className="p-6 bg-gray-50 border-t border-gray-100 text-center">
+                  <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">
+                    Confidential • Money Tracker Premium Insight • {new Date().toLocaleDateString()}
+                  </p>
                 </div>
               </motion.div>
             </div>
