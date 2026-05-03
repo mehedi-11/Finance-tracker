@@ -19,24 +19,10 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(() => {
     try {
       const savedUser = localStorage.getItem('finance_app_user');
-      const loginTime = localStorage.getItem('finance_login_time');
-      
-      if (savedUser && loginTime) {
-        const currentTime = new Date().getTime();
-        const oneHour = 60 * 60 * 1000;
-        
-        if (currentTime - parseInt(loginTime) > oneHour) {
-          localStorage.removeItem('finance_app_user');
-          localStorage.removeItem('finance_login_time');
-          return null;
-        } else {
-          return JSON.parse(savedUser);
-        }
-      }
+      return savedUser ? JSON.parse(savedUser) : null;
     } catch (err) {
       console.error('Auth initialization error:', err);
       localStorage.removeItem('finance_app_user');
-      localStorage.removeItem('finance_login_time');
     }
     return null;
   });
@@ -46,27 +32,7 @@ export const AuthProvider = ({ children }) => {
   const logout = useCallback(() => {
     setUser(null);
     localStorage.removeItem('finance_app_user');
-    localStorage.removeItem('finance_login_time');
   }, []);
-
-  // Check for auto-logout every minute
-  useEffect(() => {
-    if (!user) return;
-
-    const interval = setInterval(() => {
-      const loginTime = localStorage.getItem('finance_login_time');
-      if (loginTime) {
-        const currentTime = new Date().getTime();
-        const oneHour = 60 * 60 * 1000;
-        if (currentTime - parseInt(loginTime) > oneHour) {
-          toast.error('Session expired. Please login again.');
-          logout();
-        }
-      }
-    }, 60000); // Check every minute
-
-    return () => clearInterval(interval);
-  }, [user, logout]); // Fix: logout is now in dependency array
 
   const register = async (userData) => {
     const response = await fetch(`${API_URL}/register`, {
@@ -104,7 +70,6 @@ export const AuthProvider = ({ children }) => {
 
     setUser(data);
     localStorage.setItem('finance_app_user', JSON.stringify(data));
-    localStorage.setItem('finance_login_time', new Date().getTime().toString());
     toast.success('Verified successfully!');
   };
 
@@ -125,7 +90,6 @@ export const AuthProvider = ({ children }) => {
 
     setUser(data);
     localStorage.setItem('finance_app_user', JSON.stringify(data));
-    localStorage.setItem('finance_login_time', new Date().getTime().toString());
     toast.success('Welcome back!');
     return { success: true };
   };
