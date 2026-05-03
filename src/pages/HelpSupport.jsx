@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { HelpCircle, Mail, MessageCircle, Phone, ArrowRight, ShieldCheck, LifeBuoy } from 'lucide-react';
+import { HelpCircle, Mail, MessageSquare, PhoneCall, ArrowRight, ShieldCheck, LifeBuoy } from 'lucide-react';
 import { Card, Button } from '../components/ui';
 
 const HelpSupport = () => {

@@ -34,7 +34,7 @@ const SEO = ({ title, description, keywords }) => {
       linkCanonical.rel = 'canonical';
       document.head.appendChild(linkCanonical);
     }
-    linkCanonical.setAttribute('href', `https://moneytracker.mehedi.com${location.pathname}`);
+    linkCanonical.setAttribute('href', `https://finance-tracker-19.netlify.app${location.pathname}`);
 
   }, [title, description, keywords, location]);
 
