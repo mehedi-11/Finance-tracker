@@ -326,28 +326,32 @@ export const FinanceProvider = ({ children }) => {
   });
 
   const currentIncomeTransactions = currentCycleTransactions.filter(t => t.type === 'income' && t.isPaid !== false);
-  const regularIncome = currentIncomeTransactions.filter(t => t.category !== 'Saving').reduce((sum, t) => sum + Number(t.amount), 0);
+  const regularIncome = currentIncomeTransactions.filter(t => t.category !== 'Saving' && !t.category.includes('(Loan)')).reduce((sum, t) => sum + Number(t.amount), 0);
   const savingsUsed = currentIncomeTransactions.filter(t => t.category === 'Saving').reduce((sum, t) => sum + Number(t.amount), 0);
+  const loansReceived = currentIncomeTransactions.filter(t => t.category.includes('(Loan)')).reduce((sum, t) => sum + Number(t.amount), 0);
 
   const totals = {
     income: regularIncome,
     expenses: currentCycleTransactions.filter(t => t.type === 'expense' && t.isPaid !== false).reduce((sum, t) => sum + Number(t.amount), 0),
     savingsUsed: savingsUsed,
+    loansReceived: loansReceived,
     balance: 0
   };
-  totals.balance = totals.income + totals.savingsUsed - totals.expenses;
+  totals.balance = totals.income + totals.savingsUsed + totals.loansReceived - totals.expenses;
 
   const globalIncomeTransactions = transactions.filter(t => t.type === 'income' && t.isPaid !== false);
-  const globalRegularIncome = globalIncomeTransactions.filter(t => t.category !== 'Saving').reduce((sum, t) => sum + Number(t.amount), 0);
+  const globalRegularIncome = globalIncomeTransactions.filter(t => t.category !== 'Saving' && !t.category.includes('(Loan)')).reduce((sum, t) => sum + Number(t.amount), 0);
   const globalSavingsUsed = globalIncomeTransactions.filter(t => t.category === 'Saving').reduce((sum, t) => sum + Number(t.amount), 0);
+  const globalLoansReceived = globalIncomeTransactions.filter(t => t.category.includes('(Loan)')).reduce((sum, t) => sum + Number(t.amount), 0);
 
   const globalTotals = {
     income: globalRegularIncome,
     expenses: transactions.filter(t => t.type === 'expense' && t.isPaid !== false).reduce((sum, t) => sum + Number(t.amount), 0),
     savingsUsed: globalSavingsUsed,
+    loansReceived: globalLoansReceived,
     balance: 0
   };
-  globalTotals.balance = globalTotals.income + globalTotals.savingsUsed - globalTotals.expenses;
+  globalTotals.balance = globalTotals.income + globalTotals.savingsUsed + globalTotals.loansReceived - globalTotals.expenses;
 
   const categoryTotals = currentCycleTransactions
     .filter(t => t.type === 'expense' && t.isPaid !== false)
