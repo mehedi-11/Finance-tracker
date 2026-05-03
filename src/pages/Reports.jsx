@@ -150,7 +150,7 @@ const Reports = () => {
     element.innerHTML = `
       <div style="font-family: 'Inter', sans-serif; color: #1e293b; line-height: 1.5;">
         <!-- Header -->
-        <div style="display: flex; justify-content: space-between; align-items: flex-end; border-bottom: 4px solid #4f46e5; padding-bottom: 20px; margin-bottom: 40px;">
+        <div style="display: flex; justify-content: space-between; align-items: flex-end; border-bottom: 4px solid #4f46e5; padding-bottom: 20px; margin-bottom: 30px;">
           <div>
             <h1 style="margin:0; color:#4f46e5; font-size: 32px; font-weight: 900; letter-spacing: -1px;">Money Tracker</h1>
             <p style="margin:5px 0 0; color:#64748b; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px;">Monthly Financial Statement</p>
@@ -158,6 +158,22 @@ const Reports = () => {
           <div style="text-align: right;">
             <p style="margin:0; font-size: 20px; font-weight: 900; color: #1e293b;">${cycleName}</p>
             <p style="margin:5px 0 0; font-size: 11px; color: #94a3b8; font-weight: 600;">Report ID: FF-${report.month.replace(' ', '-')}</p>
+          </div>
+        </div>
+
+        <!-- User Information Section -->
+        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px; margin-bottom: 30px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+          <div style="display: flex; flex-direction: column; gap: 5px;">
+            <p style="margin:0; font-size: 10px; color: #94a3b8; font-weight: 800; text-transform: uppercase;">Account Holder</p>
+            <p style="margin:0; font-size: 13px; font-weight: 700; color: #1e293b;">${user?.name}</p>
+            <p style="margin:5px 0 0; font-size: 11px; color: #64748b;">${user?.email} • ${user?.phone || 'N/A'}</p>
+            <p style="margin:5px 0 0; font-size: 11px; color: #64748b;">${user?.address || 'Address not set'}</p>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 5px; text-align: right;">
+            <p style="margin:0; font-size: 10px; color: #94a3b8; font-weight: 800; text-transform: uppercase;">Reporting Details</p>
+            <p style="margin:0; font-size: 11px; color: #64748b;"><span style="font-weight: 700;">Duration:</span> ${new Date(report.startDate).toLocaleDateString()} - ${new Date(report.endDate).toLocaleDateString()}</p>
+            <p style="margin:0; font-size: 11px; color: #64748b;"><span style="font-weight: 700;">Billing Cycle:</span> Day ${user?.monthStartDay || 1} of Month</p>
+            <p style="margin:0; font-size: 11px; color: #64748b;"><span style="font-weight: 700;">Currency:</span> ${user?.currency} (${currencies.find(c => c.code === user?.currency)?.name.split('(')[1].replace(')', '') || ''})</p>
           </div>
         </div>
 
