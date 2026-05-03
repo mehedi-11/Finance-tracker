@@ -11,7 +11,8 @@ import {
   X,
   Filter,
   AlertTriangle,
-  Check
+  Check,
+  Repeat
 } from 'lucide-react';
 import { useFinance } from '../context/FinanceContext';
 import { useAuth } from '../context/AuthContext';
@@ -56,7 +57,8 @@ const Transactions = () => {
     category: 'Food',
     date: new Date().toISOString().split('T')[0],
     isPaid: true,
-    expectedPayDate: new Date().toISOString().split('T')[0]
+    expectedPayDate: new Date().toISOString().split('T')[0],
+    isRecurring: false
   });
 
   const { start: cycleStart, end: cycleEnd } = getCurrentCycleRange();
@@ -82,7 +84,8 @@ const Transactions = () => {
         category: transaction.category,
         date: transaction.date ? transaction.date.split('T')[0] : new Date().toISOString().split('T')[0],
         isPaid: transaction.isPaid ?? true,
-        expectedPayDate: transaction.expectedPayDate ? transaction.expectedPayDate.split('T')[0] : new Date().toISOString().split('T')[0]
+        expectedPayDate: transaction.expectedPayDate ? transaction.expectedPayDate.split('T')[0] : new Date().toISOString().split('T')[0],
+        isRecurring: transaction.isRecurring || false
       });
     } else {
       setEditingTransaction(null);
@@ -93,7 +96,8 @@ const Transactions = () => {
         category: 'Food',
         date: new Date().toISOString().split('T')[0],
         isPaid: true,
-        expectedPayDate: new Date().toISOString().split('T')[0]
+        expectedPayDate: new Date().toISOString().split('T')[0],
+        isRecurring: false
       });
     }
     setIsModalOpen(true);
@@ -387,9 +391,6 @@ const Transactions = () => {
                             <option value="true">Paid</option>
                             <option value="false">Unpaid</option>
                           </select>
-                          <p className="text-[10px] text-gray-500 italic ml-1">
-                            {formData.isPaid ? 'This will deduct from your balance.' : 'This will be ignored (No balance/expense change).'}
-                          </p>
                         </div>
                         
                         {!formData.isPaid && (
@@ -403,6 +404,24 @@ const Transactions = () => {
                         )}
                       </div>
                     )}
+
+                    <div className="flex items-center justify-between p-4 bg-primary-50 rounded-2xl border border-primary-100">
+                      <div className="flex items-center gap-3">
+                        <Repeat size={18} className="text-primary-600" />
+                        <div>
+                          <p className="text-sm font-bold text-gray-900">Recurring</p>
+                          <p className="text-[10px] text-gray-500 font-medium leading-none">Repeat every month</p>
+                        </div>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => setFormData({ ...formData, isRecurring: !formData.isRecurring })}
+                        className={`w-12 h-6 rounded-full transition-colors relative ${formData.isRecurring ? 'bg-primary-600' : 'bg-gray-200'}`}
+                      >
+                        <div className={`absolute top-1 w-4 h-4 bg-white rounded-full transition-transform ${formData.isRecurring ? 'left-7' : 'left-1'}`}></div>
+                      </button>
+                    </div>
+
                     <Button type="submit" className="w-full py-4 text-lg font-bold mt-4">
                       {editingTransaction ? 'Update Record' : 'Save Transaction'}
                     </Button>

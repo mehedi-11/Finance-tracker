@@ -105,23 +105,62 @@ export const FinanceProvider = ({ children }) => {
   }, [loans, user]);
 
   const addTransaction = async (transaction) => {
-    // Clean data for backend
-    // eslint-disable-next-line no-unused-vars
-    const { _id, createdAt, updatedAt, __v, user: u, ...cleanData } = transaction;
-
-    const response = await fetch(`${API_URL}/transactions`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${user.token}` },
-      body: JSON.stringify(cleanData),
-    });
-    if (response.ok) {
-      const newTransaction = await response.json();
-      // Force preserve isPaid in local state if backend strips it
-      const finalTransaction = { ...transaction, ...newTransaction };
-      setTransactions(prev => [finalTransaction, ...prev]);
-      return finalTransaction;
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/transactions`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify(transaction)
+      });
+      const data = await response.json();
+      if (response.ok) {
+        setTransactions(prev => [data, ...prev]);
+        toast.success('Transaction added');
+        return data;
+      }
+    } catch (error) {
+      console.error('Error adding transaction:', error);
+      toast.error('Failed to add transaction');
     }
   };
+
+  const checkRecurringTransactions = () => {
+    const today = new Date();
+    const currentMonth = today.getMonth();
+    const currentYear = today.getFullYear();
+
+    transactions.forEach(async (t) => {
+      if (t.isRecurring) {
+        const transDate = new Date(t.date);
+        // If the recurring transaction hasn't been added for this month yet
+        const alreadyAdded = transactions.some(existing => 
+          existing.description === t.description && 
+          new Date(existing.date).getMonth() === currentMonth &&
+          new Date(existing.date).getFullYear() === currentYear &&
+          existing._id !== t._id
+        );
+
+        if (!alreadyAdded) {
+          const newDate = new Date(currentYear, currentMonth, transDate.getDate());
+          await addTransaction({
+            ...t,
+            date: newDate.toISOString().split('T')[0],
+            isPaid: false,
+            isRecurring: true,
+            _id: undefined // Backend will generate new ID
+          });
+        }
+      }
+    });
+  };
+
+  useEffect(() => {
+    if (transactions.length > 0) {
+      checkRecurringTransactions();
+    }
+  }, [transactions.length]);
 
   const deleteTransaction = async (id) => {
     const response = await fetch(`${API_URL}/transactions/${id}`, {
@@ -373,6 +412,73 @@ export const FinanceProvider = ({ children }) => {
     return Math.round(averageExpense * 1.05);
   };
 
+  // Financial Health Score Calculation
+  const getFinancialHealth = () => {
+    let score = 0;
+    const income = totals.income || 1;
+    const expenses = totals.expenses || 0;
+    const savings = Math.max(0, income - expenses);
+    
+    // 1. Savings Rate (Max 40 points)
+    const savingsRate = (savings / income) * 100;
+    if (savingsRate >= 30) score += 40;
+    else if (savingsRate >= 15) score += 25;
+    else if (savingsRate > 0) score += 10;
+
+    // 2. Budget Compliance (Max 30 points)
+    const budgetStatus = budgets.length > 0 ? budgets.every(b => {
+      const spent = transactions
+        .filter(t => t.type === 'expense' && t.category === b.category)
+        .reduce((sum, t) => sum + Number(t.amount), 0);
+      return spent <= b.amount;
+    }) : true;
+    if (budgetStatus) score += 30;
+    else score += 10;
+
+    // 3. Debt-to-Income Ratio (Max 20 points)
+    const debt = activeLoans;
+    const debtRatio = (debt / income) * 100;
+    if (debtRatio === 0) score += 20;
+    else if (debtRatio < 20) score += 15;
+    else if (debtRatio < 50) score += 5;
+
+    // 4. Emergency Fund (Max 10 points)
+    const avgExpense = expenses || 1;
+    const monthsCovered = totalSavings / avgExpense;
+    if (monthsCovered >= 3) score += 10;
+    else if (monthsCovered >= 1) score += 5;
+
+    let status = 'Fair';
+    let color = 'amber';
+    if (score >= 80) { status = 'Excellent'; color = 'emerald'; }
+    else if (score >= 60) { status = 'Good'; color = 'primary'; }
+    else if (score < 40) { status = 'Poor'; color = 'rose'; }
+
+    return { score, status, color };
+  };
+
+  // Savings Goals State & Logic
+  const [goals, setGoals] = useState(() => {
+    const saved = localStorage.getItem('finance_goals');
+    return saved ? JSON.parse(saved) : [];
+  });
+
+  useEffect(() => {
+    localStorage.setItem('finance_goals', JSON.stringify(goals));
+  }, [goals]);
+
+  const addGoal = (goal) => {
+    setGoals(prev => [{ ...goal, _id: Date.now().toString(), currentAmount: 0 }, ...prev]);
+  };
+
+  const updateGoalProgress = (id, amount) => {
+    setGoals(prev => prev.map(g => g._id === id ? { ...g, currentAmount: Number(g.currentAmount) + Number(amount) } : g));
+  };
+
+  const deleteGoal = (id) => {
+    setGoals(prev => prev.filter(g => g._id !== id));
+  };
+
   const getAIAdvice = () => {
     const advice = [];
     const forecast = getSpendingForecast();
@@ -454,6 +560,11 @@ export const FinanceProvider = ({ children }) => {
       getMonthlyReports,
       getSpendingForecast,
       getAIAdvice,
+      getFinancialHealth,
+      goals,
+      addGoal,
+      updateGoalProgress,
+      deleteGoal,
       totals,
       globalTotals,
       categoryTotals,

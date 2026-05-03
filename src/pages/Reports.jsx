@@ -341,6 +341,36 @@ const Reports = () => {
     toast.success('Professional Report Downloaded!');
   };
 
+  const handleExportCSV = (report) => {
+    const monthTransactions = transactions.filter(t => {
+      const d = new Date(t.date);
+      return d >= new Date(report.startDate) && d <= new Date(report.endDate);
+    });
+
+    const headers = ['Date', 'Description', 'Category', 'Type', 'Amount', 'Status'];
+    const rows = monthTransactions.map(t => [
+      new Date(t.date).toLocaleDateString(),
+      t.description.replace(/,/g, ''),
+      t.category,
+      t.type,
+      t.amount,
+      t.isPaid ? 'Paid' : 'Unpaid'
+    ]);
+
+    let csvContent = "data:text/csv;charset=utf-8," 
+      + headers.join(",") + "\n"
+      + rows.map(e => e.join(",")).join("\n");
+
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", `MoneyTracker_${report.month.replace(/ /g, '_')}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    toast.success('Excel/CSV Exported!');
+  };
+
   return (
     <div className="space-y-8 animate-fade-in pb-20">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -404,6 +434,13 @@ const Reports = () => {
                               title="View Details"
                             >
                               <Eye size={18} />
+                            </button>
+                            <button 
+                              onClick={() => handleExportCSV(report)}
+                              className="p-2 bg-gray-50 text-gray-500 hover:text-indigo-600 rounded-xl transition-all"
+                              title="Export to Excel/CSV"
+                            >
+                              <RefreshCw size={18} />
                             </button>
                             <button 
                               onClick={() => handleDownload(report)}

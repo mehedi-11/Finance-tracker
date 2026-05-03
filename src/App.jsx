@@ -19,6 +19,7 @@ import Profile from './pages/Profile';
 import ResetPassword from './pages/ResetPassword';
 import Loans from './pages/Loans';
 import Plans from './pages/Plans';
+import Calendar from './pages/Calendar';
 import HelpSupport from './pages/HelpSupport';
 import Savings from './pages/Savings';
 
@@ -27,6 +28,7 @@ import Sidebar from './components/layout/Sidebar';
 import Navbar from './components/layout/Navbar';
 import Footer from './components/layout/Footer';
 import BottomNav from './components/layout/BottomNav';
+import FloatingTools from './components/FloatingTools';
 
 const ProtectedRoute = ({ children }) => {
   const { user, loading: authLoading } = useAuth();
@@ -62,10 +64,12 @@ function AppContent() {
             <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
             <Route path="/loans" element={<ProtectedRoute><Loans /></ProtectedRoute>} />
             <Route path="/plans" element={<ProtectedRoute><Plans /></ProtectedRoute>} />
+            <Route path="/calendar" element={<ProtectedRoute><Calendar /></ProtectedRoute>} />
             <Route path="/savings" element={<ProtectedRoute><Savings /></ProtectedRoute>} />
             <Route path="/help" element={<ProtectedRoute><HelpSupport /></ProtectedRoute>} />
           </Routes>
         </main>
+        {user && <FloatingTools />}
         {user && <Footer />}
         {user && <BottomNav />}
       </div>
