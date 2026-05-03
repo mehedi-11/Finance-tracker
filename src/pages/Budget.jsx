@@ -163,11 +163,11 @@ const Budget = () => {
                       <div className="flex items-center gap-4">
                         <div className="sm:text-right hidden sm:block">
                           {isOver ? (
-                            <Badge variant="danger">Over Budget</Badge>
+                            <Badge variant="danger">{t('budget.over_budget')}</Badge>
                           ) : isNear ? (
                             <Badge variant="warning">Warning</Badge>
                           ) : (
-                            <Badge variant="success">On Track</Badge>
+                            <Badge variant="success">{t('budget.on_track')}</Badge>
                           )}
                         </div>
                         <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
@@ -219,7 +219,7 @@ const Budget = () => {
                 <div className="w-20 h-20 bg-gray-50 rounded-xl flex items-center justify-center mb-6">
                   <PieChartIcon className="text-gray-300" size={40} />
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-2">No Budgets Set</h3>
+                <h3 className="text-xl font-bold text-gray-900 mb-2">{t('budget.no_budgets')}</h3>
                 <p className="text-gray-500 font-medium max-w-sm mb-8 px-4">
                   Start by setting a monthly limit for a category like Food or Transport to track your spending.
                 </p>

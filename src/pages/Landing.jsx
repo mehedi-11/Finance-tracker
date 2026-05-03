@@ -12,10 +12,10 @@ const Landing = () => {
           <div className="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-600/20">
             <Wallet className="text-white" size={24} />
           </div>
-          <span className="text-xl font-black tracking-tight text-gray-900">Money Tracker</span>
+          <span className="text-xl font-black tracking-tight text-gray-900">{t('common.money_tracker')}</span>
         </div>
         <Link to="/login">
-          <Button variant="ghost" className="font-bold">Sign In</Button>
+          <Button variant="ghost" className="font-bold" onClick={() => window.location.href='/login'}>{t('common.sign_in')}</Button>
         </Link>
       </nav>
 

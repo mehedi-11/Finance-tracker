@@ -5,12 +5,14 @@ import { useFinance } from '../../context/FinanceContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
 import { formatCurrency } from '../../utils/helpers';
+import { useTranslation } from 'react-i18next';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL 
   ? import.meta.env.VITE_API_URL.replace('/auth', '') 
   : 'http://localhost:5000/api';
 
 const Navbar = ({ setIsSidebarOpen }) => {
+  const { t } = useTranslation();
   const { user } = useAuth();
   const { transactions, budgets, loans } = useFinance();
   const navigate = useNavigate();
@@ -24,13 +26,13 @@ const Navbar = ({ setIsSidebarOpen }) => {
       
       const results = [
         ...transactions.filter(t => t.description.toLowerCase().includes(query) || t.category.toLowerCase().includes(query))
-          .map(t => ({ ...t, source: 'Transaction', icon: t.type === 'income' ? TrendingUp : TrendingDown, path: '/transactions' })),
+          .map(t => ({ ...t, source: 'transaction', icon: TrendingUp, path: '/transactions' })),
         
         ...budgets.filter(b => b.category.toLowerCase().includes(query))
-          .map(b => ({ ...b, description: b.category, source: 'Budget', icon: PieChart, path: '/budget' })),
+          .map(b => ({ ...b, description: b.category, source: 'budget', icon: PieChart, path: '/budget' })),
         
         ...loans.filter(l => l.lender.toLowerCase().includes(query) || l.purpose.toLowerCase().includes(query))
-          .map(l => ({ ...l, description: `${l.lender} - ${l.purpose}`, source: 'Loan', icon: HandCoins, path: '/loans' }))
+          .map(l => ({ ...l, description: `${l.lender} - ${l.purpose}`, source: 'loan', icon: HandCoins, path: '/loans' }))
       ];
       
       return results.slice(0, 8);
@@ -100,7 +102,7 @@ const Navbar = ({ setIsSidebarOpen }) => {
           </div>
           <input 
             type="text"
-            placeholder="Search transactions, budgets, loans..."
+            placeholder={t('navbar.search_placeholder')}
             className="w-full bg-gray-50 border border-gray-100 rounded-2xl pl-12 pr-12 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:bg-white transition-all"
             value={globalSearch}
             onChange={(e) => {
@@ -129,7 +131,7 @@ const Navbar = ({ setIsSidebarOpen }) => {
                 exit={{ opacity: 0, y: 10 }}
                 className="absolute top-full left-0 right-0 mt-2 bg-white border border-gray-100 rounded-2xl shadow-2xl p-2 z-[60] overflow-hidden"
               >
-                <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest px-4 py-2">Quick Results</p>
+                <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest px-4 py-2">{t('navbar.quick_results')}</p>
                 <div className="space-y-1">
                   {searchResults.map((res, i) => (
                     <button
@@ -147,12 +149,12 @@ const Navbar = ({ setIsSidebarOpen }) => {
                         </div>
                         <div>
                           <p className="text-sm font-bold text-gray-900 line-clamp-1">{res.description}</p>
-                          <p className="text-[10px] font-black text-primary-500 uppercase tracking-tight">{res.source}</p>
+                          <p className="text-[10px] font-black text-primary-500 uppercase tracking-tight">{t(`navbar.${res.source}`)}</p>
                         </div>
                       </div>
                       <div className="text-right">
                         <p className="text-sm font-black text-gray-900">{formatCurrency(res.amount || 0, user?.currency)}</p>
-                        <p className="text-[10px] font-medium text-gray-400 italic">View Page</p>
+                        <p className="text-[10px] font-medium text-gray-400 italic">{t('navbar.view_page')}</p>
                       </div>
                     </button>
                   ))}
@@ -188,8 +190,8 @@ const Navbar = ({ setIsSidebarOpen }) => {
                 className="absolute right-0 mt-4 w-[calc(100vw-2rem)] sm:w-80 bg-white border border-gray-100 rounded-xl shadow-2xl p-6 z-50 overflow-hidden"
               >
                 <div className="flex items-center justify-between mb-6">
-                  <h4 className="font-black text-gray-900">Notifications</h4>
-                  <span className="text-[10px] bg-primary-50 text-primary-600 px-2 py-1 rounded-xl font-bold uppercase">{unreadCount} New</span>
+                  <h4 className="font-black text-gray-900">{t('navbar.notifications')}</h4>
+                  <span className="text-[10px] bg-primary-50 text-primary-600 px-2 py-1 rounded-xl font-bold uppercase">{unreadCount} {t('navbar.new_notif')}</span>
                 </div>
                 
                 <div className="space-y-4 max-h-80 overflow-y-auto pr-2 custom-scrollbar">
@@ -213,7 +215,7 @@ const Navbar = ({ setIsSidebarOpen }) => {
                       </div>
                     ))
                   ) : (
-                    <p className="text-center text-gray-400 text-sm py-10">No notifications yet.</p>
+                    <p className="text-center text-gray-400 text-sm py-10">{t('navbar.no_notif')}</p>
                   )}
                 </div>
               </motion.div>
@@ -224,7 +226,7 @@ const Navbar = ({ setIsSidebarOpen }) => {
         <Link to="/profile" className="hidden md:flex items-center gap-2 md:gap-3 hover:opacity-80 transition-opacity">
           <div className="text-right">
             <p className="text-sm font-black text-gray-900 leading-none whitespace-nowrap">{user?.name || 'User'}</p>
-            <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest mt-1">Premium</p>
+            <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest mt-1">{t('navbar.premium')}</p>
           </div>
           <div className="w-10 h-10 rounded-xl bg-primary-600 flex items-center justify-center font-bold text-white shadow-lg ring-2 ring-primary-50/50 shrink-0">
             {user?.name?.[0].toUpperCase() || user?.email?.[0].toUpperCase() || 'U'}

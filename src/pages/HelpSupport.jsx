@@ -25,30 +25,30 @@ const HelpSupport = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <Card className="text-center p-8 bg-white border-none shadow-sm hover:shadow-md transition-all group">
-          <div className="w-14 h-14 bg-indigo-50 rounded-xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform">
-            <Mail className="text-indigo-600" size={28} />
+          <div className="w-16 h-16 bg-indigo-50 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-500">
+            <Mail className="text-indigo-600" size={32} />
           </div>
-          <h3 className="text-lg font-bold text-gray-900 mb-2">{t('help_support.email_support')}</h3>
-          <p className="text-gray-500 text-sm mb-6">Response within 24 hours</p>
-          <Button variant="secondary" className="w-full bg-indigo-50 border-none text-indigo-600 font-bold">Email Us</Button>
+          <h3 className="text-lg font-bold text-gray-900 mb-2">{t('common.email_us')}</h3>
+          <p className="text-gray-500 text-sm mb-6">{t('common.response_time')}</p>
+          <Button variant="secondary" className="w-full bg-indigo-50 border-none text-indigo-600 font-bold">{t('common.email_us')}</Button>
         </Card>
 
         <Card className="text-center p-8 bg-white border-none shadow-sm hover:shadow-md transition-all group">
-          <div className="w-14 h-14 bg-emerald-50 rounded-xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform">
-            <MessageCircle className="text-emerald-600" size={28} />
+          <div className="w-16 h-16 bg-emerald-50 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-500">
+            <MessageSquare className="text-emerald-600" size={32} />
           </div>
           <h3 className="text-lg font-bold text-gray-900 mb-2">{t('help_support.live_chat')}</h3>
-          <p className="text-gray-500 text-sm mb-6">Available 10am - 6pm</p>
-          <Button variant="secondary" className="w-full bg-emerald-50 border-none text-emerald-600 font-bold">Start Chat</Button>
+          <p className="text-gray-500 text-sm mb-6">{t('common.chat_availability')}</p>
+          <Button variant="secondary" className="w-full bg-emerald-50 border-none text-emerald-600 font-bold">{t('common.start_chat')}</Button>
         </Card>
 
         <Card className="text-center p-8 bg-white border-none shadow-sm hover:shadow-md transition-all group">
-          <div className="w-14 h-14 bg-purple-50 rounded-xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform">
-            <Phone className="text-purple-600" size={28} />
+          <div className="w-16 h-16 bg-purple-50 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-500">
+            <PhoneCall className="text-purple-600" size={32} />
           </div>
-          <h3 className="text-lg font-bold text-gray-900 mb-2">Phone Support</h3>
-          <p className="text-gray-500 text-sm mb-6">Call us directly</p>
-          <Button variant="secondary" className="w-full bg-purple-50 border-none text-purple-600 font-bold">Call Now</Button>
+          <h3 className="text-lg font-bold text-gray-900 mb-2">{t('common.phone_support')}</h3>
+          <p className="text-gray-500 text-sm mb-6">{t('common.call_directly')}</p>
+          <Button variant="secondary" className="w-full bg-purple-50 border-none text-purple-600 font-bold">{t('common.call_now')}</Button>
         </Card>
       </div>
 

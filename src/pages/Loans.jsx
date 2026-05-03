@@ -195,8 +195,8 @@ const Loans = () => {
 
                     <div className="space-y-2 pt-2 border-t border-gray-50">
                       <div className="flex justify-between text-[10px] font-black text-gray-400 uppercase tracking-widest">
-                        <span>Repayment Progress</span>
-                        <span>{formatCurrency(paidAmount, user?.currency)} Paid</span>
+                        <span>{t('loans.repayment_progress')}</span>
+                        <span>{formatCurrency(paidAmount, user?.currency)} {t('loans.paid')}</span>
                       </div>
                       <div className="h-3 w-full bg-gray-100 rounded-xl overflow-hidden">
                         <motion.div 
@@ -213,7 +213,7 @@ const Loans = () => {
                           <span className="text-[10px] font-bold uppercase tracking-wider">{formatDate(loan.expectedPayDate)}</span>
                         </div>
                         <span className={`text-[10px] font-black uppercase tracking-wider ${isFullyPaid ? 'text-emerald-600' : 'text-primary-600'}`}>
-                          {Math.round(progress)}% Completed
+                          {Math.round(progress)}% {t('loans.completed')}
                         </span>
                       </div>
                     </div>
@@ -226,9 +226,9 @@ const Loans = () => {
               <div className="w-20 h-20 bg-gray-50 rounded-2xl flex items-center justify-center mb-6">
                 <HandCoins size={40} className="text-gray-300" />
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">No Loan Records Found</h3>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">{t('loans.no_loans')}</h3>
               <p className="text-gray-500 font-medium max-w-sm">
-                Add your borrowings or lendings to track repayment progress automatically.
+                {t('loans.no_loans_info')}
               </p>
             </div>
           )}
@@ -248,7 +248,7 @@ const Loans = () => {
                 className="relative w-full max-w-lg bg-white rounded-xl shadow-2xl flex flex-col max-h-[90vh]"
               >
                 <div className="flex items-center justify-between p-8 md:p-10 pb-4">
-                  <h2 className="text-2xl font-black text-gray-900">{editingLoan ? 'Edit Record' : 'Add Loan Record'}</h2>
+                  <h2 className="text-2xl font-black text-gray-900">{editingLoan ? t('loans.edit_record') : t('loans.add_record')}</h2>
                   <button onClick={() => setIsModalOpen(false)} className="p-3 hover:bg-gray-100 rounded-xl text-gray-400 transition-colors">
                     <X size={24} />
                   </button>
@@ -257,11 +257,11 @@ const Loans = () => {
                 <div className="flex-1 overflow-y-auto px-8 md:px-10 pb-8 md:pb-10 custom-scrollbar">
                   <form onSubmit={handleSubmit} className="space-y-6">
                     <div className="space-y-1.5">
-                      <label className="text-sm font-bold text-gray-700 ml-1">Loan Type</label>
+                      <label className="text-sm font-bold text-gray-700 ml-1">{t('loans.loan_type')}</label>
                       <div className="flex gap-3 p-1.5 bg-gray-50 rounded-xl">
                         {[
-                          { id: 'get', label: 'Received (Debt)', color: 'amber' },
-                          { id: 'give', label: 'Given (Lent)', color: 'emerald' }
+                          { id: 'get', label: t('loans.received'), color: 'amber' },
+                          { id: 'give', label: t('loans.given'), color: 'emerald' }
                         ].map((t) => (
                           <button
                             key={t.id}
@@ -279,14 +279,14 @@ const Loans = () => {
                       </div>
                     </div>
 
-                    <Input label="Person / Bank Name" placeholder="e.g. John Doe" value={formData.lender} onChange={(e) => setFormData({ ...formData, lender: e.target.value })} required />
-                    <Input label="Purpose" placeholder="e.g. Business help, Car" value={formData.purpose} onChange={(e) => setFormData({ ...formData, purpose: e.target.value })} required />
+                    <Input label={t('loans.person_bank')} placeholder="e.g. John Doe" value={formData.lender} onChange={(e) => setFormData({ ...formData, lender: e.target.value })} required />
+                    <Input label={t('loans.purpose')} placeholder="e.g. Business help, Car" value={formData.purpose} onChange={(e) => setFormData({ ...formData, purpose: e.target.value })} required />
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <Input label="Amount" type="number" placeholder="0.00" value={formData.amount} onChange={(e) => setFormData({ ...formData, amount: e.target.value })} required />
-                      <Input label="Expected Date" type="date" value={formData.expectedPayDate} onChange={(e) => setFormData({ ...formData, expectedPayDate: e.target.value })} required />
+                      <Input label={t('common.amount')} type="number" placeholder="0.00" value={formData.amount} onChange={(e) => setFormData({ ...formData, amount: e.target.value })} required />
+                      <Input label={t('loans.expected_date')} type="date" value={formData.expectedPayDate} onChange={(e) => setFormData({ ...formData, expectedPayDate: e.target.value })} required />
                     </div>
                     <Button type="submit" className="w-full py-4 text-lg font-bold mt-4" disabled={loading}>
-                      {loading ? 'Processing...' : (editingLoan ? 'Update Record' : 'Save Record')}
+                      {loading ? t('loans.processing') : (editingLoan ? t('loans.update_record') : t('loans.save_record'))}
                     </Button>
                   </form>
                 </div>

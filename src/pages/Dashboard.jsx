@@ -249,7 +249,7 @@ const Dashboard = () => {
                 AI Financial Insights
               </h3>
               <div className="flex items-center gap-2">
-                <span className="text-[10px] font-black uppercase tracking-widest text-primary-600 bg-primary-50 px-3 py-1.5 rounded-full border border-primary-100">Live Analysis</span>
+                <span className="text-[10px] font-black uppercase tracking-widest text-primary-600 bg-primary-50 px-3 py-1.5 rounded-full border border-primary-100">{t('dashboard.live_analysis')}</span>
               </div>
             </div>
             
@@ -288,7 +288,7 @@ const Dashboard = () => {
           <Card className="bg-white border-none shadow-sm flex flex-col items-center justify-center p-8 text-center relative overflow-hidden group">
             <div className="absolute inset-0 bg-gradient-to-b from-transparent to-primary-50/20 opacity-0 group-hover:opacity-100 transition-opacity"></div>
             <div className="relative z-10">
-              <p className="text-[10px] uppercase font-black text-gray-400 tracking-widest mb-6">Financial Health Score</p>
+              <p className="text-[10px] uppercase font-black text-gray-400 tracking-widest mb-6">{t('dashboard.health_score')}</p>
               
               <div className="relative w-32 h-32 mx-auto mb-6">
                 <svg className="w-full h-full -rotate-90">
@@ -393,7 +393,7 @@ const Dashboard = () => {
           <Card className="bg-gradient-to-br from-indigo-600 to-indigo-700 border-none shadow-xl shadow-indigo-600/20 p-8 text-white relative overflow-hidden">
             <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2 blur-2xl"></div>
             <div className="relative z-10 flex flex-col h-full">
-              <p className="text-[10px] uppercase font-black text-indigo-100 tracking-widest mb-8">Savings Potential</p>
+              <p className="text-[10px] uppercase font-black text-indigo-100 tracking-widest mb-8">{t('dashboard.savings_potential')}</p>
               <h4 className="text-4xl font-black mb-4">
                 {formatCurrency(Math.max(0, totals.income - forecastAmount), user?.currency)}
               </h4>
@@ -402,7 +402,7 @@ const Dashboard = () => {
               </p>
               <div className="pt-6 border-t border-white/10 mt-6">
                  <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-widest text-indigo-200">
-                    <span>Forecast Factor</span>
+                    <span>{t('dashboard.forecast_factor')}</span>
                     <span>94% Accurate</span>
                  </div>
               </div>
@@ -626,7 +626,7 @@ const Dashboard = () => {
                         <div key={report.month} className="flex items-center justify-between p-4 rounded-xl border border-purple-100 bg-purple-50/30">
                           <div>
                             <h4 className="font-bold text-gray-900">{report.month}</h4>
-                            <p className="text-xs text-gray-500 font-medium">Saved from income</p>
+                            <p className="text-xs text-gray-500 font-medium">{t('dashboard.saved_from_income')}</p>
                           </div>
                           <span className="font-black text-purple-600">{formatCurrency(report.savings, user?.currency)}</span>
                         </div>
@@ -713,7 +713,7 @@ const Dashboard = () => {
                 <div className="w-20 h-20 bg-amber-50 rounded-2xl flex items-center justify-center mx-auto mb-6">
                   <AlertTriangle className="text-amber-500" size={40} />
                 </div>
-                <h3 className="text-xl font-black text-gray-900 mb-2">Insufficient Balance</h3>
+                <h3 className="text-xl font-black text-gray-900 mb-2">{t('dashboard.insufficient_balance')}</h3>
                 <p className="text-gray-500 text-sm font-medium mb-8 leading-relaxed">{warningModal.message}</p>
                 <Button onClick={() => setWarningModal({ isOpen: false, message: '' })} className="w-full bg-amber-600 hover:bg-amber-700 text-white border-none py-4 font-black rounded-xl">I Understand</Button>
               </motion.div>

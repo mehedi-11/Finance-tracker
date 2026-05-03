@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import { Calculator, X, RefreshCw, ChevronRight, Hash } from 'lucide-react';
 import { Button } from './ui';
 
 const FloatingTools = () => {
+  const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const [activeTool, setActiveTool] = useState(null); // 'calc' or 'conv'
   
@@ -98,7 +100,7 @@ const FloatingTools = () => {
               {activeTool === 'conv' && (
                 <div className="space-y-4 animate-fade-in">
                    <div className="space-y-1.5">
-                     <label className="text-[10px] font-black uppercase text-gray-400 tracking-widest">Amount</label>
+                     <label className="text-[10px] font-black uppercase text-gray-400 tracking-widest">{t('tools.amount')}</label>
                      <input 
                        type="number" 
                        value={convAmount} 
@@ -115,7 +117,7 @@ const FloatingTools = () => {
                       </select>
                    </div>
                    <div className="bg-emerald-50 p-4 rounded-xl text-center border border-emerald-100">
-                      <p className="text-[10px] font-black text-emerald-600 uppercase tracking-widest mb-1">Result</p>
+                      <p className="text-[10px] font-black text-emerald-600 uppercase tracking-widest mb-1">{t('tools.result')}</p>
                       <p className="text-xl font-black text-emerald-700">{convert()} {toCurrency}</p>
                    </div>
                 </div>
@@ -126,7 +128,7 @@ const FloatingTools = () => {
                   <div className="w-16 h-16 bg-primary-50 text-primary-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
                     <Hash size={32} />
                   </div>
-                  <p className="text-sm font-bold text-gray-400">Select a tool to begin</p>
+                  <p className="text-sm font-bold text-gray-400">{t('tools.select_tool')}</p>
                 </div>
               )}
             </div>

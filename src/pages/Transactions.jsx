@@ -320,7 +320,7 @@ const Transactions = () => {
                         <div className="w-20 h-20 bg-gray-50 rounded-xl flex items-center justify-center">
                           <Search size={40} className="text-gray-300" />
                         </div>
-                        <p className="text-lg font-bold text-gray-400">No transactions found</p>
+                        <p className="text-lg font-bold text-gray-400">{t('transactions.no_transactions')}</p>
                       </div>
                     </td>
                   </tr>
@@ -382,7 +382,7 @@ const Transactions = () => {
                     {formData.type === 'expense' && (
                       <div className="space-y-4">
                         <div className="space-y-1.5">
-                          <label className="text-sm font-bold text-gray-700 ml-1">Payment Status</label>
+                          <label className="text-sm font-bold text-gray-700 ml-1">{t('transactions.payment_status')}</label>
                           <select
                             className="input-premium"
                             value={formData.isPaid ? 'true' : 'false'}
@@ -449,7 +449,7 @@ const Transactions = () => {
                 <div className="w-20 h-20 bg-amber-50 rounded-xl flex items-center justify-center mx-auto mb-6">
                   <AlertTriangle className="text-amber-500" size={40} />
                 </div>
-                <h3 className="text-xl font-black text-gray-900 mb-2">Insufficient Balance</h3>
+                <h3 className="text-xl font-black text-gray-900 mb-2">{t('dashboard.insufficient_balance')}</h3>
                 <p className="text-gray-500 text-sm font-medium mb-8">{warningModal.message}</p>
                 <Button onClick={() => setWarningModal({ isOpen: false, message: '' })} className="w-full bg-amber-600 hover:bg-amber-700 text-white border-none">I Understand</Button>
               </motion.div>

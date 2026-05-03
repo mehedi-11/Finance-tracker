@@ -46,7 +46,7 @@ const ForgotPassword = () => {
           <div className="w-16 h-16 bg-primary-50 rounded-xl flex items-center justify-center mx-auto mb-6">
             <KeyRound className="text-primary-600" size={32} />
           </div>
-          <h1 className="text-2xl font-black text-gray-900">Forgot Password</h1>
+          <h1 className="text-2xl font-black text-gray-900">{t('auth.forgot_password')}</h1>
           <p className="text-gray-500 text-sm mt-2 mb-8 font-medium">
             Enter your email and we'll send you a link to reset your password.
           </p>

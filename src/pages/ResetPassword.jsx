@@ -51,7 +51,7 @@ const ResetPassword = () => {
             <div className="w-16 h-16 bg-emerald-50 rounded-xl flex items-center justify-center mx-auto mb-4">
               <ShieldCheck className="text-emerald-600" size={32} />
             </div>
-            <h1 className="text-2xl font-black text-gray-900">Reset Password</h1>
+            <h1 className="text-2xl font-black text-gray-900">{t('auth.reset_password')}</h1>
             <p className="text-gray-500 text-sm mt-2 font-medium">
               We've sent a 6-digit reset code to <br />
               <span className="text-gray-900 font-bold">{email}</span>.
@@ -90,7 +90,7 @@ const ResetPassword = () => {
             
             <Button type="submit" className="w-full py-4 text-lg font-black flex items-center justify-center gap-2 shadow-xl shadow-primary-500/30" disabled={loading}>
               {loading ? 'Resetting...' : (
-                <>Reset Password <ArrowRight size={20} /></>
+                <>{t('auth.reset_password')} <ArrowRight size={20} /></>
               )}
             </Button>
           </form>

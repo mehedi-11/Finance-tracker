@@ -41,7 +41,7 @@ const Login = () => {
         className="w-full max-w-md"
       >
         <Link to="/" className="inline-flex items-center gap-2 text-gray-500 hover:text-gray-900 mb-8 transition-colors font-bold text-sm">
-          <ArrowLeft size={16} /> Back to Home
+          <ArrowLeft size={16} /> {t('auth.back_home')}
         </Link>
         
         <Card className="p-10 bg-white border-none shadow-2xl">
@@ -49,9 +49,9 @@ const Login = () => {
             <div className={`w-16 h-16 ${show2FA ? 'bg-emerald-50' : 'bg-primary-50'} rounded-xl flex items-center justify-center mx-auto mb-4`}>
               {show2FA ? <ShieldCheck className="text-emerald-600" size={32} /> : <LogIn className="text-primary-600" size={32} />}
             </div>
-            <h1 className="text-2xl font-black text-gray-900">{show2FA ? 'Two-Factor Auth' : 'Welcome Back'}</h1>
+            <h1 className="text-2xl font-black text-gray-900">{show2FA ? t('auth.two_factor') : t('auth.welcome_back')}</h1>
             <p className="text-gray-500 text-sm mt-2 font-medium">
-              {show2FA ? 'Enter the code sent to your email.' : 'Log in to manage your financial flow.'}
+              {show2FA ? t('auth.enter_2fa') : t('auth.login_msg')}
             </p>
           </div>
 
@@ -59,7 +59,7 @@ const Login = () => {
             {!show2FA ? (
               <>
                 <Input 
-                  label="Email Address" 
+                  label={t('auth.email_address')} 
                   type="email" 
                   placeholder="name@example.com"
                   value={email}
@@ -68,21 +68,21 @@ const Login = () => {
                 />
                 <div className="space-y-1">
                   <Input 
-                    label="Password" 
-                    type="password" 
-                    placeholder="••••••••"
+                  label={t('auth.password')} 
+                  type="password" 
+                  placeholder="••••••••"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
                   />
                   <div className="text-right">
-                    <Link to="/forgot-password" size="xs" className="text-xs text-primary-600 hover:underline font-bold">Forgot password?</Link>
+                    <Link to="/forgot-password" size="xs" className="text-xs text-primary-600 hover:underline font-bold">{t('auth.forgot_password')}</Link>
                   </div>
                 </div>
               </>
             ) : (
               <Input 
-                label="Verification Code" 
+                label={t('auth.verification_code')} 
                 type="text" 
                 placeholder="123456"
                 value={twoFactorCode}
@@ -94,15 +94,15 @@ const Login = () => {
             )}
             
             <Button type="submit" className="w-full py-4 text-lg font-black shadow-xl shadow-primary-500/30" disabled={loading}>
-              {loading ? 'Processing...' : (show2FA ? 'Verify & Login' : 'Sign In')}
+              {loading ? t('loans.processing') : (show2FA ? t('auth.verify_login') : t('common.sign_in'))}
             </Button>
           </form>
 
           {!show2FA && (
             <p className="text-center text-gray-500 text-sm mt-10 font-medium">
-              Don't have an account? {' '}
+              {t('auth.no_account')} {' '}
               <Link to="/register" className="text-primary-600 hover:underline font-black">
-                Register Now
+                {t('auth.register_now')}
               </Link>
             </p>
           )}

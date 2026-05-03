@@ -63,7 +63,7 @@ const Register = () => {
             <div className="w-16 h-16 bg-primary-50 rounded-xl flex items-center justify-center mx-auto mb-4">
               <UserPlus className="text-primary-600" size={32} />
             </div>
-            <h1 className="text-2xl font-black text-gray-900">Create Account</h1>
+            <h1 className="text-2xl font-black text-gray-900">{t('auth.create_account')}</h1>
             <p className="text-gray-500 text-sm mt-2 font-medium">Join thousands of smart spenders today.</p>
           </div>
 
@@ -83,7 +83,7 @@ const Register = () => {
               prefix="+880"
             />
             <div className="space-y-2">
-              <label className="text-sm font-bold text-gray-700 ml-1">Preferred Currency</label>
+              <label className="text-sm font-bold text-gray-700 ml-1">{t('auth.preferred_currency')}</label>
               <select 
                 name="currency" 
                 value={formData.currency} 
@@ -108,8 +108,7 @@ const Register = () => {
           </form>
 
           <p className="text-center text-gray-500 text-sm mt-8 font-medium">
-            Already have an account? {' '}
-            <Link to="/login" className="text-primary-600 hover:underline font-black">Sign In</Link>
+            <p className="text-gray-500 font-bold">{t('auth.already_account')} <Link to="/login" className="text-primary-600 hover:underline font-black">{t('auth.sign_in')}</Link></p>
           </p>
         </Card>
       </motion.div>

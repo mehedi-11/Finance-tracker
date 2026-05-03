@@ -175,9 +175,9 @@ const Savings = () => {
             <table className="w-full text-left border-collapse min-w-[800px]">
               <thead>
                 <tr className="border-b border-gray-50 text-gray-400 text-[10px] uppercase tracking-widest font-black bg-gray-50/50">
-                  <th className="px-8 py-5">Month Period</th>
-                  <th className="px-8 py-5 text-emerald-600">Total Income</th>
-                  <th className="px-8 py-5 text-rose-600">Total Expense</th>
+                  <th className="px-8 py-5">{t('savings.month_period')}</th>
+                  <th className="px-8 py-5 text-emerald-600">{t('savings.total_income')}</th>
+                  <th className="px-8 py-5 text-rose-600">{t('savings.total_expense')}</th>
                   <th className="px-8 py-5 text-primary-600 text-right">Saved</th>
                 </tr>
               </thead>
@@ -228,13 +228,13 @@ const Savings = () => {
               <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setIsProgressModalOpen(false)} className="absolute inset-0 bg-gray-900/40 backdrop-blur-sm" />
               <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }} className="relative w-full max-w-sm bg-white rounded-3xl p-8 shadow-2xl">
                 <div className="flex justify-between items-center mb-8">
-                  <h2 className="text-2xl font-black text-gray-900">Add Progress</h2>
+                  <h2 className="text-2xl font-black text-gray-900">{t('savings.add_progress')}</h2>
                   <button onClick={() => setIsProgressModalOpen(false)} className="p-2 hover:bg-gray-100 rounded-xl text-gray-400"><X size={20} /></button>
                 </div>
                 <p className="text-sm font-bold text-gray-500 mb-6">Adding to: <span className="text-primary-600">{selectedGoal?.title}</span></p>
                 <form onSubmit={handleUpdateProgress} className="space-y-6">
                   <Input label="Amount to Add" type="number" placeholder="0.00" value={progressAmount} onChange={e => setProgressAmount(e.target.value)} required />
-                  <Button type="submit" className="w-full py-4 font-black bg-emerald-600 hover:bg-emerald-700 shadow-lg shadow-emerald-600/20">Update Progress</Button>
+                  <Button type="submit" className="w-full py-4 font-black bg-emerald-600 hover:bg-emerald-700 shadow-lg shadow-emerald-600/20">{t('savings.update_progress')}</Button>
                 </form>
               </motion.div>
             </div>

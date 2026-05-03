@@ -144,7 +144,7 @@ const Profile = () => {
         <div className="text-center md:text-left flex-1">
           <h1 className="text-3xl font-bold text-gray-900">{user?.name}</h1>
           <div className="flex items-center justify-center md:justify-start gap-3 mt-2">
-            <Badge variant="success">Verified User</Badge>
+            <Badge variant="success">{t('profile.verified')}</Badge>
             <Badge variant="info">{currencies.find(c => c.code === user?.currency)?.name || user?.currency}</Badge>
           </div>
         </div>
@@ -162,7 +162,7 @@ const Profile = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <Input label={t('profile.name')} value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} />
                 <Input 
-                  label="Phone" 
+                  label={t('profile.phone')} 
                   value={formData.phone} 
                   onChange={(e) => {
                     const val = e.target.value.replace(/\D/g, '').slice(0, 10);
@@ -182,12 +182,12 @@ const Profile = () => {
                     ))}
                   </select>
                 </div>
-                <Input label="Date of Birth" type="date" value={formData.dob} onChange={(e) => setFormData({...formData, dob: e.target.value})} />
+                <Input label={t('profile.dob')} type="date" value={formData.dob} onChange={(e) => setFormData({...formData, dob: e.target.value})} />
                 <div className="md:col-span-2">
-                  <Input label="Address" value={formData.address} onChange={(e) => setFormData({...formData, address: e.target.value})} />
+                  <Input label={t('profile.address')} value={formData.address} onChange={(e) => setFormData({...formData, address: e.target.value})} />
                 </div>
                 <div className="md:col-span-2 space-y-1.5">
-                  <label className="text-sm font-bold text-gray-700 ml-1">Month Start Day</label>
+                  <label className="text-sm font-bold text-gray-700 ml-1">{t('profile.month_start')}</label>
                   <input 
                     type="number" 
                     min="1" 
@@ -208,26 +208,26 @@ const Profile = () => {
                       }
                     }} 
                   />
-                  <p className="text-[10px] text-gray-500 italic ml-1 text-right">Cycle starts on this day every month.</p>
+                  <p className="text-[10px] text-gray-500 italic ml-1 text-right">{t('profile.cycle_start_info')}</p>
                 </div>
               </div>
               <Button type="submit" className="w-full mt-4" disabled={loading}>
-                {loading ? 'Saving...' : t('common.save')}
+                {loading ? t('profile.saving_dots') : t('common.save')}
               </Button>
             </form>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <ProfileItem icon={Mail} label="Email" value={user?.email} />
-              <ProfileItem icon={Globe} label="Currency" value={currencies.find(c => c.code === user?.currency)?.name || user?.currency} />
-              <ProfileItem icon={Phone} label="Phone" value={user?.phone || 'Not set'} />
-              <ProfileItem icon={MapPin} label="Address" value={user?.address || 'Not set'} />
-              <ProfileItem icon={Settings} label="Month Start Day" value={`Starts on Day ${user?.monthStartDay || 1}`} />
+              <ProfileItem icon={Mail} label={t('profile.email')} value={user?.email} />
+              <ProfileItem icon={Globe} label={t('profile.currency')} value={currencies.find(c => c.code === user?.currency)?.name || user?.currency} />
+              <ProfileItem icon={Phone} label={t('profile.phone')} value={user?.phone || t('profile.not_set')} />
+              <ProfileItem icon={MapPin} label={t('profile.address')} value={user?.address || t('profile.not_set')} />
+              <ProfileItem icon={Settings} label={t('profile.month_start')} value={`${t('profile.starts_on')} ${user?.monthStartDay || 1}`} />
             </div>
           )}
         </Card>
 
         <Card className="space-y-6 bg-white border-none shadow-sm">
-          <h3 className="text-xl font-bold text-gray-900">Security & Data</h3>
+          <h3 className="text-xl font-bold text-gray-900">{t('profile.security_data')}</h3>
           <div className="space-y-4">
             <Button 
               variant="secondary" 
@@ -243,7 +243,7 @@ const Profile = () => {
               onClick={() => setShowResetModal(true)}
               disabled={loading}
             >
-              <Trash2 size={18} /> Reset Data
+              <Trash2 size={18} /> {t('profile.reset_data')}
             </Button>
 
             <Button variant="danger" className="w-full text-left justify-start gap-3 mt-4 font-bold" onClick={logout}>

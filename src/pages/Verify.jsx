@@ -58,7 +58,7 @@ const Verify = () => {
             <div className="w-16 h-16 bg-emerald-50 rounded-xl flex items-center justify-center mx-auto mb-4">
               <ShieldCheck className="text-emerald-600" size={32} />
             </div>
-            <h1 className="text-2xl font-black text-gray-900">Verify Email</h1>
+            <h1 className="text-2xl font-black text-gray-900">{t('auth.verify_email')}</h1>
             <p className="text-gray-500 text-sm mt-2 font-medium">
               We've sent a 6-digit code to <br />
               <span className="text-gray-900 font-bold">{email}</span>.
@@ -79,7 +79,7 @@ const Verify = () => {
             
             <Button type="submit" className="w-full py-4 text-lg font-black flex items-center justify-center gap-2 shadow-xl shadow-primary-500/30" disabled={loading}>
               {loading ? 'Verifying...' : (
-                <>Verify Account <ArrowRight size={20} /></>
+                <>{t('auth.verify_account')} <ArrowRight size={20} /></>
               )}
             </Button>
           </form>
@@ -90,7 +90,7 @@ const Verify = () => {
             className="w-full text-center text-gray-500 text-sm mt-10 font-bold hover:text-gray-900 transition-colors flex items-center justify-center gap-2"
           >
             {resending ? <RotateCw size={16} className="animate-spin" /> : "Didn't receive a code?"}
-            <span className="text-primary-600 font-black">Resend Now</span>
+            <span className="text-primary-600 font-black">{t('auth.resend_now')}</span>
           </button>
         </Card>
       </motion.div>
