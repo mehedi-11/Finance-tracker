@@ -80,12 +80,12 @@ const HelpSupport = () => {
           <div className="w-16 h-16 bg-primary-600 rounded-2xl flex items-center justify-center mx-auto mb-8 shadow-lg shadow-primary-600/20">
             <ShieldCheck className="text-white" size={32} />
           </div>
-          <h2 className="text-3xl font-black text-gray-900">Still have questions?</h2>
+          <h2 className="text-3xl font-black text-gray-900">{t('help_support.help_footer_title')}</h2>
           <p className="text-gray-600 max-w-lg mx-auto font-medium">
-            Our team is always ready to help you with any issues or feedback you might have.
+            {t('help_support.help_footer_subtitle')}
           </p>
           <Button className="bg-primary-600 text-white hover:bg-primary-700 border-none px-10 py-4 font-bold rounded-xl flex items-center gap-2 mx-auto shadow-lg shadow-primary-600/20 active:scale-95">
-            Get in Touch <ArrowRight size={20} />
+            {t('help_support.get_in_touch')} <ArrowRight size={20} />
           </Button>
         </div>
       </Card>

@@ -98,7 +98,10 @@
     "faq_2_q": "Can I export my data?",
     "faq_2_a": "Yes, you can export reports from the Reports page.",
     "email_support": "Email Support",
-    "live_chat": "Live Chat"
+    "live_chat": "Live Chat",
+    "help_footer_title": "Still have questions?",
+    "help_footer_subtitle": "Our team is always ready to help you with any issues or feedback you might have.",
+    "get_in_touch": "Get in Touch"
   },
   "savings": {
     "title": "My Savings",
