@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://finance-tracker-19.netlify.app/sitemap.xml
